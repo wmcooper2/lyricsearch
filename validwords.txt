@@ -1,136 +1,93 @@
-true
-play
-street
-dry
-rainy
-put
-harder
-and
-that
-me
-science
-go
-crime
-Saturday
-could
-soundly
-rubber
-was
-door
-s
-fall
-with
-crazy
-shooting
-rumor
-can
-my
-we
-of
-juice
-lost
-meet
-magic
-t
-from
-heartache
-know
-walking
-real
-trombone
-faster
-right
-smelling
-stone
-loose
-think
-never
-pain
-in
-afternoon
-ran
-what
-bolt
-he
-just
-carry
-if
-m
-let
-sleeping
-letter
-run
-your
-more
-there
-all
-left
-want
-Tommy
-cold
-hard
-much
-away
-blue
-come
-up
-you
-going
-cry
-people
-size
-gun
-at
-Will
-this
-here
-grieve
-down
-it
-round
-cell
-slide
-fish
-blow
-say
-believe
-deputy
-very
-morning
-a
-re
-bone
-town
-The
-get
-typhoon
-to
-law
-got
-nothing
-so
-hell
-floor
-reason
-like
-they
-Al
-heaven
-I
-afford
-the
-once
-happening
-break
-clear
-take
-be
-not
-knowledge
-for
-today
-on
-water
-when
-open
-cannot
+[
+    "Al",
+    "I",
+    "Saturday",
+    "Tommy",
+    "Will",
+    "a",
+    "afternoon",
+    "and",
+    "away",
+    "blow",
+    "bone",
+    "break",
+    "can",
+    "cannot",
+    "carry",
+    "cell",
+    "clear",
+    "cold",
+    "come",
+    "crazy",
+    "deputy",
+    "door",
+    "down",
+    "dry",
+    "fish",
+    "floor",
+    "from",
+    "get",
+    "go",
+    "going",
+    "got",
+    "gun",
+    "he",
+    "heaven",
+    "hell",
+    "here",
+    "if",
+    "in",
+    "it",
+    "juice",
+    "know",
+    "law",
+    "let",
+    "like",
+    "loose",
+    "m",
+    "me",
+    "meet",
+    "more",
+    "morning",
+    "my",
+    "never",
+    "on",
+    "once",
+    "people",
+    "put",
+    "rainy",
+    "ran",
+    "re",
+    "right",
+    "round",
+    "rubber",
+    "rumor",
+    "run",
+    "s",
+    "shooting",
+    "sleeping",
+    "slide",
+    "smelling",
+    "soundly",
+    "stone",
+    "street",
+    "t",
+    "take",
+    "that",
+    "the",
+    "there",
+    "they",
+    "this",
+    "to",
+    "town",
+    "trombone",
+    "typhoon",
+    "up",
+    "very",
+    "walking",
+    "want",
+    "was",
+    "water",
+    "with",
+    "you"
+]
