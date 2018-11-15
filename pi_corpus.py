@@ -23,6 +23,8 @@ if __name__ == "__main__":
     # pi's lyrics_dir
     lryics_dir = "/mnt/usb/"
 
+    valid = set()
+    invalid = set()
 
     #English word list
     english_words = words.words("en")
@@ -30,13 +32,17 @@ if __name__ == "__main__":
 
     # lyrics word list 
     print("Loading corpus...")
-    corpus_root = "./testlyrics"
+    corpus_root = "./testlyrics_small"
     lyrics_corpus = PlaintextCorpusReader(corpus_root, ".*")
 
     for song in lyrics_corpus.fileids():
         print("Working... {}".format(song))
         valid_words = set(filter(valid_word, lyrics_corpus.words(song)))
         invalid_words = set(filter(invalid_word, lyrics_corpus.words(song)))
+
+        #add valid and invalid to main ones
+        valid = valid.union(valid_words)
+        invalid = invalid.union(invalid_words)
 
     # make lowercase and double check invalid words
     if invalid_words:
@@ -49,6 +55,7 @@ if __name__ == "__main__":
         temp_valid = set(filter(valid_word, temp))
         temp_invalid = set(filter(invalid_word, temp))
         invalid_words = temp_invalid
+
 
     all_valid = valid_words.union(temp_valid)
     all_invalid = invalid_words.union(temp_invalid)
