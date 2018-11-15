@@ -1,0 +1,5 @@
+/Users/wandalcooper/Programming/Github/lyricsearch/testlyrics/Xavier Rudd_Choices.txt
+/Users/wandalcooper/Programming/Github/lyricsearch/testlyrics/X Japan_Silent Jealousy.txt
+/Users/wandalcooper/Programming/Github/lyricsearch/testlyrics/X Japan_Unfinished.txt
+/Users/wandalcooper/Programming/Github/lyricsearch/testlyrics/XC-NN_Looking Forward.txt
+/Users/wandalcooper/Programming/Github/lyricsearch/testlyrics/X-Perience_Red Rain (Mirror).txt
