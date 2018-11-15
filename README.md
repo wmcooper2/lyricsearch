@@ -16,3 +16,13 @@ To search for a given pattern in all of the lyrics files.
 * type in the exact pattern to search for.
 * click the "search" button.
 * a list of files where the search pattern is found will appear in `<root>/results/`.
+
+### To do
+* make a set of words from all the lryics from all the nodes
+* copy that set to all the nodes
+  * when searching for a pattern, check that the words exist in the set first.
+* make a regex that allows for searching a pattern of words within a list
+  * ex; as ... as
+  * as tall as
+  * as big and tall as
+
