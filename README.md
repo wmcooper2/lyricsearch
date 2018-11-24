@@ -25,4 +25,5 @@ To search for a given pattern in all of the lyrics files.
   * ex; as ... as
   * as tall as
   * as big and tall as
-
+* standardized the dir for the data in all the files.
+* make a module to put in the nodes that uses multiprocessing.py
