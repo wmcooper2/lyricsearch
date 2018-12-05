@@ -59,7 +59,7 @@ class LyricsGui:
 
     def sendtocluster(self, pattern):
         for pi in cluster:
-            command = "ssh "+pi+" 'sudo python3 lyricsearch_pi.py "+pattern+""
+            command = "ssh pi@"+pi+" 'sudo python3 lyricsearch_pi.py "+pattern+"'"
             print("pi command = ", command)
 #            self.dict_[pi] = subprocess.run([
 #                command])
