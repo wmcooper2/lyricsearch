@@ -5,6 +5,7 @@
 import os
 from pathlib import Path
 import re
+import subprocess as sp
 import time
 import tkinter as tk
 from tkinter import ttk
@@ -115,6 +116,8 @@ class LyricsCli:
 
         savefile = str(self.savedir)+"/"+pattern+".txt"
         resultsfile = open(savefile, "a+")
+
+# use thread to send to nodes, use subprocess while inside the node
 
         #change this for the pi
         #dont need to use glob if the queues are already setup

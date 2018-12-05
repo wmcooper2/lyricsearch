@@ -11,11 +11,18 @@ To search for a given pattern in all of the lyrics files.
 
 ### Operation
 _Old, need to update_
-* in the program's root dir, place any text file in `<root>/lyrics/`.
-* run `search.py`.
+
+_The program runs a GUI in the macbook and a CLI in the pi-nodes._
+
+On the macbook;
+* run `lyricsearch.py`.
 * type in the exact pattern to search for.
 * click the "search" button.
-* a list of files where the search pattern is found will appear in `<root>/results/`.
+
+
+
+
+
 
 ### To do
 * make a set of words from all the lyrics from all the nodes
@@ -38,3 +45,8 @@ _Old, need to update_
   * run `evenlydividework.py`
   * change the file paths where they will save to
 5. 
+
+
+
+### other notes
+* copy time =  44095 seconds to evenly divide 616,000 files
