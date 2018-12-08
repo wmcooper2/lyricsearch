@@ -15,12 +15,13 @@ from picluster import cluster
 
 class LyricsGui:
     def __init__(self):
+        self.debug = True
         self.win = tk.Tk()
         self.win.title("Lyrics Search")
         self.songcount = 0
         self.matchcount = 0
         self.cwd = str(Path.cwd())
-        self.targetdir = Path("./testlyrics/")
+        self.lyricsdata = Path("./testdata/")
 
         self.frame = ttk.LabelFrame(self.win, 
             text="What do you want to search for?")
@@ -59,11 +60,17 @@ class LyricsGui:
 
     def sendtocluster(self, pattern):
         for pi in cluster:
-            command = "ssh pi@"+pi+" 'sudo python3 lyricsearch_pi.py "+pattern+"'"
-            print("pi command = ", command)
-#            self.dict_[pi] = subprocess.run([
-#                command])
-#                "sudo", "python3", "lyricsearch_pi.py", pattern]) 
+            try:
+                if self.debug:
+                    command = "ssh pi@"+pi+\
+                        " 'sudo python3 lyricsearch_pi.py "+pattern+"'"
+                    print("pi command = ", command)
+                else:
+                    command = "ssh pi@"+pi+\
+                        " 'sudo python3 lyricsearch_pi.py "+pattern+"'"
+                    subprocess.run([command])
+            except:
+                print("Sending command to pi",pi,"failed.")
 
     def gui_search(self):
         """Searches for the user-requested pattern. Returns None."""
@@ -72,28 +79,33 @@ class LyricsGui:
         self.totaldisplay.grid_forget()
         self.matchdisplay.grid_forget()
         pattern = self.userinput.get()
-
-        self.sendtocluster(pattern)
-
+        if self.debug:
+            self.macsearch(pattern)
+        else:
+            self.sendtocluster(pattern)
+        #at this point, self.dict_ still has live processes in it.
         self.userinput.focus()
-#        savefile = str(self.savedir)+"/"+pattern+".txt"
-#        resultsfile = open(savefile, "a+")
-#
-#        for file_ in Path(self.cwd).glob("**/*.txt"):
-#            text = open(file_, "r").read()
-#            match = re.search(pattern, text)
-#
-#            if match != None:
-#                resultsfile.write(str(file_)+"\n")
-#                self.matchcount += 1
-#                self.matchdisplay.grid_forget()
-#                self.displaymatches()
-#            self.songcount += 1
-#            self.totaldisplay.grid_forget()
-#            self.displaytotal()
-#        resultsfile.close()
-#        print("PATTERN::", pattern, " :::  MATCHES::", str(self.matchcount))
-#
+
+    def macsearch(self, pattern):
+        #this part should be run in the pi nodes
+        savefile = str(self.savedir)+"/"+pattern+".txt"
+        resultsfile = open(savefile, "a+")
+
+        for file_ in Path(self.lyricsdata).glob("**/*.txt"):
+            text = open(file_, "r").read()
+            match = re.search(pattern, text)
+
+            if match != None:
+                resultsfile.write(str(file_)+"\n")
+                self.matchcount += 1
+                self.matchdisplay.grid_forget()
+                self.displaymatches()
+            self.songcount += 1
+            self.totaldisplay.grid_forget()
+            self.displaytotal()
+        resultsfile.close()
+        print("PATTERN::", pattern, " :::  MATCHES::", str(self.matchcount))
+
     def displaymatches(self):
         """Displays the file matches found in the gui. Returns None."""
         self.matchdisplay = ttk.Label(self.frame, 

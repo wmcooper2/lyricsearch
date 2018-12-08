@@ -7,22 +7,24 @@ _Old, need to update to include picluster_
 
 ### Purpose
 
-To search for a given pattern in all of the lyrics files.
+To search for a string in all of the lyrics files.
 
 ### Operation
-_Old, need to update_
 
 _The program runs a GUI in the macbook and a CLI in the pi-nodes._
 
 On the macbook;
-* run `lyricsearch.py`.
+* run `lyricsearch_mac.py`.
 * type in the exact pattern to search for.
 * click the "search" button.
+* results show up in `<rootdir>/results/`.
+* the name of the search result text file is the string you searched for.
 
-
-
-
-
+On the pi-nodes;
+* pi-nodes are headless; ssh into them.
+* go to "/home/pi/lyricsearch/"
+* run `lyricsearc_pi.py`
+* type in the search pattern into the terminal and press "Enter".
 
 ### To do
 * make a set of words from all the lyrics from all the nodes
@@ -46,7 +48,5 @@ On the macbook;
   * change the file paths where they will save to
 5. 
 
-
-
 ### other notes
-* copy time =  44095 seconds to evenly divide 616,000 files
+* copy time =  44095 seconds to evenly divide 616,000 files among 4 dirs on the macbook.
