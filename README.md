@@ -1,9 +1,8 @@
 # Lyrics Search
-_Old, need to update to include picluster_
 * A GUI tool. 
 * Performs pattern search concurrently using pi-cluster. 
-* Creates `<cwd>/results/` 
-* Creates text files in `<cwd>/results/`
+* Creates `<rootdir>/results/` 
+* Creates text files in `<rootdir>/results/`
 
 ### Purpose
 
@@ -12,6 +11,8 @@ To search for a string in all of the lyrics files.
 ### Operation
 
 _The program runs a GUI in the macbook and a CLI in the pi-nodes._
+
+Place the text files in `<rootdir>/testdata/` for now.
 
 On the macbook;
 * run `lyricsearch_mac.py`.
@@ -23,7 +24,7 @@ On the macbook;
 On the pi-nodes;
 * pi-nodes are headless; ssh into them.
 * go to "/home/pi/lyricsearch/"
-* run `lyricsearc_pi.py`
+* run `lyricsearch_pi.py`
 * type in the search pattern into the terminal and press "Enter".
 
 ### To do
