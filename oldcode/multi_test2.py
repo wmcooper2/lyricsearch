@@ -50,22 +50,23 @@ def cli_search(list_):
     with open(savefile, "a+") as resultsfile:
         resultsfile.write("Banana")
         for file_ in Path(searchdir).glob("**/*.txt"):
-#            print(file_)
-            match = None
-            try:
-                with open(str(file_), "r") as f:
-                    text = f.read()
-#                    print("Searching...", file_)
-                    match = re.search(pattern, text)
-            except:
-                print("FAIL")
-            if match != None:
-                resultsfile.write(str(file_)+"\n")
-    return
+            print(file_)
 
+#            match = None
+#            try:
+#                with open(str(file_), "r") as f:
+#                    text = f.read()
+#                    print("Searching...", file_)
+#                    match = re.search(pattern, text)
+#            except:
+#                print("FAIL")
+#            if match != None:
+#                resultsfile.write(str(file_)+"\n")
+##    return
+
+#def cli_search(targetdir, pattern):
 def cli_search2(d, pattern, lock):
     """Searches for the user-requested pattern. Returns None."""
-    start = time()
     searched = 0
     cwd = str(Path.cwd())
     dir_ = d
@@ -74,15 +75,6 @@ def cli_search2(d, pattern, lock):
     savefile = savedir+dir_+pattern+".txt"
     makesavedir(savedir)
     makeresultsfile(savefile)
-
-    def showcount(d):
-        global total
-        total += 1
-        print(d, "::", total)
-
-#    total = sum(1 for f in Path(searchdir).glob("**/*.txt"))
-    total = sum(1 for f in Path(searchdir).iterdir())
-#    [showcount(d) for c in Path(searchdir).iterdir()]
     with open(savefile, "a+") as resultsfile:
         for file_ in Path(searchdir).glob("**/*.txt"):
             match = None
@@ -95,17 +87,14 @@ def cli_search2(d, pattern, lock):
             if match != None:
                 resultsfile.write(str(file_)+"\n")
             searched += 1
-            if searched % 1000 == 0:
-                print("[{0}] {1}/{2}".format(d, searched, total))
-    #terminate worker?
-    #join worker?
-    #then get the time?
-    end = time()
-    timetaken = round(end - start, 6)
-    print("[{0}] time taken :: {1}".format(d, timetaken))
-
+            if searched % 3000 == 0
+                lock.acquire()
+                print("Still working... searched", searched)
+                lock.release()
+                
+##    return
 if __name__ == "__main__":
-    total = 0   #global
+
     if ismac():
         print("This file was made for a pi-node. Quitting...")
 
@@ -124,10 +113,16 @@ if __name__ == "__main__":
             workers.append(mp.Process(target=cli_search2, args=(d, pattern, lock)))
         for w in workers:
             w.start()
-#        for w in workers:
-#            w.terminate()
+        for w in workers:
+            w.join(3)
+        for w in workers:
+            w.terminate()
 #        for w in workers:
 #            print("pid      =", w.pid)
 #            print("exitcode =", w.exitcode)
+
     else:
         print("Machine not recognized. Quitting program.")
+    print("PATTERN ::", pattern)
+    end = time()
+    print("time taken::", end-start)

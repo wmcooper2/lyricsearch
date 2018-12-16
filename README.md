@@ -50,4 +50,5 @@ On the pi-nodes;
 5. 
 
 ### other notes
-* copy time =  44095 seconds to evenly divide 616,000 files among 4 dirs on the macbook.
+* copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
+* Running `multi_test.py` on a pi-node took about 3.5 hours (12700 secs). At least thats better than 12 hours on the macbook.
