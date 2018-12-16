@@ -40,6 +40,7 @@ On the pi-nodes;
   * as tall as
   * as big and tall as
 * Run "multicoresearch_mac.py" on one fourth of the full data to compare against the pi-nodes. 
+* save the results files with the name of the given search pattern.
 
 ### Process
 1. Divide all the files as evenly as possible among 4 dirs
