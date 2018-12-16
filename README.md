@@ -28,6 +28,8 @@ On the pi-nodes;
 * type in the search pattern into the terminal and press "Enter".
 
 ### To do
+* merge code of "lyricsearch_mac.py" and "multicoresearch_mac.py"
+* change "run" command in root dir to point to "mulitcoresearch_mac.py"
 * make a set of words from all the lyrics from all the nodes
 * copy that set to all the nodes
   * when searching for a pattern, check that the words exist in the set first.
@@ -35,8 +37,6 @@ On the pi-nodes;
   * ex; as ... as
   * as tall as
   * as big and tall as
-* standardized the dir for the data in all the files.
-* make a module to put in the nodes that uses multiprocessing.py
 
 ### Process
 1. Divide all the files as evenly as possible among 4 dirs

@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 lyricsearch_mac.py
+python3 src/lyricsearch_mac.py

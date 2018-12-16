@@ -34,36 +34,7 @@ def makeresultsfile(savefile):
     Path(savefile).touch()
     os.chmod(savefile, 0o777)
 
-#def cli_search(targetdir, pattern):
-def cli_search(list_):
-    """Searches for the user-requested pattern. Returns None."""
-    cwd = str(Path.cwd())
-    dir_ = list_[0]
-    pattern = list_[1]
-    searchdir = "/mnt/usb"+dir_
-    savedir = str(Path(cwd+"/results"))
-    savefile = savedir+dir_+pattern+".txt"
-    print("searchdir::", searchdir)
-    print("savefile::", savefile)
-    makesavedir(savedir)
-    makeresultsfile(savefile)
-    with open(savefile, "a+") as resultsfile:
-        resultsfile.write("Banana")
-        for file_ in Path(searchdir).glob("**/*.txt"):
-#            print(file_)
-            match = None
-            try:
-                with open(str(file_), "r") as f:
-                    text = f.read()
-#                    print("Searching...", file_)
-                    match = re.search(pattern, text)
-            except:
-                print("FAIL")
-            if match != None:
-                resultsfile.write(str(file_)+"\n")
-    return
-
-def cli_search2(d, pattern, lock):
+def cli_search(d, pattern, lock):
     """Searches for the user-requested pattern. Returns None."""
     start = time()
     searched = 0
@@ -97,9 +68,6 @@ def cli_search2(d, pattern, lock):
             searched += 1
             if searched % 1000 == 0:
                 print("[{0}] {1}/{2}".format(d, searched, total))
-    #terminate worker?
-    #join worker?
-    #then get the time?
     end = time()
     timetaken = round(end - start, 6)
     print("[{0}] time taken :: {1}".format(d, timetaken))
@@ -121,13 +89,8 @@ if __name__ == "__main__":
         workers = []
         lock = Lock()
         for d in dirs:
-            workers.append(mp.Process(target=cli_search2, args=(d, pattern, lock)))
+            workers.append(mp.Process(target=cli_search, args=(d, pattern, lock)))
         for w in workers:
             w.start()
-#        for w in workers:
-#            w.terminate()
-#        for w in workers:
-#            print("pid      =", w.pid)
-#            print("exitcode =", w.exitcode)
     else:
         print("Machine not recognized. Quitting program.")
