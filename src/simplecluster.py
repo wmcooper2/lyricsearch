@@ -14,6 +14,9 @@ pi_outputs  = []                        # holds stdout from pis
 valid_args  = ["1", "2", "3", "4"]
 given_args  = []                        # holds args from command line
 
+#factor out this line;
+#    name = format_pi_name(cluster[int(pi)-1])
+
 def not_none(flag):
     """Checks that args for a flag are not None. Returns Boolean."""
     if flag[1] != None: return True
@@ -111,6 +114,14 @@ def _list(pi, args):
     print(run_cmd(cmd).strip())
     print("\n")
 
+def _combine(pi):
+    """Combines results files in '/home/pi/lyricsearch/results/'. 
+        Returns None."""
+    name = format_pi_name(cluster[int(pi)-1])
+    cmd = format_cmd(name, "sudo python3 lyricsearch/combine.py")
+    result = run_cmd(cmd)
+    print("pi{}".format(pi), "results combined at node.")
+
 def run_simple(a):
     """Runs a simple command. Returns None."""
     if args.reboot:
@@ -127,6 +138,9 @@ def run_simple(a):
         [_umount(arg) for arg in set(args.umount)]
     elif args.list:
         [_list(arg, args) for arg in set(args.list)]
+    elif args.combine:
+        [_combine(arg) for arg in set(args.combine)]
+
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser(description="Commands for the pi-cluster.")
@@ -149,6 +163,9 @@ if __name__ == "__main__":
         nargs="?", const=valid_args)
     simple.add_argument("-l", "--list", help="List dirs in /mnt/usb",
         nargs="?", const=valid_args)
+    simple.add_argument("-c", "--combine", help="combines files in /home/pi/lyricsearch/results/",
+        nargs="?", const=valid_args)
+
 
     args = parser.parse_args()
     clear_terminal()
