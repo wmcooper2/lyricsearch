@@ -43,21 +43,32 @@ On the pi-nodes;
 * save the results files with the name of the given search pattern.
 
 ### Process
+#### Distribute the files among the nodes
 1. Divide all the files as evenly as possible among 4 dirs
   * run `evenlydividework.py`
 2. Load the newly created dirs onto 4 USB's (because I have 4 pi-nodes)
-  * do this manually (finished, one-time operation) 
+  * done manually (finished, one-time operation) 
 3. Copy "evenlydividework.py" to the nodes
+  * done manually (finished, one-time operation) 
 4. Divide all the files on each node again into 4 smaller dirs
-  * do this manually (finished, one-time operation) 
   * run `evenlydividework.py`
 
+
+#### Begin a search
 __not finished after this point__
-5. run the search through the `run` command in the root dir or directly through the main programs.
+1. run the search through the `run` command in the root dir or directly through the main programs as listed below;
+  * This takes about 3 to 3.5 hours on the cluster.
   * run on a pi-node
     * run `${HOME}/lyricsearch/mulitcoresearch_pi.py`
   * run on the macbook
     * run `${HOME}/lyricsearch/multicoresearch_mac.py`
+2. After the search is complete;
+  * run `python3 src/simplecluster.py -c`
+3. At this point, the results are combined on each node.
+  * run `python3 src/simplecluster.py -t`
+  * transfers/combines cluster results to the macbook.
+
+
 
 ### other notes
 * file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.

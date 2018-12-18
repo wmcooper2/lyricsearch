@@ -8,6 +8,7 @@ import subprocess
 
 #custom
 from pi_ipaddresses import *
+from personaldata import *
 
 cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
@@ -61,6 +62,10 @@ def run_cmd(cmd):
     """Runs cmd in a subprocess. Returns stdout String."""
     return subprocess.run(cmd, encoding="utf-8", shell=True,
         stdout=subprocess.PIPE).stdout
+
+def scp_from_pi(pi):
+    """Copies all 'noderesult.txt' files to the macbook. Returns None."""
+    return "scp "+pi+":/home/pi/lyricsearch/results/noderesult.txt "+macbookresultsdir
 
 def _reboot(pi):
     """Reboots all the nodes in cluster. Returns None."""
@@ -122,6 +127,19 @@ def _combine(pi):
     result = run_cmd(cmd)
     print("pi{}".format(pi), "results combined at node.")
 
+def _transfer(pi):
+    """Transfers/combines node results to macbook's results dir.
+        Returns None.
+
+        macbook's results dir: <rootdir>/results/
+    """
+    name = format_pi_name(cluster[int(pi)-1])
+#    print(name)
+    cmd = scp_from_pi(name)
+    print(cmd)
+    
+
+
 def run_simple(a):
     """Runs a simple command. Returns None."""
     if args.reboot:
@@ -140,7 +158,8 @@ def run_simple(a):
         [_list(arg, args) for arg in set(args.list)]
     elif args.combine:
         [_combine(arg) for arg in set(args.combine)]
-
+    elif args.transfer:
+        [_transfer(arg) for arg in set(args.transfer)]
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser(description="Commands for the pi-cluster.")
@@ -165,7 +184,8 @@ if __name__ == "__main__":
         nargs="?", const=valid_args)
     simple.add_argument("-c", "--combine", help="combines files in /home/pi/lyricsearch/results/",
         nargs="?", const=valid_args)
-
+    simple.add_argument("-t", "--transfer", help="transfers/combines node results to macbook '<rootdir>/results/'", 
+        nargs="?", const=valid_args)
 
     args = parser.parse_args()
     clear_terminal()
