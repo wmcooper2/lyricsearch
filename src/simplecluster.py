@@ -3,6 +3,7 @@
 
 #stand lib
 import argparse as ap
+import os
 from pathlib import Path
 import subprocess
 
@@ -14,7 +15,8 @@ cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
 valid_args  = ["1", "2", "3", "4"]
 given_args  = []                        # holds args from command line
-
+patternfile = "searchpattern.txt"
+noderesult  = "../results/noderesult.txt"
 #factor out this line;
 #    name = format_pi_name(cluster[int(pi)-1])
 
@@ -66,6 +68,12 @@ def run_cmd(cmd):
 def scp_from_pi(pi):
     """Copies all 'noderesult.txt' files to the macbook. Returns None."""
     return "scp "+pi+":/home/pi/lyricsearch/results/noderesult.txt "+macbookresultsdir
+
+def load_search_pattern(patternfile):
+    """Loads search pattern from '<rootdir>/results/'. Returns String."""
+    with open(patternfile) as f:
+        pattern = f.readlines()
+        return pattern[0]
 
 def _reboot(pi):
     """Reboots all the nodes in cluster. Returns None."""
@@ -133,12 +141,24 @@ def _transfer(pi):
 
         macbook's results dir: <rootdir>/results/
     """
+    #transfer to mac, one file at a time
     name = format_pi_name(cluster[int(pi)-1])
-#    print(name)
     cmd = scp_from_pi(name)
-    print(cmd)
-    
+    run_cmd(cmd)
+    resultsfile = "../results/"+load_search_pattern(patternfile).strip()+".txt"
 
+    if not Path(resultsfile).exists():
+        Path(resultsfile).touch()
+    else:
+        #copy contents of results to a single file
+        with open(Path(noderesult), "r") as f:
+            with open(resultsfile, "a+") as f2:
+                temp = f.readlines()
+                for line in temp:
+                    f2.write(line.strip())
+                    f2.write("\n")
+        #delete the file
+        os.remove(noderesult)
 
 def run_simple(a):
     """Runs a simple command. Returns None."""
