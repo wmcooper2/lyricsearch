@@ -54,7 +54,7 @@ On the pi-nodes;
   * run `evenlydividework.py`
 
 
-#### Begin a search
+#### Begin a search (manual way)
 __not finished after this point__
 1. run the search through the `run` command in the root dir or directly through the main programs as listed below;
   * This takes about 3 to 3.5 hours on the cluster.
@@ -67,6 +67,11 @@ __not finished after this point__
 3. At this point, the results are combined on each node.
   * run `python3 src/simplecluster.py -t`
   * transfers/combines cluster results to the macbook.
+
+#### Begin a search (automated way)
+1. run `src/mainlryicsearch.py`
+  * need to create subprocesses at line 64 in customcluster.py?
+    * to start the other nodes?
 
 
 

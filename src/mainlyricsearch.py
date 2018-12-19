@@ -3,6 +3,7 @@
 
 #stand lib
 from pathlib import Path
+import subprocess as sp
 import tkinter as tk
 from tkinter import ttk
 
@@ -19,40 +20,33 @@ win.title("Template GUI")
 main_box = ttk.Frame(win)
 main_box.grid(column=0, row=0, pady=6, padx=6)
 
-L_WIDTH = 30
 templatestring = "template"
-address_frame = ttk.LabelFrame(main_box, text="Template", width=L_WIDTH)
-address_frame.grid(column=0, row=0, sticky=tk.W, pady=6, padx=6)
-address = ttk.Label(address_frame, text=templatestring)
-address.grid(column=0, row=0, sticky=tk.W, pady=6, padx=6)
+search_frame = ttk.LabelFrame(main_box, 
+    text="Input a search pattern;", width=30)
+search_frame.grid(column=0, row=0, sticky=tk.W, pady=6, padx=6)
+search_pattern = ttk.Entry(search_frame)
+search_pattern.grid(column=0, row=0, 
+    sticky=tk.W, pady=6, padx=6)
 
 status_frame = ttk.LabelFrame(main_box)
 status_frame.grid(column=0, row=1, pady=6, padx=6)
 
-#to perform the search (see README.md)
- #the gui will run 'multicoresearch.py'
- #after the search, run 'python3 src/simplecluster.py -c'
- #after the combination (as in the previous step), run 'python3 src/simplecluster -t'
- #** Ideally, click one button, but until then run these three steps
-
-
-
-
-
-
-
+def testprocess():
+    cmd = "sudo python3 /home/pi/lyricsearch/remotesearch.py "+'"'+search_pattern.get().strip()+'"'
+    sp.run(["python3", "customcluster.py", cmd])
+#    search_pattern.delete(0, 'end')
 
 def row1():
-    leftbtn1 = ttk.Button(status_frame, text="Row1", 
-        command=cmds.test)
+    leftbtn1 = ttk.Button(status_frame, text="Search", 
+        command=testprocess)
     leftbtn1.grid(column=0, row=1, pady=6, padx=6)
     result1a = ttk.Label(status_frame, 
-        text="text1")
+        text="status")
     result1a.grid(column=1, row=1, pady=6, padx=6)
     result1b = ttk.Label(status_frame, 
-        text="text2")
+        text="result")
     result1b.grid(column=2, row=1, pady=6, padx=6)
-    rightbtn1 = ttk.Button(status_frame, text="recover", 
+    rightbtn1 = ttk.Button(status_frame, text="Cancel", 
         command=cmds.test)
     rightbtn1.grid(column=3, row=1, pady=6, padx=6)
 
@@ -99,14 +93,14 @@ def row4():
     rightbtn4.grid(column=3, row=4, pady=6, padx=6)
 
 #bottom
-button_frame = ttk.LabelFrame(main_box)
-button_frame.grid(column=0, row=2, sticky=tk.W, pady=6, padx=6)
-run_tests_btn = ttk.Button(button_frame, text="Run", 
-    command=cmds.test)
-run_tests_btn.grid(column=0, row=0, sticky=tk.W, pady=6, padx=6)
+#button_frame = ttk.LabelFrame(main_box)
+#button_frame.grid(column=0, row=2, sticky=tk.W, pady=6, padx=6)
+#run_tests_btn = ttk.Button(button_frame, text="Run", 
+#    command=cmds.test)
+#run_tests_btn.grid(column=0, row=0, sticky=tk.W, pady=6, padx=6)
 
 row1()
-row2()
-row3()
-row4()
+#row2()
+#row3()
+#row4()
 win.mainloop()

@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 src/multicoresearch_mac.py
+python3 src/mainlyricsearch.py

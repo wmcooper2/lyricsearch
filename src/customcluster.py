@@ -60,6 +60,9 @@ def custom_cmd(pi, args):
     ssh = format_ssh(node)
     cmd = format_cmd(ssh, args.command)
     result = run_cmd(cmd)
+
+    #subprocesses needed to branch here...currently only runs on the first node
+    print("result == ", result)
     if args.verbose:
         print(result.strip())
     return "pi@{0}".format(pi)+"\n"+result.strip()
