@@ -1,24 +1,20 @@
 # Lyrics Search
-* A GUI tool. 
-* Performs pattern search concurrently using pi-cluster. 
-* Creates `<rootdir>/results/` 
-* Creates text files in `<rootdir>/results/`
 
 ### Purpose
 
-To search for a string in all of the lyrics files.
+A GUI tool to search for patterns all the lyrics text files.
 
 ### Operation
 
 _The program runs a GUI in the macbook and a CLI in the pi-nodes._
 
-Place the text files in `<rootdir>/testdata/` for now.
+Place the text files in `<programroot>/testdata/` for now.
 
 On the macbook;
 * run `lyricsearch_mac.py`.
 * type in the exact pattern to search for.
 * click the "search" button.
-* results show up in `<rootdir>/results/`.
+* results show up in `<programroot>/results/`.
 * the name of the search result text file is the string you searched for.
 
 On the pi-nodes;
@@ -28,8 +24,7 @@ On the pi-nodes;
 * type in the search pattern into the terminal and press "Enter".
 
 ### To do
-* merge code of "lyricsearch_mac.py" and "multicoresearch_mac.py"
-* change "run" command in root dir to point to "mulitcoresearch_mac.py"
+* change "run" command in root dir to point to "lyricsearch.py"
 * make a set of words from all the lyrics from all the nodes
 * make module that searches for the pattern in a collection of files that may already have the results previously searhced for.
 * presearch for some common strings in anticipation of future requests.
@@ -73,8 +68,19 @@ __not finished after this point__
   * need to create subprocesses at line 64 in customcluster.py?
     * to start the other nodes?
 
-
+# Developer Notes
+* The overall structure of the program is illustrated in "diagram.mdj"
+* The search functions are, in order;
+  * mac search      (searches only on the mac)
+  * cluster search  (sends search commands to all nodes from the mac)
+  * pi search       (starts the worker subprocesses on a node)
+  * worker search   (the actual search that is performed in a node's core)
+* Performs pattern search concurrently using pi-cluster. 
+* Performs pattern search sequentially using macbook.
+* Creates `<programroot>/results/` 
+* Creates text files in `<programroot>/results/`
 
 ### other notes
 * file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
+* running the search on the mac (with debug = True), took <= 2 hours
 * lyric search time using `multicoresearch_pi.py` on a pi-node took about 3.5 hours (12700 secs). 
