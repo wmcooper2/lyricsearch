@@ -13,6 +13,7 @@ RESULTDIR           = CWD+"/../results/"
 CLUSTER             = personal.PINODES
 MACSEARCHDIR        = personal.MACDATADIR
 MACSEARCHTESTDIR    = CWD+personal.MACTESTDIR   #for debugging
+DIVIDEDDATADIR      = personal.MACDATADIR2
 
 #for pi-nodes
 PISEARCHDIRS        = [personal.PIDATADIR+subdir for subdir 
