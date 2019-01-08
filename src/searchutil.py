@@ -1,5 +1,6 @@
 """Utility module for Lyric Search program."""
 #stand lib
+from collections import deque
 import multiprocessing as mp
 from multiprocessing import Lock
 import os
@@ -27,41 +28,49 @@ def mac_search(lyric_dir, pattern):
     """Searches lyric_dir for pattern. Returns 2 Integers."""
     matched     = 0
     searched    = 0
-    errors      = 0
-    savefile    = format_file_name(RESULTDIR, pattern)
-    lyrics      = list(set(text_files(lyric_dir)))
-    with open(savefile, "a+") as s:
-        for f in lyrics:
-            try:
-                with open(f, "r") as text:
-                    match = re.search(pattern, text.read())
-                    if match != None:
-                        s.write(str(f)+"\n")
-                        matched += 1
-                    searched += 1
-            except:
-                errors += 1
-            if searched % 10000 == 0:
-                show_progress(str(round((searched/len(lyrics)*100), 2)))
-    print("Errors:", str(errors))
+    save_file    = format_file_name(RESULTDIR, pattern)
+    lyrics      = deque(set(text_files(lyric_dir)))
+    print("len lyrics:",len(lyrics))
+    errors      = deque()
+    results     = deque()
+    for f in lyrics:
+        try:
+            with open(f, "r") as text:
+                match = re.search(pattern, text.read())
+                if match != None:
+                    results.append(str(f)+"\n")
+                    matched += 1
+        except:
+            errors.append(f)
+        searched += 1
+        if searched % 10000 == 0:
+            show_progress(str(round((searched/len(lyrics)*100), 2)))
+    print("Errors:", str(len(errors)))
+    save(results, save_file)
+    save(errors, DEBUGERRORS)
     return matched, searched
 
 def cluster_search(pattern):
     """Sends a command to the pi-cluster. Returns None."""
     for pi in CLUSTER:
         try:
-#            command = "ssh pi@"+pi+\
-#                " 'sudo python3 lyricsearch_pi.py "+pattern+"'"
+            #This is the point where a valid command need to be sent to
+            # each node. The command should run a version of 
+            # pi_search(pattern)
+
+            command = "ssh pi@"+pi+\
+                " 'sudo python3 lyricsearch_pi.py "+pattern+"'"
             cmd = format_pi_cmd(pi, pattern)
             subprocess.run([cmd])
         except: print("Sending command to pi",pi,"failed.")
 
-#def pi_search(lyric_dir, pattern):
 def pi_search(pattern):
     """Searches lyric_dir for pattern. 
         Starts new subprocesses. Returns None."""
     workers = []
     lock = Lock()
+    
+    #if I use fairlydividework() here, then I dont need to have 4 dirs.
     for d in PISEARCHDIRS:
         workers.append(mp.Process(target=worker_search, 
             args=(d, pattern, lock)))
@@ -70,41 +79,35 @@ def pi_search(pattern):
 
 def worker_search(dir_, pattern, lock):
     """Searches dir_ for the user-requested pattern. Returns None."""
-    searched = 0
-    todo = list(text_files(dir_))
-
-    total = len(todo)
-#    print("lyric file count:", str(total))
-
-    errors   = []
-    results = []
-#    with open(save_file, "a+") as r:
-    for file_ in sorted(todo):
+    #need to run on the cluster before removing comments
+    searched    = 0
+#    lyrics      = list(text_files(dir_))
+    lyrics      = deque(text_files(dir_))
+    total       = len(lyrics)
+#    errors      = []
+#    results     = []
+    errors      = deque()
+    results     = deque()
+    for f in sorted(lyrics):
         try:
-            with open(str(file_), "r") as text:
+            with open(str(f), "r") as text:
                 match = re.search(pattern, text.read())
                 if match != None:
-                    results.append(str(file_)+"\n")
-                    r.write(str(file_)+"\n")
+                    results.append(str(f)+"\n")
         except:
-#            print("FAIL")
-            #save errors for analysis
-            errors.append(file_)
-
+            errors.append(f)
+        #update user
         searched += 1
         if searched % 1000 == 0:
+            show_progress(str(round((searched/len(lyrics)*100), 2)))
             print("[{0}] {1}/{2}".format(dir_, searched, total))
-
     #write results
     lock.acquire()
     save_file = RESULTDIR+pattern+".txt"
     make_file(save_file)
-    #doesnt work
-#    with open(save_file, "a+") as s:
-#        map(lambda x: s.write(x), results)
-    save(errors, "../errors/debugerrors.txt")
+    save(results, save_file)
+    save(errors, DEBUGERRORS)
     lock.release()
-
 
 #replaced make_results_file()
 def make_file(file_):
@@ -133,16 +136,12 @@ def make_dir(dir_):
 def make_file(file_):
     """Makes file_. Returns None."""
     Path(file_).touch()
-#    os.chmod(file_, 0o777)
-    os.chmod(file_, 0o766)
+    os.chmod(file_, 0o777)
 
 def format_pi_cmd(pi, pattern):
     """Formats a command line string for pi-node. Returns String."""
     return "ssh pi@"+pi+" 'sudo python3 lyricsearch/src/lyricsearch_pi.py "+pattern+"'"
-
-#def testprocess(pattern):
-#    cmd = "sudo python3 /home/pi/lyricsearch/remotesearch.py "+'"'+pattern+'"'
-#    sp.run(["python3", "customcluster.py", cmd])
+#    return "ssh pi@"+pi+" 'sudo python3 lyricsearch/src/searchutil.py "+pattern+"'"
 
 def save(list_, location):
     """Appends list_ to location. Returns None. """

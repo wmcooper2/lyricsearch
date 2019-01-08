@@ -62,13 +62,11 @@ class LyricsGui:
                 mac_search(self.search_dir, pattern)
         else:
             cluster_search(pattern)
-        #at this point, self.dict_ still has live processes in it.
         self.matchdisplay.grid_forget()
         self.totaldisplay.grid_forget()
         self.displaymatches()
         self.displaytotal()
         self.userinput.focus()
-#        print("PATTERN::", pattern, " :::  MATCHES::", str(self.matchcount))
 
     def displaymatches(self):
         """Displays the file matches found in the gui. Returns None."""

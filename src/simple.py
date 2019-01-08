@@ -8,8 +8,9 @@ from pathlib import Path
 import subprocess
 
 #custom
+from personal import *
 from pi_ipaddresses import *
-from personaldata import *
+#from personaldata import *
 
 cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
@@ -215,7 +216,10 @@ if __name__ == "__main__":
     if valid(a):
         run_simple(a)
     else:
-        print("Please choose any combination of the four nodes (1 2 3 or 4).\nYou can choose a maximum of four nodes at a time.\nLeave blank to choose all.\n")
+        print("Please choose any combination of the four nodes (1 2 3 or 4).")
+        print("You can choose a maximum of four nodes at a time.")
+        print("Leave blank to choose all.")
+        print("Example; 'python3 simple.py 234'")
 
     # End program
     parser.exit(status=0, message="Finished.\n")
