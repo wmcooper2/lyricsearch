@@ -1,5 +1,4 @@
 # Lyrics Search
-
 ### Purpose
 
 A GUI tool to search for patterns all the lyrics text files.
@@ -8,79 +7,79 @@ A GUI tool to search for patterns all the lyrics text files.
 
 _The program runs a GUI in the macbook and a CLI in the pi-nodes._
 
-Place the text files in `<programroot>/testdata/` for now.
+### Performing search from the macbook
+* Turn on pi-cluster.
+* Connect "MONTHLY" external device.
+* Check `constants.DEBUG == False`.
+    * if True: performs lyric search on smaller set of data in "MONTHLY".
+* Run `python3 guisearch.py`.
+* Type in the exact pattern to search for.
+    * for now, it only performs an exact search.
+* Click the "search" button.
+* Results are written to `<programroot>/results/`.
+    * new text files are created here.
+    * the name of the file is the pattern that was searched for.
 
-On the macbook;
-* run `lyricsearch_mac.py`.
-* type in the exact pattern to search for.
-* click the "search" button.
-* results show up in `<programroot>/results/`.
-* the name of the search result text file is the string you searched for.
-
-On the pi-nodes;
-* pi-nodes are headless; ssh into them.
+### Performing search from the pi-nodes
+* SSH into a node.
+    * pi-nodes are headless.
+    * if you want to use a gui, then connect a monitor to the node directly before turning on the node.
 * go to "/home/pi/lyricsearch/"
-* run `lyricsearch_pi.py`
+* run `python3 clisearch.py`
+    * `python3 guisearch.py` will just run `python3 clisearch.py` anyway if run directly on a node.
 * type in the search pattern into the terminal and press "Enter".
 
 ### To do
 * change "run" command in root dir to point to "lyricsearch.py"
 * make a set of words from all the lyrics from all the nodes
-* make module that searches for the pattern in a collection of files that may already have the results previously searhced for.
-* presearch for some common strings in anticipation of future requests.
-* copy that set to all the nodes
-  * when searching for a pattern, check that the words exist in the set first.
+    * make module that searches for the pattern in a collection of files that may already have the results previously searched for.
+    * presearch for some common strings in anticipation of future requests.
+    * copy that set to all the nodes
+      * when searching for a pattern, check that the words exist in the set first.
+      * an exact match cannot be found if a word does not exist in the set, so search that set first for faster results.
 * make a regex that allows for searching a pattern of words within a list
-  * ex; as ... as
-  * as tall as
-  * as big and tall as
-* Run "multicoresearch_mac.py" on one fourth of the full data to compare against the pi-nodes. 
-* save the results files with the name of the given search pattern.
+    * ex; as ... as
+    * as tall as
+    * as big and tall as
 
-### Process
-#### Distribute the files among the nodes
+## Setup Process
+### Distribute the files among the nodes
 1. Divide all the files as evenly as possible among 4 dirs
-  * run `evenlydividework.py`
+    * run `python3 fairlydivide.py`
 2. Load the newly created dirs onto 4 USB's (because I have 4 pi-nodes)
-  * done manually (finished, one-time operation) 
-3. Copy "evenlydividework.py" to the nodes
-  * done manually (finished, one-time operation) 
+    * done manually (finished, one-time operation) 
+3. Copy "fairlydivide.py" to the nodes
+    * done manually (finished, one-time operation) 
 4. Divide all the files on each node again into 4 smaller dirs
-  * run `evenlydividework.py`
+    * run `python3 fairlydivide.py`
 
-
-#### Begin a search (manual way)
+### Manual Search 
 __not finished after this point__
 1. run the search through the `run` command in the root dir or directly through the main programs as listed below;
-  * This takes about 3 to 3.5 hours on the cluster.
-  * run on a pi-node
-    * run `${HOME}/lyricsearch/mulitcoresearch_pi.py`
-  * run on the macbook
-    * run `${HOME}/lyricsearch/multicoresearch_mac.py`
+    * This takes about 3 to 3.5 hours on the cluster.
+    * run on a pi-node
+      * run `${HOME}/lyricsearch/clisearch.py`
+    * run on the macbook
+      * run `${HOME}/lyricsearch/clisearch.py`
 2. After the search is complete;
-  * run `python3 src/simplecluster.py -c`
+    * run `python3 src/simplecluster.py -c`
 3. At this point, the results are combined on each node.
-  * run `python3 src/simplecluster.py -t`
-  * transfers/combines cluster results to the macbook.
+    * run `python3 src/simplecluster.py -t`
+    * transfers/combines cluster results to the macbook.
 
-#### Begin a search (automated way)
-1. run `src/mainlryicsearch.py`
-  * need to create subprocesses at line 64 in customcluster.py?
-    * to start the other nodes?
+### Automatic Search
+1. run `python3 src/guisearch.py`
 
-# Developer Notes
+### Developer Notes
 * The overall structure of the program is illustrated in "diagram.mdj"
-* The search functions are, in order;
-  * mac search      (searches only on the mac)
-  * cluster search  (sends search commands to all nodes from the mac)
-  * pi search       (starts the worker subprocesses on a node)
-  * worker search   (the actual search that is performed in a node's core)
-* Performs pattern search concurrently using pi-cluster. 
-* Performs pattern search sequentially using macbook.
+* The search function hierarchy is;
+    * mac search      (searches only on the mac, sequential)
+    * cluster search  (sends search commands to all nodes from the mac)
+    * pi search       (starts the worker subprocesses on a node, concurrent)
+    * worker search   (the actual search that is performed in a node's core)
 * Creates `<programroot>/results/` 
 * Creates text files in `<programroot>/results/`
 
 ### other notes
 * file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
-* running the search on the mac (with debug = True), took <= 2 hours
-* lyric search time using `multicoresearch_pi.py` on a pi-node took about 3.5 hours (12700 secs). 
+* lyric search time using `clisearch.py` on a pi-node took about 3.5 hours (12700 secs). 
