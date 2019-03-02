@@ -21,10 +21,12 @@ noderesult  = "../results/noderesult.txt"
 #factor out this line;
 #    name = format_pi_name(cluster[int(pi)-1])
 
-def not_none(flag):
-    """Checks that args for a flag are not None. Returns Boolean."""
-    if flag[1] != None: return True
-    else: return False
+good_arg = lambda flag: flag[1] != None
+
+#def not_none(flag):
+#    """Checks that args for a flag are not None. Returns Boolean."""
+#    if flag[1] != None: return True
+#    else:               return False
 
 def valid(a):
     """Validates the input arugments. Returns Boolean."""
@@ -47,9 +49,11 @@ def format_pi_name(string):
     piname = "pi@"+string
     return piname
 
-def format_cmd(str1, str2):
-    """Formats the command. Returns String."""
-    return "ssh "+str1+" '"+str2+"'"
+
+format_cmd = lambda s1, s2: "ssh "+s1+" '"+s2+"'"
+#def format_cmd(str1, str2):
+#    """Formats the command. Returns String."""
+#    return "ssh "+str1+" '"+str2+"'"
 
 def print_kwargs():
     """Displays kwargs given at command line. Returns None."""
@@ -146,7 +150,9 @@ def _transfer(pi):
     name = format_pi_name(cluster[int(pi)-1])
     cmd = scp_from_pi(name)
     run_cmd(cmd)
-    resultsfile = "../results/"+load_search_pattern(patternfile).strip()+".txt"
+    resultsfile = "../results/"+\
+                  load_search_pattern(patternfile).strip()+\
+                  ".txt"
 
     if not Path(resultsfile).exists():
         Path(resultsfile).touch()
@@ -191,11 +197,11 @@ if __name__ == "__main__":
     simple = parser.add_mutually_exclusive_group()
     simple.add_argument("-r", "--reboot", help="Reboots the cluster.", 
         nargs="?", const=valid_args)
-    simple.add_argument("-s", "--shutdown", help="Shuts down the cluster.",
+    simple.add_argument("-s", "--shutdown", help="Shuts down cluster.",
         nargs="?", const=valid_args)
     simple.add_argument("-n", "--name", help="Displays name of the node.",
         nargs="?", const=valid_args)
-    simple.add_argument("-i", "--ipaddr", help="Displays node's ipaddress.",
+    simple.add_argument("-i", "--ipaddr", help="Displays node ipaddress.",
         nargs="?", const=valid_args)
     simple.add_argument("-m", "--mount", help="Mounts the usb drives.",
         nargs="?", const=valid_args)
@@ -210,16 +216,18 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     clear_terminal()
-    print("\n")     # for nice terminal output
-    a = filter(not_none, args._get_kwargs())    #filter args != None
+    print("\n")     #nice terminal output
+    a = filter(good_arg, args._get_kwargs())    #filter args != None
 
     if valid(a):
         run_simple(a)
     else:
-        print("Please choose any combination of the four nodes (1 2 3 or 4).")
+        print("Please choose any combination of the nodes (1 2 3 or 4).")
         print("You can choose a maximum of four nodes at a time.")
         print("Leave blank to choose all.")
         print("Example; 'python3 simple.py 234'")
+        print("...or")
+        print("         'python3 simple.py'")
 
     # End program
     parser.exit(status=0, message="Finished.\n")

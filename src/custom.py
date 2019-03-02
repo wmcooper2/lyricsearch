@@ -12,10 +12,9 @@ cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
 given_args  = []                        # holds args from command line
 
-def not_none(flag):
-    """Checks that args for a flag are not None. Returns Boolean."""
-    if flag[1] != None: return True
-    else: return False
+format_cmd = lambda s1, s2: "{0} '{1}'".format(s1, s2)
+format_node= lambda s: "pi@"+s
+format_ssh = lambda s: "ssh "+s
 
 def clear_terminal():
     """Clears the terminal window. Returns None."""
@@ -25,19 +24,6 @@ def show_outputs():
     """Shows the outputs of the pis. Returns None."""
     for output in pi_outputs:
         print(str(pi_outputs.index(output)), "::", output)
-
-def format_node(string):
-    """Formats the pi name. Returns String."""
-    piname = "pi@"+string
-    return piname
-
-def format_ssh(str1):
-    """Formats the ssh portion of the command. Returns String."""
-    return "ssh "+str1
-
-def format_cmd(ssh, string):
-    """Formats the full command for a node. Returns String."""
-    return "{0} '{1}'".format(ssh, string)
 
 def print_kwargs():
     """Displays kwargs given at command line. Returns None."""
@@ -56,12 +42,13 @@ def run_cmd(cmd):
 
 def custom_cmd(pi, args):
     """Sends custom command to a node. Returns String."""
-    node = format_node(pi)
-    ssh = format_ssh(node)
-    cmd = format_cmd(ssh, args.command)
-    result = run_cmd(cmd)
+    node    = format_node(pi)
+    ssh     = format_ssh(node)
+    cmd     = format_cmd(ssh, args.command)
+    result  = run_cmd(cmd)
 
-    #subprocesses needed to branch here...currently only runs on the first node
+    #subprocesses needed to branch here...
+    # currently only runs on the first node
     print("result == ", result)
     if args.verbose:
         print(result.strip())
@@ -76,6 +63,18 @@ if __name__ == "__main__":
     clear_terminal()
     print("\n")
     [custom_cmd(pi, args) for pi in cluster]
-
-    # End program
     parser.exit(status=0, message="Finished.\n")
+
+#def not_none(flag):
+#    """Checks that args for a flag are not None. Returns Boolean."""
+#    if flag[1] != None: return True
+#    else:               return False
+
+#def format_node(string):
+#    """Formats the pi name. Returns String."""
+#    piname = "pi@"+string
+#    return piname
+
+#def format_cmd(ssh, string):
+#    """Formats the full command for a node. Returns String."""
+#    return "{0} '{1}'".format(ssh, string)

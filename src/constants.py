@@ -7,14 +7,18 @@ import personal
 
 #for mac and pi
 CWD                 = str(Path.cwd())
-DEBUGERRORS         = CWD+"/../debug/debugerrors.txt"
-RESULTDIR           = CWD+"/../results/"
-TRANSFERDIR         = CWD+"/../transfer/"
+DEBUG               = True
+#DEBUG               = False
+DEBUGERRORS         = CWD+"/debug/debugerrors.txt"
+RESULTDIR           = CWD+"/results/"
+TRANSFERDIR         = CWD+"/transfer/"
 
 #for macbook
 CLUSTER             = personal.PINODES
-MACSEARCHDIR        = personal.MACDATADIR
-#MACSEARCHTESTDIR    = CWD+personal.MACTESTDIR   #for debugging
+if DEBUG:
+    MACSEARCHDIR    = CWD+personal.MACTESTDIR
+else:
+    MACSEARCHDIR        = personal.MACDATADIR
 DIVIDEDDATADIR      = personal.MACDATADIR2
 
 #for pi-nodes

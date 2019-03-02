@@ -11,19 +11,14 @@ from searchutil import *
 
 class LyricsGui:
     def __init__(self):
-#        self.debug = True           # for debugging, searches on mac
-        self.debug = False           # for debugging, searches on mac
-        self.win = tk.Tk()
-        self.win.title("Lyrics Search")
-#        self.dict_ = {}
+        self.cluster    = CLUSTER
+        self.cwd        = CWD
+        self.debug      = DEBUG
         self.matchcount = 0
-        self.songcount = 0
-
-        #constants
-        self.cwd = CWD
-        self.cluster = CLUSTER
-#        self.search_dir = MACSEARCHTESTDIR      #for debugging
         self.search_dir = MACSEARCHDIR
+        self.songcount  = 0
+        self.win        = tk.Tk()
+        self.win.title("Lyrics Search")
 
         self.frame = ttk.LabelFrame(self.win, 
             text="What do you want to search for?")
@@ -52,14 +47,13 @@ class LyricsGui:
 
     def search(self):
         """Searches for the user-requested pattern. Returns None."""
-        self.songcount = 0
+        self.songcount  = 0
         self.matchcount = 0
         self.totaldisplay.grid_forget()
         self.matchdisplay.grid_forget()
         pattern = self.userinput.get()
         if self.debug:
-            self.matchcount, self.songcount = \
-                mac_search(self.search_dir, pattern)
+            self.matchcount, self.songcount = mac_search(self.search_dir, pattern)
         else:
             cluster_search(pattern)
         self.matchdisplay.grid_forget()
