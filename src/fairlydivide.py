@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shutil
 from time import time
+from typing import Queue
 
 #custom
 from constants import *
@@ -18,11 +19,11 @@ no_remainder = lambda x, y: x % y == 0
 #    if num >= 2 and num <=16:   return True
 #    else:                       return False
 
-def count_files(dir_):
+def count_files(dir_: str) -> int:
     """Counts the files that end in '.txt' in 'path_'. Returns Integer."""
     return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
-def get_files(dir_):
+def get_files(dir_: str) -> list:
     """Gets text files from dir_, recursively. Returns List."""
     return [file_ for file_ in Path(dir_).glob("**/*.txt")]
  
@@ -30,7 +31,7 @@ def divide_bulk(main, sub, num):
     """Appends num elements from main to sub. Returns None."""
     [sub.append(main.pop()) for x in range(num)]
 
-def divide_remainder(a, b):
+def divide_remainder(a: Queue, b: Queue) -> None:
     """Try to put an element into QueueA from QueueB. Returns None."""
     try: a.append(b.pop())
     except: pass
@@ -57,7 +58,6 @@ def divided_dir_name(el, list_):
 
 if __name__ == "__main__":
     if ismac():
-#        bins = int(os.cpu_count())
         try:
             bins = int(input("How many bins do you want to sort into? "))
         except ValueError:
@@ -66,12 +66,12 @@ if __name__ == "__main__":
 
         if valid_bins(bins):
             print("Counting files...")
-            file_amt = count_files(MACSEARCHDIR)
+            file_amt = count_files(SEARCHDIR)
             print("File count:", str(file_amt))
 
             fs = deque()
             print("Collecting files...")
-            [fs.append(str(f).strip()) for f in get_files(MACSEARCHDIR)]
+            [fs.append(str(f).strip()) for f in get_files(SEARCHDIR)]
             print("Finished collecting files.")
 
             print("Dividing files...")

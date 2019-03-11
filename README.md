@@ -1,4 +1,6 @@
 # Lyrics Search
+_Personal Note: This program combines code taken from musicdatabase/ and raspberrypicluster/_
+
 ### Purpose
 
 A GUI tool to search for patterns all the lyrics text files.
@@ -83,3 +85,4 @@ __not finished after this point__
 ### other notes
 * file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
 * lyric search time using `clisearch.py` on a pi-node took about 3.5 hours (12700 secs). 
+* Searching through sets of the songs words is faster for finding potential matches. After a set search, then perform an exact match search.

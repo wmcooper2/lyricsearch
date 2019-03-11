@@ -10,7 +10,6 @@ import subprocess
 #custom
 from personal import *
 from pi_ipaddresses import *
-#from personaldata import *
 
 cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
@@ -140,6 +139,14 @@ def _combine(pi):
     result = run_cmd(cmd)
     print("pi{}".format(pi), "results combined at node.")
 
+def _setupsets(pi):
+    """Makes the mega and song sets in '/home/pi/lyricsearch/data/'.
+        Returns None."""
+    name = format_pi_name(cluster[int(pi)-1])
+    cmd = format_cmd(name, "sudo python3 lyricsearch/makesets.py")
+    result = run_cmd(cmd)
+    print("pi{}".format(pi), "Set objects created in data/.")
+
 def _transfer(pi):
     """Transfers/combines node results to macbook's results dir.
         Returns None.
@@ -167,26 +174,28 @@ def _transfer(pi):
         #delete the file
         os.remove(noderesult)
 
-def run_simple(a):
+def run_simple(a): #possible error with arg?
     """Runs a simple command. Returns None."""
-    if args.reboot:
-        [_reboot(arg) for arg in set(args.reboot)]
-    elif args.shutdown:
-        [_shutdown(arg) for arg in set(args.shutdown)]
-    elif args.name:
-        [_name(arg) for arg in set(args.name)]
+    if args.combine:
+        [_combine(arg)      for arg in set(args.combine)]
     elif args.ipaddr:
-        [_ipaddr(arg) for arg in set(args.ipaddr)]
-    elif args.mount:
-        [_mount(arg) for arg in set(args.mount)]
-    elif args.umount:
-        [_umount(arg) for arg in set(args.umount)]
+        [_ipaddr(arg)       for arg in set(args.ipaddr)]
     elif args.list:
-        [_list(arg, args) for arg in set(args.list)]
-    elif args.combine:
-        [_combine(arg) for arg in set(args.combine)]
+        [_list(arg, args)   for arg in set(args.list)]
+    elif args.name:
+        [_name(arg)         for arg in set(args.name)]
+    elif args.mount:
+        [_mount(arg)        for arg in set(args.mount)]
+    elif args.reboot:
+        [_reboot(arg)       for arg in set(args.reboot)]
+    elif args.setup:
+        [_setupsets(arg)    for arg in set(args.setup)]
+    elif args.shutdown:
+        [_shutdown(arg)     for arg in set(args.shutdown)]
     elif args.transfer:
-        [_transfer(arg) for arg in set(args.transfer)]
+        [_transfer(arg)     for arg in set(args.transfer)]
+    elif args.umount:
+        [_umount(arg)       for arg in set(args.umount)]
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser(description="Commands for the pi-cluster.")
@@ -195,33 +204,36 @@ if __name__ == "__main__":
 
     # simple, common commands
     simple = parser.add_mutually_exclusive_group()
-    simple.add_argument("-r", "--reboot", help="Reboots the cluster.", 
+    simple.add_argument("-c", "--combine",  help="combines files in /home/pi/lyricsearch/results/",
+        nargs="?", const=valid_args)
+    simple.add_argument("-i", "--ipaddr",   help="Displays node ipaddress.",
+        nargs="?", const=valid_args)
+    simple.add_argument("-l", "--list",     help="List dirs in /mnt/usb",
+        nargs="?", const=valid_args)
+    simple.add_argument("-m", "--mount",    help="Mounts the usb drives.",
+        nargs="?", const=valid_args)
+    simple.add_argument("-n", "--name",     help="Displays name of the node.",
+        nargs="?", const=valid_args)
+    simple.add_argument("-r", "--reboot",   help="Reboots the cluster.", 
         nargs="?", const=valid_args)
     simple.add_argument("-s", "--shutdown", help="Shuts down cluster.",
         nargs="?", const=valid_args)
-    simple.add_argument("-n", "--name", help="Displays name of the node.",
-        nargs="?", const=valid_args)
-    simple.add_argument("-i", "--ipaddr", help="Displays node ipaddress.",
-        nargs="?", const=valid_args)
-    simple.add_argument("-m", "--mount", help="Mounts the usb drives.",
-        nargs="?", const=valid_args)
-    simple.add_argument("-u", "--umount", help="Unmounts the usb drives.",
-        nargs="?", const=valid_args)
-    simple.add_argument("-l", "--list", help="List dirs in /mnt/usb",
-        nargs="?", const=valid_args)
-    simple.add_argument("-c", "--combine", help="combines files in /home/pi/lyricsearch/results/",
-        nargs="?", const=valid_args)
     simple.add_argument("-t", "--transfer", help="transfers/combines node results to macbook '<rootdir>/results/'", 
+        nargs="?", const=valid_args)
+    simple.add_argument("-u", "--umount",   help="Unmounts the usb drives.",
+        nargs="?", const=valid_args)
+    simple.add_argument("-x", "--setup",    help="Setup the mega and song sets.",
         nargs="?", const=valid_args)
 
     args = parser.parse_args()
     clear_terminal()
     print("\n")     #nice terminal output
-    a = filter(good_arg, args._get_kwargs())    #filter args != None
+    request = filter(good_arg, args._get_kwargs())    #filter args != None
 
-    if valid(a):
-        run_simple(a)
+    if valid(request):
+        run_simple(request)
     else:
+        #examples
         print("Please choose any combination of the nodes (1 2 3 or 4).")
         print("You can choose a maximum of four nodes at a time.")
         print("Leave blank to choose all.")

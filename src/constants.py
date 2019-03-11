@@ -1,27 +1,39 @@
 """Constants module for Lyric Search program."""
-#stand lib
+# stand lib
 from pathlib import Path
+import os
 
-#custom
-import personal
+# custom
+from personal import *
 
-#for mac and pi
-CWD                 = str(Path.cwd())
-DEBUG               = True
-#DEBUG               = False
-DEBUGERRORS         = CWD+"/debug/debugerrors.txt"
-RESULTDIR           = CWD+"/results/"
-TRANSFERDIR         = CWD+"/transfer/"
+ismac       = lambda: os.uname().sysname == "Darwin"
+ispi        = lambda: os.uname().sysname == "Linux"
 
-#for macbook
-CLUSTER             = personal.PINODES
+CLUSTER     = PINODES
+DEBUG       = True
+DEBUGERRORS = "../debug/debugerrors.txt"
+RESULTDIR   = "../results/"
+TRANSFERDIR = "/transfer/"
+URL_FILE    = "../data/uniqueurls.txt"
+
 if DEBUG:
-    MACSEARCHDIR    = CWD+personal.MACTESTDIR
-else:
-    MACSEARCHDIR        = personal.MACDATADIR
-DIVIDEDDATADIR      = personal.MACDATADIR2
+    DATA_DIR    = "../testdata/"
+    LYRICS_SET  = "../testdata/lyrics_test.db"
+    MEGA_SET    = "../testdata/megaset_test.db"
+#    SONG_DIR    = "../testdata/"
+    SEARCHDIR   = TESTDIR
+else:   #not debug
+    DATA_DIR    = "../data/"
+    LYRICS_SET  = "../data/lyrics.db" 
+    MEGA_SET    = "../data/megaset.db"
+    if ismac():
+#        SONG_DIR    = WEEKLY_SONG_DIR
+        DATA_DIR    = WEEKLY_SONG_DIR
+        LYRICS_DIR  = WEEKLY_SONG_DIR+"pi1data/data1/"
+    elif ispi():
+#        SONG_DIR    = PISONGDIR
+        DATA_DIR    = PISONGDIR
 
-#for pi-nodes
-PISEARCHDIRS        = [personal.PIDATADIR+subdir for subdir 
-                       in personal.PISUBDATADIRS]
-COMBINEDRESULT      = RESULTDIR+"finalresult.txt"
+if ispi():  #regardless of debug
+    PISEARCHDIRS    = [PIDATADIR+subdir for subdir in PISUBDATADIRS]
+    COMBINEDRESULT  = RESULTDIR+"finalresult.txt"

@@ -11,11 +11,10 @@ from searchutil import *
 
 class LyricsGui:
     def __init__(self):
-        self.cluster    = CLUSTER
-        self.cwd        = CWD
+#        self.cluster    = CLUSTER
         self.debug      = DEBUG
         self.matchcount = 0
-        self.search_dir = MACSEARCHDIR
+#        self.search_dir = SONG_DIR
         self.songcount  = 0
         self.win        = tk.Tk()
         self.win.title("Lyrics Search")
@@ -52,10 +51,12 @@ class LyricsGui:
         self.totaldisplay.grid_forget()
         self.matchdisplay.grid_forget()
         pattern = self.userinput.get()
+
+        #search functions in searchutil.py
         if self.debug:
-            self.matchcount, self.songcount = mac_search(self.search_dir, pattern)
+            self.results = mac_search(pattern)
         else:
-            cluster_search(pattern)
+            pi_search(pattern)
         self.matchdisplay.grid_forget()
         self.totaldisplay.grid_forget()
         self.displaymatches()
