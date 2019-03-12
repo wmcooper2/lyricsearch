@@ -8,8 +8,9 @@ from pathlib import Path
 import subprocess
 
 #custom
+from constants import *
 from personal import *
-from pi_ipaddresses import *
+#from pi_ipaddresses import *
 
 cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
 pi_outputs  = []                        # holds stdout from pis
@@ -20,39 +21,27 @@ noderesult  = "../results/noderesult.txt"
 #factor out this line;
 #    name = format_pi_name(cluster[int(pi)-1])
 
-good_arg = lambda flag: flag[1] != None
+good_arg        = lambda flag: flag[1] != None
+format_pi_name  = lambda n: "pi@"+n
 
-#def not_none(flag):
-#    """Checks that args for a flag are not None. Returns Boolean."""
-#    if flag[1] != None: return True
-#    else:               return False
-
-def valid(a):
+def valid(a) -> bool:
     """Validates the input arugments. Returns Boolean."""
     for line in a:
         if all([arg in valid_args for arg in line[1]]) and len(line[1])<=4: 
             return True
     return False
 
-def clear_terminal():
+def clear_terminal() -> None:
     """Clears the terminal window. Returns None."""
     subprocess.run(["clear"])
+    return None
 
-def show_outputs():
+def show_outputs() -> None:
     """Shows the outputs of the pis. Returns None."""
     for output in pi_outputs:
         print(str(pi_outputs.index(output)), "::", output)
 
-def format_pi_name(string):
-    """Formats the pi name. Returns String."""
-    piname = "pi@"+string
-    return piname
-
-
 format_cmd = lambda s1, s2: "ssh "+s1+" '"+s2+"'"
-#def format_cmd(str1, str2):
-#    """Formats the command. Returns String."""
-#    return "ssh "+str1+" '"+str2+"'"
 
 def print_kwargs():
     """Displays kwargs given at command line. Returns None."""
