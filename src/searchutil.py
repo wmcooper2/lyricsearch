@@ -60,7 +60,8 @@ def mac_search(pattern: str) -> list:
 def pi_search(pattern: str, spawn: bool = False) -> list:
     """Performs a search on a pi-node. Returns None."""
     if spawn:
-        spawn_workers()
+        pass
+#        spawn_workers()
     else:
         results = search(pattern)
         if DEBUG:
@@ -68,16 +69,16 @@ def pi_search(pattern: str, spawn: bool = False) -> list:
         return results
     return []
 
-def spawn_workers() -> None:
-    """Spawns worker subprocesses. Returns None."""
-    workers = []
-    lock    = Lock()
-    for d in PISEARCHDIRS:
-        workers.append(mp.Process(target=worker_search, 
-            args=(d, pattern, lock)))
-    for w in workers:
-        w.start()
-    return None
+#def spawn_workers() -> None:
+#    """Spawns worker subprocesses. Returns None."""
+#    workers = []
+#    lock    = Lock()
+#    for d in PISEARCHDIRS:
+#        workers.append(mp.Process(target=worker_search, 
+#            args=(d, pattern, lock)))
+#    for w in workers:
+#        w.start()
+#    return None
  
 def search(pattern: str) -> list:
     """Searches for songs containing 'pattern'. Returns List."""

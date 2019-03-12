@@ -5,7 +5,9 @@ import os
 from pathlib import Path
 import shutil
 from time import time
-from typing import Queue
+#from typing import Queue
+from typing import Any
+from typing import Deque
 
 #custom
 from constants import *
@@ -31,7 +33,7 @@ def divide_bulk(main, sub, num):
     """Appends num elements from main to sub. Returns None."""
     [sub.append(main.pop()) for x in range(num)]
 
-def divide_remainder(a: Queue, b: Queue) -> None:
+def divide_remainder(a: Any, b: Any) -> None:
     """Try to put an element into QueueA from QueueB. Returns None."""
     try: a.append(b.pop())
     except: pass
@@ -69,9 +71,11 @@ if __name__ == "__main__":
             file_amt = count_files(SEARCHDIR)
             print("File count:", str(file_amt))
 
-            fs = deque()
+            fs: Deque = deque()
             print("Collecting files...")
-            [fs.append(str(f).strip()) for f in get_files(SEARCHDIR)]
+#            [fs.append(str(f).strip()) for f in get_files(SEARCHDIR)]
+            for f in get_files(SEARCHDIR):
+                fs.append(str(f).strip())
             print("Finished collecting files.")
 
             print("Dividing files...")

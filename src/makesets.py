@@ -42,7 +42,7 @@ def make_song_set(dir_: str) -> dict:
             song_count += 1
             show_progress(song_count)
         except:
-            save_error(song_file)
+            save_error(str(song_file))
             print("Error:", song_file)
     end = time()
     print("Time taken:", round(end-start, 2))
@@ -61,7 +61,7 @@ def make_mega_set(dir_: str) -> set:
             song_count += 1
             show_progress(song_count)
         except:
-            save_error(song_file)
+            save_error(str(song_file))
             print("Error:", song_file)
     end = time()
     print("Time taken:", round(end-start, 2))

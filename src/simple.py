@@ -12,16 +12,17 @@ from constants import *
 from personal import *
 #from pi_ipaddresses import *
 
-cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
-pi_outputs  = []                        # holds stdout from pis
-valid_args  = ["1", "2", "3", "4"]
-given_args  = []                        # holds args from command line
-patternfile = "searchpattern.txt"
-noderesult  = "../results/noderesult.txt"
+cluster: list     = [pi1, pi2, pi3, pi4]      # ip addresses
+pi_outputs: list  = []                        # holds stdout from pis
+valid_args: list  = ["1", "2", "3", "4"]
+given_args: list  = []                        # command line args
+patternfile: str = "searchpattern.txt"
+noderesult: str  = "../results/noderesult.txt"
 #factor out this line;
 #    name = format_pi_name(cluster[int(pi)-1])
 
 good_arg        = lambda flag: flag[1] != None
+format_cmd      = lambda s1, s2: "ssh "+s1+" '"+s2+"'"
 format_pi_name  = lambda n: "pi@"+n
 
 def valid(a) -> bool:
@@ -40,20 +41,20 @@ def show_outputs() -> None:
     """Shows the outputs of the pis. Returns None."""
     for output in pi_outputs:
         print(str(pi_outputs.index(output)), "::", output)
+    return None
 
-format_cmd = lambda s1, s2: "ssh "+s1+" '"+s2+"'"
-
-def print_kwargs():
+def print_kwargs() -> None:
     """Displays kwargs given at command line. Returns None."""
     for _, value in args._get_kwargs():
         given_args.append(value)
         print(_, "::", value)
+    return None
 
 def print_pi_outputs():
     """Displays contents of pi_outputs. Returns None."""
     [print(out.stdout) for out in pi_outputs]
 
-def run_cmd(cmd):
+def run_cmd(cmd: str) -> str:
     """Runs cmd in a subprocess. Returns stdout String."""
     return subprocess.run(cmd, encoding="utf-8", shell=True,
         stdout=subprocess.PIPE).stdout

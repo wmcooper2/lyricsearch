@@ -4,32 +4,37 @@
 #stand lib
 import argparse as ap
 import subprocess
+from typing import Any
 
 #custom
-from pi_ipaddresses import *
+from constants import *
+from personal import *
 
-cluster     = [pi1, pi2, pi3, pi4]      # ip addresses
-pi_outputs  = []                        # holds stdout from pis
-given_args  = []                        # holds args from command line
+cluster: list     = [pi1, pi2, pi3, pi4]    # ip addresses
+pi_outputs: list  = []                      # holds stdout from pis
+given_args: list  = []                      # command line args
 
 format_cmd = lambda s1, s2: "{0} '{1}'".format(s1, s2)
 format_node= lambda s: "pi@"+s
 format_ssh = lambda s: "ssh "+s
 
-def clear_terminal():
+def clear_terminal() -> None:
     """Clears the terminal window. Returns None."""
     subprocess.run(["clear"])
+    return None
 
-def show_outputs():
+def show_outputs() -> None:
     """Shows the outputs of the pis. Returns None."""
     for output in pi_outputs:
         print(str(pi_outputs.index(output)), "::", output)
+    return None
 
-def print_kwargs():
+def print_kwargs() -> None:
     """Displays kwargs given at command line. Returns None."""
     for _, value in args._get_kwargs():
         given_args.append(value)
         print(_, "::", value)
+    return None
 
 def print_pi_outputs():
     """Displays contents of pi_outputs. Returns None."""
@@ -40,7 +45,7 @@ def run_cmd(cmd):
     return subprocess.run(cmd, encoding="utf-8", shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout
 
-def custom_cmd(pi, args):
+def custom_cmd(pi: str, args: Any) -> str:
     """Sends custom command to a node. Returns String."""
     node    = format_node(pi)
     ssh     = format_ssh(node)
