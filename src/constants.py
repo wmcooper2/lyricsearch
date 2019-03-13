@@ -6,30 +6,29 @@ import os
 # custom
 from personal import *
 
-ismac       = lambda: os.uname().sysname == "Darwin"
-ispi        = lambda: os.uname().sysname == "Linux"
+ismac = lambda: os.uname().sysname == "Darwin"
+ispi = lambda: os.uname().sysname == "Linux"
 
-CLUSTER     = PINODES
-DEBUG       = False
+CLUSTER = PINODES
+DEBUG = True
 DEBUGERRORS = "../debug/debugerrors.txt"
-RESULTDIR   = "../results/"
+RESULTDIR = "../results/"
 TRANSFERDIR = "/transfer/"
-URL_FILE    = "../data/uniqueurls.txt"
+URL_FILE = "../data/uniqueurls.txt"
 
 if DEBUG:
-    DATA_DIR    = "../testdata/"
-    LYRICS_SET  = "../testdata/lyrics_test.db"
-    MEGA_SET    = "../testdata/megaset_test.db"
-    SEARCHDIR   = TESTDIR
-else:   #not debug
-    LYRICS_SET  = "../data/lyrics.db" 
-    MEGA_SET    = "../data/megaset.db"
+    DATA_DIR = "../testdata/"
+    LYRICS_SET = "../testdata/lyrics_test.db"
+    MEGA_SET = "../testdata/megaset_test.db"
+else:   # not debug
+    LYRICS_SET = "../data/lyrics.db"
+    MEGA_SET = "../data/megaset.db"
     if ismac():
-        DATA_DIR    = WEEKLY_SONG_DIR
-        LYRICS_DIR  = WEEKLY_SONG_DIR+"pi1data/data1/"
+        DATA_DIR = WEEKLY_SONG_DIR
+        LYRICS_DIR = WEEKLY_SONG_DIR+"pi1data/data1/"
     elif ispi():
-        DATA_DIR    = PIDATADIR
+        DATA_DIR = PIDATADIR
 
-if ispi():  #regardless of debug
-    PISEARCHDIRS    = [PIDATADIR+subdir for subdir in PISUBDATADIRS]
-    COMBINEDRESULT  = RESULTDIR+"finalresult.txt"
+if ispi():  # regardless of debug
+    PISEARCHDIRS = [PIDATADIR+subdir for subdir in PISUBDATADIRS]
+    COMBINEDRESULT = RESULTDIR+"finalresult.txt"
