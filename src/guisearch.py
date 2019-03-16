@@ -1,37 +1,36 @@
 """A GUI tool for pattern matching in the lyrics text files."""
-#stand lib
+# stand lib
 from pathlib import Path
 import subprocess
 import tkinter as tk
 from tkinter import ttk
 
-#custom
+# custom
 from constants import *
 from searchutil import *
 
+
 class LyricsGui:
     def __init__(self):
-#        self.cluster    = CLUSTER
-        self.debug      = DEBUG
+        self.debug = DEBUG
         self.matchcount = 0
-#        self.search_dir = SONG_DIR
-        self.songcount  = 0
-        self.win        = tk.Tk()
+        self.songcount = 0
+        self.win = tk.Tk()
         self.win.title("Lyrics Search")
 
-        self.frame = ttk.LabelFrame(self.win, 
-            text="What do you want to search for?")
+        self.frame = ttk.LabelFrame(self.win,
+                                    text="Enter search sentence.")
         self.frame.grid(column=0, row=0)
 
         self.userinput = ttk.Entry(self.frame, width=39)
         self.userinput.grid(column=0, row=0, columnspan=4)
 
-        self.searchbutton = ttk.Button(self.frame, 
-            text="Search", command=self.search)
+        self.searchbutton = ttk.Button(self.frame,
+                                       text="Search", command=self.search)
         self.searchbutton.grid(column=0, row=1, sticky=tk.W)
 
-        self.quitbutton = ttk.Button(self.frame, 
-            text="Quit", command=self._quit)
+        self.quitbutton = ttk.Button(self.frame,
+                                     text="Quit", command=self._quit)
         self.quitbutton.grid(column=1, row=1, sticky=tk.W)
 
         self.displaytotal()
@@ -46,13 +45,12 @@ class LyricsGui:
 
     def search(self):
         """Searches for the user-requested pattern. Returns None."""
-        self.songcount  = 0
+        self.songcount = 0
         self.matchcount = 0
         self.totaldisplay.grid_forget()
         self.matchdisplay.grid_forget()
         pattern = self.userinput.get()
 
-        #search functions in searchutil.py
         if self.debug:
             self.results = mac_search(pattern)
         else:
@@ -65,15 +63,18 @@ class LyricsGui:
 
     def displaymatches(self):
         """Displays the file matches found in the gui. Returns None."""
-        self.matchdisplay = ttk.Label(self.frame, 
-            text="Matches: "+str(self.matchcount))
+        self.matchdisplay = ttk.Label(self.frame,
+                                      text="Matches: " +
+                                      str(self.matchcount))
         self.matchdisplay.grid(column=2, row=1, sticky=tk.E)
 
     def displaytotal(self):
         """Displays the searched song count in the gui. Returns None."""
-        self.totaldisplay = ttk.Label(self.frame, 
-            text="Searched: "+str(self.songcount))
+        self.totaldisplay = ttk.Label(self.frame,
+                                      text="Searched: " +
+                                      str(self.songcount))
         self.totaldisplay.grid(column=3, row=1, sticky=tk.E)
+
 
 if __name__ == "__main__":
     if ismac():

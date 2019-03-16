@@ -45,7 +45,7 @@ def divide_bulk(files: Deque, sub: Deque, num: int) -> None:
     return None
 
 
-def divide_remainder(files: Deque, groups: Deque) -> None:
+def divide_remainder(files: Deque, groups: List) -> None:
     """Try to put an element into QueueA from QueueB. Returns None."""
     if len(files) > 0:
         for group in groups:
