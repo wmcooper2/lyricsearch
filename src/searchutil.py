@@ -22,9 +22,7 @@ from constants import *
 
 add_suffix = lambda x: x+".txt"
 file_name = lambda d, s: d+s+".txt"
-no_remainder = lambda x, y: x % y == 0
 progress = lambda s: print("Progress:", s, "%")
-valid_bins = lambda num: 2 <= num and num <= 16
 wkr_progress = lambda d, s, t: print("[{0}] {1}/{2}".format(d, s, t))
 
 
@@ -36,51 +34,6 @@ def count_files(dir_: str) -> int:
 def get_files(dir_: str) -> list:
     """Gets text files from dir_, recursively. Returns List."""
     return [file_ for file_ in Path(dir_).glob("**/*.txt")]
-
-
-def divide_bulk(files: Deque, sub: Deque, num: int) -> None:
-    """Appends num elements from files to sub. Returns None."""
-    for x in range(num):
-        sub.append(files.pop())
-    return None
-
-
-def divide_remainder(files: Deque, groups: List) -> None:
-    """Try to put an element into QueueA from QueueB. Returns None."""
-    if len(files) > 0:
-        for group in groups:
-            try:
-                group.append(files.pop())
-            except IndexError: # empty deque
-                pass
-    return None
-
-
-def fairly_divide(files: Deque, bins: int) -> List:
-    """Fairly divides files into different directories.
-        Returns List of Deque Objects."""
-    group_size = len(files)//bins
-    groups: List = [deque() for x in range(bins)]
-
-    for group in groups:
-        divide_bulk(files, group, group_size)
-    if no_remainder(len(files), bins):
-        pass
-    else:
-        divide_remainder(files, groups)
-    return groups
-
-
-def copy_deque_files(group: Deque, dest: Text) -> None:
-    """Copies files in group to 'dest/'. Returns None."""
-    for file_ in group:
-        shutil.copy(file_, dest)
-    return None
-
-
-def block_name(num: int) -> Text:
-    """Formats dir name. Returns String."""
-    return "block"+str(num)
 
 
 def make_file(file_): #replaced make_results_file

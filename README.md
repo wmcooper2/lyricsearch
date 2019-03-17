@@ -9,6 +9,26 @@ A GUI tool to search for patterns all the lyrics text files.
 
 _The program runs a GUI in the macbook and a CLI in the pi-nodes._
 
+
+### Preparing the Data
+The pi-nodes have 1GB RAM, therefore the data needs to be worked in small blocks.
+To divide the data;
+    * Run fairlydivide.py
+        * This will divide all of the text files into the number of directories you specify.
+        * Choose 16 blocks.
+Divide the data among the pi-nodes.
+    * 4 (block) dirs to each pi-node.
+    * Run `copytopi $pi1 dir` etc.
+On the pi-nodes;
+    * For each (block) directory,
+        * Run fairlydividesets.py
+        * Make 4 sets (shelve database sets) of the text files in that directory.
+        * This is to prevent running out of RAM on the pi.
+
+_Stopped here to update/upgrade the pi-nodes' OS. Having too many issues with the type annotations._
+After the data has been distributed and divided, then move on to performing a search.
+
+
 ### Performing search from the macbook
 * Turn on pi-cluster.
 * Connect "MONTHLY" external device.

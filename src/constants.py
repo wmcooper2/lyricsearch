@@ -10,10 +10,11 @@ ismac = lambda: os.uname().sysname == "Darwin"
 ispi = lambda: os.uname().sysname == "Linux"
 
 CLUSTER = PINODES
-DEBUG = False
+DEBUG = True
 DEBUGERRORS = "../debug/debugerrors.txt"
 TRANSFERDIR = "/transfer/"
 URL_FILE = "../data/uniqueurls.txt"
+SETDIR = "../setdir/"
 
 if DEBUG:
     DATA_DIR = "../testdata/"

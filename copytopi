@@ -1,0 +1,4 @@
+#!/bin/bash
+# copytopi pi where what
+# example; copytopi $pi1 data /block1
+scp -r $3 $1:/home/pi/lyricsearch/$2

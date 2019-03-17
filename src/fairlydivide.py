@@ -1,11 +1,12 @@
-"""Divide the lyrics text files (fairly) evenly."""
+"""Divide the lyrics text files (fairly) evenly into directories."""
 # stand lib
 from collections import deque
+import sys
 from time import time
 
 # custom
 from constants import *
-from searchutil import *
+from fairlydivideutil import *
 
 
 if ismac():
@@ -40,7 +41,7 @@ if ismac():
         count += 1
         if not Path(RESULTDIR).exists():
             Path(RESULTDIR).mkdir(mode=0o755)
-        block = Path(RESULTDIR+block_name(count)).resolve()
+        block = Path(RESULTDIR+block_dir(count)).resolve()
         if not block.exists():
             block.mkdir(mode=0o755)
         copy_deque_files(group, str(block.resolve()))
