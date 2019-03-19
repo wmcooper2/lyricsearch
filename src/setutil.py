@@ -14,7 +14,11 @@ lyricset = lambda song, dict_: dict_[song][1]
 
 
 def count_files(dir_: str) -> int:
-    return sum(1 for f in Path(dir_).glob("**/*.txt"))
+    """Counts files. Returns Integer."""
+    files = 0
+    for f in Path(dir_).glob("**/*.txt"):
+        files += 1
+    return files
 
 
 def make_mega_set(dir_: str) -> set:
@@ -65,8 +69,10 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(song_list)
     save_to = dest_dir+name+".db"
+    print("save to", save_to)
     with shelve.open(save_to) as songs:
         finished_songs = 0
+        set_start = time()
         for song in song_list:
             try:
                 title = str(Path(song).resolve().name).strip(".txt")
@@ -78,7 +84,11 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
             except UnicodeDecodeError:
                 save_error(str(song))
                 print("Error:", str(song))
+            print(song)
             finished_songs += 1
+        set_end = time()
+        print("Time to make set block:", str(round(set_end - set_start, 2)))
+
 
 
 def progress(finished: int, total: int, step: int) -> None:

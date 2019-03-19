@@ -38,18 +38,20 @@ class LyricsGui:
         self.userinput.focus()
         self.win.mainloop()
 
-    def _quit(self):
+    def _quit(self) -> None:
         """Quits the program. Returns None."""
         self.win.quit()
         self.win.destroy()
+        return None
 
-    def search(self):
+    def search(self) -> None:
         """Searches for the user-requested pattern. Returns None."""
         self.songcount = 0
         self.matchcount = 0
         self.totaldisplay.grid_forget()
         self.matchdisplay.grid_forget()
         pattern = self.userinput.get()
+        return None
 
         if self.debug:
             self.results = mac_search(pattern)
@@ -61,19 +63,21 @@ class LyricsGui:
         self.displaytotal()
         self.userinput.focus()
 
-    def displaymatches(self):
+    def displaymatches(self) -> None:
         """Displays the file matches found in the gui. Returns None."""
         self.matchdisplay = ttk.Label(self.frame,
                                       text="Matches: " +
                                       str(self.matchcount))
         self.matchdisplay.grid(column=2, row=1, sticky=tk.E)
+        return None
 
-    def displaytotal(self):
+    def displaytotal(self) -> None:
         """Displays the searched song count in the gui. Returns None."""
         self.totaldisplay = ttk.Label(self.frame,
                                       text="Searched: " +
                                       str(self.songcount))
         self.totaldisplay.grid(column=3, row=1, sticky=tk.E)
+        return None
 
 
 if __name__ == "__main__":

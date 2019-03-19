@@ -2,12 +2,25 @@
 _Personal Note: This program combines code taken from musicdatabase/ and raspberrypicluster/_
 
 ### Purpose
-
-A GUI tool to search for patterns all the lyrics text files.
+Works as a GUI tool on the Macbook and as a CLI on the Raspberry Pi.
+Searches for patterns in all the lyrics text files.
 
 ### Operation
+#### High Level Overview
+Macbook:
+    * A gui is opened.
+    * Enter a sentence.
+    * The sentence is sent to each pi-node as a string through a subprocess.
+Pi-nodes:
+    * A cli program is started.
+    * Enter a sentence.
+    * The sentence is converted to a string.
+    * The string is converted to a set of words (with punctuation).
+    * Each block directory has a main set to confirm that a match is possible.
+    * If a match is possible, then each block's set is searched sequentially.
+    * If a match is found, then the song's name/path is saved to a file and returned.
 
-_The program runs a GUI in the macbook and a CLI in the pi-nodes._
+
 
 
 ### Preparing the Data
@@ -21,12 +34,17 @@ Divide the data among the pi-nodes.
     * Run `copytopi $pi1 dir` etc.
 On the pi-nodes;
     * For each (block) directory,
+        * Make sure any shelve databases transferred from the macbook to the pi have been deleted from the pi (db.gnu error?).
         * Run fairlydividesets.py
         * Make 4 sets (shelve database sets) of the text files in that directory.
         * This is to prevent running out of RAM on the pi.
 
 _Stopped here to update/upgrade the pi-nodes' OS. Having too many issues with the type annotations._
 After the data has been distributed and divided, then move on to performing a search.
+
+### Issues
+* May need to upgrade to Python 3.7
+    * Python 3.5.3 was giving me too many problems with the type annotations.
 
 
 ### Performing search from the macbook

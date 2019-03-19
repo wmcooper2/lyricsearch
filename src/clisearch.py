@@ -7,36 +7,38 @@ import sys
 from time import time
 
 
-def cli_search() -> list:
-    """Performs CLI search. Returns List."""
-    if ismac():
-        print("ismac")
-        pattern = str(input("Enter a search pattern: "))
+#def cli_search() -> list:
+"""Performs CLI search. Returns List."""
+if ismac():
+    print("ismac")
+    pattern = str(input("Enter a search pattern: "))
+    print("Searching for: "+pattern)
+    start = time()
+    results = mac_search(pattern)
+elif ispi():
+    try:
+        pattern = sys.argv[1]
+    except IndexError:
+        pattern = None
+    if pattern is not None:
         print("Searching for: "+pattern)
         start = time()
-        results = mac_search(pattern)
-    elif ispi():
-        try:
-            pattern = sys.argv[1]
-        except IndexError:
-            pattern = None
-        if pattern is not None:
-            print("Searching for: "+pattern)
-            start = time()
-            results = pi_search(pattern)
-        else:
-            print("Give a string to search for.")
+        results = pi_search(pattern)
     else:
-        print("Machine not recognized. Quitting program.")
+        print("Give a string to search for.")
+else:
+    print("Machine not recognized. Quitting program.")
 
-    # return results
-    if results is not None:
-        return exact_search(results)
-    else:
-        return []
-    end = time()
-    print("Time taken: ", round(end-start, 2))
+#pprint(results)
+
+# return results
+#if results is not None:
+#    return exact_search(results)
+#else:
+#    return []
+#end = time()
+#print("Time taken: ", round(end-start, 2))
 
 
-if __name__ == "__main__":
-    pprint(cli_search())
+#if __name__ == "__main__":
+#    pprint(cli_search())

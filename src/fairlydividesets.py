@@ -11,7 +11,8 @@ from setutil import pi_set_from_deque
 from setutil import progress
 from typing import Deque
 
-src_dir = sys.argv[1]
+# src_dir = sys.argv[1]
+src_dir = DATA_DIR
 
 try:
     bins = int(input("How many sets do you want to sort into? "))
@@ -27,8 +28,11 @@ if valid_bins(bins):
 
     fs: Deque = deque()
     print("Collecting files...")
+    collected = 0
     for f in get_files(src_dir):
         fs.append(str(f.resolve()).strip())
+        collected += 1
+        progress(collected, file_amt, 100)
     print("Finished collecting files.")
 
     print("Dividing files...")
