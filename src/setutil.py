@@ -9,10 +9,6 @@ from typing import Any
 from typing import Deque
 from pprint import pprint
 
-# filepath = lambda song, dict_: dict_[song][0]
-# lyricset = lambda song, dict_: dict_[song][1]
-
-
 def filepath(song: str, dict_: dict) -> str:
     """Gets the song path. Returns String."""
     return dict_[song][0]

@@ -7,38 +7,36 @@ import sys
 from time import time
 
 
-#def cli_search() -> list:
 """Performs CLI search. Returns List."""
 if ismac():
-    print("ismac")
+    print("Search dir:", exists(SETDIR), SETDIR)
+    print("Data dir:", exists(DATADIR), DATADIR)
     pattern = str(input("Enter a search pattern: "))
-    print("Searching for: "+pattern)
-    start = time()
-    results = search(pattern)
+    print("Searching for: " + pattern)
 elif ispi():
     try:
         pattern = sys.argv[1]
     except IndexError:
         pattern = None
     if pattern is not None:
-        print("Searching for: "+pattern)
-        start = time()
-        results = pi_search(pattern)
+        print("Searching for: " + pattern)
     else:
         print("Give a string to search for.")
+        quit()
 else:
     print("Machine not recognized. Quitting program.")
+    quit()
 
-#pprint(results)
+start = time()
+for db in Path(SETDIR).glob("**/*.db"):
+    possible_matches = search_db(pattern, str(db))
+end = time()
+print("Search time:", round(end - start, 2))
 
-# return results
-#if results is not None:
-#    return exact_search(results)
-#else:
-#    return []
-#end = time()
-#print("Time taken: ", round(end-start, 2))
+if possible_matches is not None:
+    final_results = exact_search(possible_matches)
+else:
+    print([])
 
-
-#if __name__ == "__main__":
-#    pprint(cli_search())
+print("Possible matches:", len(possible_matches))
+pprint(final_results)

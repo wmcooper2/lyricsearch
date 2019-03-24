@@ -18,20 +18,21 @@ TRANSFERDIR = "/transfer/"
 URL_FILE = "../data/uniqueurls.txt"
 
 if DEBUG:
-    DATA_DIR = "../testdata/"
+    DATADIR = "../testdata/"
     LYRICS_SET = "../testdata/lyrics_test.db"
     MEGA_SET = "../testdata/megaset_test.db"
-else:   # not debug
+else:
     LYRICS_SET = "../data/lyrics.db"
     MEGA_SET = "../data/megaset.db"
     if ismac():
-#         DATA_DIR = WEEKLYEXTERNALDRIVE  # changed for mac testing
-        DATA_DIR = "/Volumes/PI1/"
+#         DATADIR = WEEKLYEXTERNALDRIVE  # changed for mac testing
+        DATADIR = "/Volumes/PI1/"
         LYRICS_DIR = MACEXTERNALDRIVE+"pi1data/data1/"
         RESULTDIR = MACEXTERNALDRIVE
     elif ispi():
-        DATA_DIR = PIDATADIR
+        DATADIR = PIDATADIR
 
-if ispi():  # regardless of debug
+# regardless of debug
+if ispi():
     PISEARCHDIRS = [PIDATADIR+subdir for subdir in PISUBDATADIRS]
     COMBINEDRESULT = RESULTDIR+"finalresult.txt"

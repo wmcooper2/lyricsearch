@@ -124,3 +124,7 @@ __not finished after this point__
 * file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
 * lyric search time using `clisearch.py` on a pi-node took about 3.5 hours (12700 secs). 
 * Searching through sets of the songs words is faster for finding potential matches. After a set search, then perform an exact match search.
+
+* New, set-search method:
+    * Creating the block-sets on a pi-node took less than 2000 seconds.
+    * Searching through 100 block-sets for a possible match on a pi-node took about 110 seconds.
