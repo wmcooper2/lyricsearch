@@ -23,9 +23,9 @@ def count_files(dir_: str) -> int:
 
 def make_mega_set(dir_: str) -> set:
     """Make single set from '.txt' files in dir_. Returns Set."""
-    mega_set    = set()
-    song_count  = 0
-    start       = time()
+    mega_set = set()
+    song_count = 0
+    start = time()
     for song_file in Path(dir_).glob("**/*.txt"):
         try:
             lyrics = set(read_file(str(song_file)))
@@ -33,7 +33,7 @@ def make_mega_set(dir_: str) -> set:
                 mega_set.add(word)
             song_count += 1
             show_progress(song_count)
-        except:
+        except UnicodeDecodeError:
             save_error(str(song_file))
             print("Error:", song_file)
     end = time()
@@ -56,7 +56,7 @@ def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
                 words = set(read_file(str(Path(song))))
 
                 # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), words) 
+                value = (str(Path(song).resolve()), words)
                 songs[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
@@ -79,7 +79,7 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
                 words = set(read_file(str(Path(song))))
 
                 # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), words) 
+                value = (str(Path(song).resolve()), words)
                 songs[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
@@ -90,13 +90,12 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
         print("Time to make set block:", str(round(set_end - set_start, 2)))
 
 
-
 def progress(finished: int, total: int, step: int) -> None:
     """Prints progress to terminal. Returns None."""
     if finished % step == 0:
         print("% completed:", str(round((finished/total)*100, 2)))
     return None
-    
+
 
 def read_file(file_: str) -> list:
     """Gets contents of a file. Returns list."""
@@ -134,5 +133,5 @@ def single_db() -> None:
             words = set(read_file(str(Path(song))))
 
             # Tuple(artist_song, set)
-            value = (str(Path(song).resolve()), words) 
+            value = (str(Path(song).resolve()), words)
             songs[title] = value
