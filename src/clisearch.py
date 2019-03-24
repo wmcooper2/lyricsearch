@@ -14,7 +14,7 @@ if ismac():
     pattern = str(input("Enter a search pattern: "))
     print("Searching for: "+pattern)
     start = time()
-    results = mac_search(pattern)
+    results = search(pattern)
 elif ispi():
     try:
         pattern = sys.argv[1]

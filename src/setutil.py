@@ -9,8 +9,18 @@ from typing import Any
 from typing import Deque
 from pprint import pprint
 
-filepath = lambda song, dict_: dict_[song][0]
-lyricset = lambda song, dict_: dict_[song][1]
+# filepath = lambda song, dict_: dict_[song][0]
+# lyricset = lambda song, dict_: dict_[song][1]
+
+
+def filepath(song: str, dict_: dict) -> str:
+    """Gets the song path. Returns String."""
+    return dict_[song][0]
+
+
+def lyricset(song: str, dict_: dict) -> str:
+    """Gets the lyric's set. Returns Set."""
+    return dict_[song][1]
 
 
 def count_files(dir_: str) -> int:
@@ -19,6 +29,13 @@ def count_files(dir_: str) -> int:
     for f in Path(dir_).glob("**/*.txt"):
         files += 1
     return files
+
+
+# mega_set        = make_mega_set(DATA_DIR)   #set object
+# mega            = shelve.open(MEGA_SET)     #shelve db
+# mega["megaset"] = mega_set
+# mega.close()
+# print("Lyrics and Mega databases created in 'data/'.")
 
 
 def make_mega_set(dir_: str) -> set:
@@ -47,7 +64,7 @@ def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
     print("Counting files...")
     song_count = count_files(song_dir)
     print(song_count, "files")
-    with shelve.open(db_name) as songs:
+    with shelve.open(db_name) as db:
         song_list = Path(song_dir).glob("**/*.txt")
         finished_songs = 0
         for song in song_list:
@@ -57,7 +74,7 @@ def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
 
                 # Tuple(artist_song, set)
                 value = (str(Path(song).resolve()), words)
-                songs[title] = value
+                db[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
                 print("Error:", str(song))
@@ -70,7 +87,7 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
     song_count = len(song_list)
     save_to = dest_dir+name+".db"
     print("save to", save_to)
-    with shelve.open(save_to) as songs:
+    with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()
         for song in song_list:
@@ -80,7 +97,7 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
 
                 # Tuple(artist_song, set)
                 value = (str(Path(song).resolve()), words)
-                songs[title] = value
+                db[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
                 print("Error:", str(song))
@@ -126,7 +143,7 @@ def show_progress(num: int) -> None:
 
 def single_db() -> None:
     """Makes a single set database. Returns None."""
-    with shelve.open(LYRICS_SET) as songs:
+    with shelve.open(LYRICS_SET) as db:
         song_list = Path(DATA_DIR).glob("**/*.txt")
         for song in song_list:
             title = str(Path(song).resolve().name).strip(".txt")
@@ -134,4 +151,4 @@ def single_db() -> None:
 
             # Tuple(artist_song, set)
             value = (str(Path(song).resolve()), words)
-            songs[title] = value
+            db[title] = value

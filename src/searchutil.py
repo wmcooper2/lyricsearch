@@ -71,11 +71,6 @@ def save(data: list, dest: str) -> None:
     return None
 
 
-def mac_search(pattern: str) -> list:
-    """Performs search on the macbook. Returns List."""
-    return search(pattern)
-
-
 def pi_search(pattern: str, spawn: bool = False) -> list:
     """Performs a search on a pi-node. Returns None."""
     if spawn:
@@ -100,13 +95,35 @@ def pi_search(pattern: str, spawn: bool = False) -> list:
 #         w.start()
 #     return None
 
+def subset_match(song: set, pattern: set) -> bool:
+    """Checks if pattern is subset of song. Returns Boolean. """
+#     return song.issubset(pattern)
+    return pattern.issubset(song)
 
 def search(pattern: str) -> list:
     """Searches for songs containing 'pattern'. Returns List."""
-    if in_mega_set(pattern):
-        return song_set_search(pattern)
-    else:
-        return []
+    pset = set(pattern.split())
+    matchcount = 0
+    for db in Path(SETDIR).glob("**/*.db"):
+        miniset = shelve.open(str(db))
+        for key in miniset.keys():
+            if subset_match(miniset[key][1], pset):
+                print(key)
+        miniset.close()
+
+#         with shelve.open("set_") as miniset:
+#             print(miniset["Akon_Yes"])
+
+#                 if v[1].issubset(pattern):
+#                     matchcount += 1
+#                     print("Match:", matchcount)
+#                 else:
+#                     print("No match.")
+
+#     if in_mega_set(pattern):
+#         return song_set_search(pattern)
+#     else:
+#         return []
 
 
 def in_mega_set(pattern: str) -> bool:

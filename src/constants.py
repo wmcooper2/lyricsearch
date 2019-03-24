@@ -10,7 +10,7 @@ ismac = lambda: os.uname().sysname == "Darwin"
 ispi = lambda: os.uname().sysname == "Linux"
 
 CLUSTER = PINODES
-DEBUG = True
+DEBUG = False
 DEBUGERRORS = "../debug/debugerrors.txt"
 RESULTDIR = "../results/"
 SETDIR = "../setdir/"
@@ -25,7 +25,8 @@ else:   # not debug
     LYRICS_SET = "../data/lyrics.db"
     MEGA_SET = "../data/megaset.db"
     if ismac():
-        DATA_DIR = WEEKLYEXTERNALDRIVE
+#         DATA_DIR = WEEKLYEXTERNALDRIVE  # changed for mac testing
+        DATA_DIR = "/Volumes/PI1/"
         LYRICS_DIR = MACEXTERNALDRIVE+"pi1data/data1/"
         RESULTDIR = MACEXTERNALDRIVE
     elif ispi():

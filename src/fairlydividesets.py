@@ -13,6 +13,8 @@ from typing import Deque
 
 # src_dir = sys.argv[1]
 src_dir = DATA_DIR
+print("Source dir:", src_dir)
+print("Save dir:", SETDIR)
 
 try:
     bins = int(input("How many sets do you want to sort into? "))
@@ -39,7 +41,7 @@ if valid_bins(bins):
     groups = fairly_divide(fs, bins)
     print("Finished dividing files.")
 else:
-    print("Please choose a factor of 2  between 2 and 16.")
+    print("Please choose a factor of 2 between 2 and 16.")
     quit()
 finish = time()
 print("Time taken to prepare:", str(round(finish-start, 2)))
