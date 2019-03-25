@@ -7,7 +7,6 @@ import sys
 from time import time
 
 
-"""Performs CLI search. Returns List."""
 if ismac():
     print("Search dir:", exists(SETDIR), SETDIR)
     print("Data dir:", exists(DATADIR), DATADIR)
@@ -30,11 +29,15 @@ else:
 start = time()
 for db in Path(SETDIR).glob("**/*.db"):
     possible_matches = search_db(pattern, str(db))
-end = time()
-print("Search time:", round(end - start, 2))
 
 if possible_matches is not None:
-    final_results = exact_search(possible_matches)
+    final_results = []
+    for match in possible_matches:
+#         final_results.append(exact_search(match, pattern))
+        if exact_search(match, pattern):
+            final_results.append(match)
+    end = time()
+    print("Exact-Search time:", round(end - start, 2))
 else:
     print([])
 
