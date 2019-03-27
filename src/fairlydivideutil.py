@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.7
+"""Utility module for fairlydivide.py"""
 # stand lib
 from pathlib import Path
 from collections import deque
@@ -55,9 +57,8 @@ def get_files(dir_: str) -> list:
     return (file_ for file_ in Path(dir_).glob("**/*.txt"))
 
 
-def fairly_divide(deques: Deque, bins: int) -> List:
-    """Fairly divides files into different directories.
-        Returns List of Deque Objects."""
+def fairly_divide(deques: Deque, bins: int) -> List[Deque]:
+    """Fairly divides files. Returns List of Deque Objects."""
     group_size = len(deques)//bins
     groups: List = [deque() for x in range(bins)]
     finished = 0

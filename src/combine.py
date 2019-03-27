@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 """Combines the results files on each pi-node."""
 # stand lib
 import os
@@ -7,18 +7,18 @@ import subprocess
 
 # custom
 from constants import *
-from searchutil import *
+from clisearchutil import *
 
 
 def node_result_files() -> list:
     """Collect the result's file names on a pi-node. Returns List."""
-    return [str(p) for p in Path(RESULTDIR).glob("*.txt")]
+    return [str(p) for p in Path(RESULT_DIR).glob("*.txt")]
 
 
 def node_result_name(node: str) -> str:
     """Formats the final result file's name on a pi-node.
         Returns String."""
-    return TRANSFERDIR+"node"+node+"result.txt"
+    return COMBINE_DIR+"node"+node+"result.txt"
 
 
 def get_node_name() -> str:

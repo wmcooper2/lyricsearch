@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 """Utility module for Lyric Search program."""
 # stand lib
 from collections import deque
@@ -69,7 +70,7 @@ def text_files(dir_):
         return [str(f) for f in Path(dir_).glob("*.txt")]
 
 
-def make_dir(dir_):  # replaced makesavedir
+def make_dir(dir_):
     """Makes 'dir_' if it doesn't exist. Returns None."""
     if not Path(dir_).exists():
         Path(dir_).mkdir()
@@ -82,10 +83,12 @@ def format_pi_cmd(pi, pattern):
            pattern + "'"
 
 
-def save(data: list, dest: str) -> None:
-    """Appends data to dest. Returns None."""
+def save(src: List[str], dest: str) -> None:
+    """Appends 'src' elements to 'dest'. Returns None."""
     with open(dest, "a+") as file_:
-        [file_.write(el) for el in data if el is not None]
+        for line in src:
+            if line is not None:
+                file_.write(line + "\n")
     return None
 
 
@@ -94,7 +97,7 @@ def file_path(song: str, dict_: dict) -> str:
     return dict_[song][0]
 
 
-def lyric_set(song: str, dict_: dict) -> str:
+def lyric_set(song: str, dict_: dict) -> set:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
 
@@ -104,16 +107,12 @@ def search_db(pattern: str, db: str) -> List[str]:
     pset = set(pattern.split())
     matches = []
     with shelve.open(db) as miniset:
-#         for key in miniset.keys():
-#             if subset_match(lyric_set(key, miniset), pset):
-#                 matches.append(key)
         for name, tuple_ in miniset.items():
             if subset_match(lyric_set(name, miniset), pset):
                 matches.append(file_path(name, miniset))
     return matches
 
 
-# def subset_match(song: set, pattern: set) -> bool:
 def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     """Checks if pattern is subset of song. Returns Boolean. """
     return pattern.issubset(song)

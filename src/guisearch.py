@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 """A GUI tool for pattern matching in the lyrics text files."""
 # stand lib
 from pathlib import Path
@@ -7,7 +8,7 @@ from tkinter import ttk
 
 # custom
 from constants import *
-from searchutil import *
+from clisearchutil import *
 
 
 class LyricsGui:

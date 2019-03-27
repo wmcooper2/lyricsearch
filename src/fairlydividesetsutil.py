@@ -1,8 +1,8 @@
+#!/usr/bin/env python3.7
 """Utility module for making sets of the lyrics files."""
 # stand lib
 from constants import *
 from pathlib import Path
-from setutil import *
 import shelve
 from time import time
 from typing import Any
@@ -25,13 +25,6 @@ def count_files(dir_: str) -> int:
     for f in Path(dir_).glob("**/*.txt"):
         files += 1
     return files
-
-
-# mega_set        = make_mega_set(DATA_DIR)   #set object
-# mega            = shelve.open(MEGA_SET)     #shelve db
-# mega["megaset"] = mega_set
-# mega.close()
-# print("Lyrics and Mega databases created in 'data/'.")
 
 
 def make_mega_set(dir_: str) -> set:
@@ -82,7 +75,6 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(song_list)
     save_to = dest_dir+name+".db"
-    print("save to", save_to)
     with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()
@@ -97,7 +89,7 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
             except UnicodeDecodeError:
                 save_error(str(song))
                 print("Error:", str(song))
-            print(song)
+#             print(song)
             finished_songs += 1
         set_end = time()
         print("Time to make set block:", str(round(set_end - set_start, 2)))
@@ -124,7 +116,7 @@ def read_file_lines(file_: str) -> list:
 
 def save_error(error: str) -> None:
     """Saves error to debug file. Returns None."""
-    with open(DEBUGERRORS, "a+") as e:
+    with open(DEBUG_ERRORS, "a+") as e:
         e.write(str(Path(error).resolve()))
         e.write("\n")
     return None
@@ -136,15 +128,15 @@ def show_progress(num: int) -> None:
         print(str(round((num/616324)*100, 2)), "%")
     return None
 
-
-def single_db() -> None:
-    """Makes a single set database. Returns None."""
-    with shelve.open(LYRICS_SET) as db:
-        song_list = Path(DATA_DIR).glob("**/*.txt")
-        for song in song_list:
-            title = str(Path(song).resolve().name).strip(".txt")
-            words = set(read_file(str(Path(song))))
-
-            # Tuple(artist_song, set)
-            value = (str(Path(song).resolve()), words)
-            db[title] = value
+ 
+# def single_db() -> None:
+#     """Makes a single set database. Returns None."""
+#     with shelve.open(LYRICS_SET) as db:
+#         song_list = Path(DATA_DIR).glob("**/*.txt")
+#         for song in song_list:
+#             title = str(Path(song).resolve().name).strip(".txt")
+#             words = set(read_file(str(Path(song))))
+# 
+#             # Tuple(artist_song, set)
+#             value = (str(Path(song).resolve()), words)
+#             db[title] = value

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 """Constants module for Lyric Search program."""
 # stand lib
 from pathlib import Path
@@ -9,30 +10,26 @@ from personal import *
 ismac = lambda: os.uname().sysname == "Darwin"
 ispi = lambda: os.uname().sysname == "Linux"
 
-CLUSTER = PINODES
+CLUSTER = PI_NODES
+COMBINE_DIR = "../combine/"
 DEBUG = False
-DEBUGERRORS = "../debug/debugerrors.txt"
-RESULTDIR = "../results/"
-SETDIR = "../setdir/"
-TRANSFERDIR = "/transfer/"
-URL_FILE = "../data/uniqueurls.txt"
+DEBUG_ERRORS = "../debug/debugerrors.txt"
+
+if ismac():
+    DATA_DIR = MAC_EXT_DRIVE  # 38,520 songs
+    RESULT_DIR = MAC_EXT_DRIVE_RESULT_DIR
+    SET_DIR = MAC_EXT_DRIVE_SET_DIR
+
+if ispi():
+    DATA_DIR = PI_DATA_DIR
+    RESULT_DIR = "../results/"
+    SET_DIR = "../setdir/"
 
 if DEBUG:
-    DATADIR = "../testdata/"
-    LYRICS_SET = "../testdata/lyrics_test.db"
-    MEGA_SET = "../testdata/megaset_test.db"
-else:
-    LYRICS_SET = "../data/lyrics.db"
-    MEGA_SET = "../data/megaset.db"
-    if ismac():
-#         DATADIR = WEEKLYEXTERNALDRIVE  # changed for mac testing
-        DATADIR = "/Volumes/PI1/"
-        LYRICS_DIR = MACEXTERNALDRIVE+"pi1data/data1/"
-        RESULTDIR = MACEXTERNALDRIVE
-    elif ispi():
-        DATADIR = PIDATADIR
+    DATA_DIR = "../testdata/"  # 54 songs
 
-# regardless of debug
-if ispi():
-    PISEARCHDIRS = [PIDATADIR+subdir for subdir in PISUBDATADIRS]
-    COMBINEDRESULT = RESULTDIR+"finalresult.txt"
+PATHS = [COMBINE_DIR,
+         DATA_DIR,
+         DEBUG_ERRORS,
+         RESULT_DIR,
+         SET_DIR]

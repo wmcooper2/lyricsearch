@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 """Main program module."""
 # custom
 from clisearch import cli_search

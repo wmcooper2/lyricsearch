@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 """Send custom commands to control the pi-cluster."""
 # stand lib
 import argparse as ap

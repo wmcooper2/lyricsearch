@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 """Divide the lyrics text files (fairly) evenly into directories."""
 # stand lib
 from collections import deque
@@ -39,9 +40,9 @@ if ismac():
     count = 0
     for group in groups:
         count += 1
-        if not Path(RESULTDIR).exists():
-            Path(RESULTDIR).mkdir(mode=0o755)
-        block = Path(RESULTDIR+block_dir(count)).resolve()
+        if not Path(RESULT_DIR).exists():
+            Path(RESULT_DIR).mkdir(mode=0o755)
+        block = Path(RESULT_DIR + block_dir(count)).resolve()
         if not block.exists():
             block.mkdir(mode=0o755)
         copy_deque_files(group, str(block.resolve()))
