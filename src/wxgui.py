@@ -1,20 +1,54 @@
 #!/usr/bin/env python3.7
 """GUI for lyric searching program."""
-# may be issues with running in a virtual environment.
-# see note here; https://realpython.com/python-gui-with-wxpython/
-
-
-# stand lib
-
 # 3rd party
 import wx
 
-class MyFrame(wx.Frame):    
-    def __init__(self):
-        super().__init__(parent=None, title='Hello World')
-        self.Show()
+COL_1 = 20
+COL_2 = 60
+ROW_1 = 20
+ROW_2 = 60
 
-if __name__ == '__main__':
-    app = wx.App()
-    frame = MyFrame()
-    app.MainLoop()
+class Gui(wx.Frame):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Centre()
+        self.menu_()
+        self.search_input_()
+        self.button_()
+        self.Bind(wx.EVT_BUTTON, self.get_input, id=self.button.GetId())
+        self.SetBackgroundColour(wx.BLACK)
+        self.SetTitle("Lyric Search")
+
+    def menu_(self):
+        menu_bar = wx.MenuBar()
+        file_menu = wx.Menu()
+        menu_bar.Append(file_menu, "File")
+        exit_item = file_menu.Append(wx.ID_EXIT, item="Exit",
+                                     helpString="status message...")
+        self.SetMenuBar(menu_bar)
+        self.Bind(wx.EVT_MENU, self.quit_, exit_item)
+        self.Show(True)
+
+    def search_input_(self):
+        self.search_box = wx.TextCtrl(self, size=(250,-1))
+        self.search_box.SetPosition((COL_1, ROW_1))
+        self.search_box.SetBackgroundColour(wx.WHITE)
+        self.Show(True)
+
+    def button_(self):
+        self.button = wx.Button(self, pos=(COL_2, ROW_2), label="Search")
+        self.Show(True)
+
+    def get_input(self, event):
+        value = self.search_box.GetValue()
+        print(value)
+
+    def quit_(self, e):
+        self.Close()
+        
+        
+
+app = wx.App()
+gui = Gui(None)
+app.MainLoop()

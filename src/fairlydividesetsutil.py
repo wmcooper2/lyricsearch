@@ -92,7 +92,7 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
 #             print(song)
             finished_songs += 1
         set_end = time()
-        print("Time to make set block:", str(round(set_end - set_start, 2)))
+#         print("Time to make blockset:", str(round(set_end - set_start, 2)))
 
 
 def progress(finished: int, total: int, step: int) -> None:
