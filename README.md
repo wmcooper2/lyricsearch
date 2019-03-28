@@ -2,86 +2,92 @@
 _Personal Note: This program combines code taken from musicdatabase/ and raspberrypicluster/_
 
 ### Purpose
-Works as a GUI tool on the Macbook and as a CLI on the Raspberry Pi.
+Works as a GUI or CLI tool on the Macbook and as a CLI on the Raspberry Pi.
 Searches for patterns in all the lyrics text files.
 
 ### Operation
 #### High Level Overview
 Macbook:
-  * A gui is opened.
+  * A gui is opened (manually have to open the CLI).
   * Enter a sentence.
   * The sentence is sent to each pi-node as a string through a subprocess.
 Pi-nodes:
   * A cli program is started.
-  * Enter a sentence.
+  * Enter a sentence (enclose the sentence in double quotes).
   * The sentence is converted to a string.
-  * The string is converted to a set of words (with punctuation).
-  * Each block directory has a main set to confirm that a match is possible.
-  * If a match is possible, then each block's set is searched sequentially.
-  * If a match is found, then the song's name/path is saved to a file and returned.
-
-
-
+  * The string is converted to a set of words (punctuation included).
+  * There are 100 mini shelve databases that contain the sets. These are searched for subset matches of the pattern.
+  * If a match is possible (a subset exists), then a path is saved for the next step.
+  * An exact match search is performed on all the saved paths where a subset was found.
+  * If an exact match is found, then the song's path is saved to a file in `SET_DIR`.
 
 ### Preparing the Data
-The pi-nodes have 1GB RAM, therefore the data needs to be worked in small blocks.
+The pi-nodes have 1GB RAM, therefore the data needs to be set up before a search is performed.
+There are about 620,000 text files.
+The text files are divided into 16 dirs (4 for each pi-node).
+Each pi-node will have 4 dirs, and these 4 dirs are divided into 100 mini sets kept in shelve databases in `SET_DIR`.
+
 To divide the data;
   * Run fairlydivide.py
     * This will divide all of the text files into the number of directories you specify.
     * Choose 16 blocks.
 Divide the data among the pi-nodes.
   * 4 (block) dirs to each pi-node.
-  * Run `copytopi $pi1 dir` etc.
+  * Manually copy to the nodes with `scp -r <dir> $<pi>:<dest>`
 On the pi-nodes;
   * For each (block) directory,
     * Make sure any shelve databases transferred from the macbook to the pi have been deleted from the pi (db.gnu error?).
     * Run fairlydividesets.py
-    * Make 4 sets (shelve database sets) of the text files in that directory.
+    * Choose 100 sets.
+    * This takes less than one hour to complete.
     * This is to prevent running out of RAM on the pi.
 
-_Stopped here to update/upgrade the pi-nodes' OS. Having too many issues with the type annotations._
-After the data has been distributed and divided, then move on to performing a search.
-
 ### Issues
-* May need to upgrade to Python 3.7
-  * Python 3.5.3 was giving me too many problems with the type annotations.
+* wxpython - need to read more on this one. This library is not like Tkinter, in my opinion.
 
-
-### Performing search from the macbook
+### Normal search on macbook
 * Turn on pi-cluster.
 * Connect "MONTHLY" external device.
 * Check `constants.DEBUG == False`.
-  * if True: performs lyric search on smaller set of data in "MONTHLY".
-* Run `python3 guisearch.py`.
+* Run `python3.7 guisearch.py`.
+  * Working on changing to `python3.7 wxgui.py`.
 * Type in the exact pattern to search for.
-  * for now, it only performs an exact search.
+  * For now, it only performs an exact search.
 * Click the "search" button.
 * Results are written to `<programroot>/results/`.
-  * new text files are created here.
-  * the name of the file is the pattern that was searched for.
+  * New text files are created here.
+  * The name of the file is the pattern that was searched for.
 
-### Performing search from the pi-nodes
-* SSH into a node.
-  * pi-nodes are headless.
-  * if you want to use a gui, then connect a monitor to the node directly before turning on the node.
-* go to "/home/pi/lyricsearch/"
-* run `python3 clisearch.py`
-  * `python3 guisearch.py` will just run `python3 clisearch.py` anyway if run directly on a node.
-* type in the search pattern into the terminal and press "Enter".
+### Debug search on macbook
+* Connect "MONTHLY" external device.
+* Check `constants.DEBUG == True`.
+* Run the gui script.
+* Type in the exact pattern to search for.
+* Click the "search" button.
+* Results are written to `<MONTHLY>/pylyricresults/`.
+  * New text files are created here.
+  * The name of the file is the pattern that was searched for prepended with an asctime stamp.
+
+### Performing search on pi-node
+* SSH into a node from macbook.
+  * Pi-nodes are headless.
+* Go to "/home/pi/lyricsearch/"
+* Run `python3 clisearch.py`
+  * The gui will not run on the pi-node directly.
+* Type in the search pattern into the terminal and press "Enter".
 
 ### To do
 * change "run" command in root dir to point to "lyricsearch.py"
-* make a set of words from all the lyrics from all the nodes
-  * make module that searches for the pattern in a collection of files that may already have the results previously searched for.
-  * presearch for some common strings in anticipation of future requests.
-  * copy that set to all the nodes
-    * when searching for a pattern, check that the words exist in the set first.
-    * an exact match cannot be found if a word does not exist in the set, so search that set first for faster results.
+* presearch for some common strings in anticipation of future requests.
+* make bash script that copies dirs to all the pi-nodes.
 * make a regex that allows for searching a pattern of words within a list
   * ex; as ... as
   * as tall as
   * as big and tall as
 
+
+
+(rework the instructions below)
 ## Setup Process
 ### Distribute the files among the nodes
 1. Divide all the files as evenly as possible among 4 dirs
@@ -121,10 +127,12 @@ __not finished after this point__
 * Creates text files in `<programroot>/results/`
 
 ### other notes
-* file copy time =  12.2 hours (44000 secs) to evenly divide 616,000 files among 4 dirs on the macbook.
-* lyric search time using `clisearch.py` on a pi-node took about 3.5 hours (12700 secs). 
-* Searching through sets of the songs words is faster for finding potential matches. After a set search, then perform an exact match search.
-
+* Searching through all the sets on the pi-cluster usually takes less than 5 minutes.
+* The exact search part of the process takes the longest as it opens up each text file. 
+  * If there are a lot of exact matches, then it could take hours.
+  * When searching, it is best to have more than one word.
+  * If you have a common pattern to search for, then it will increase the chances of having more possible matches, which means that more exact match searches will be performed which increases the time to return a list of results.
 * New, set-search method:
   * Creating the block-sets on a pi-node took less than 2000 seconds.
   * Searching through 100 block-sets for a possible match on a pi-node took about 110 seconds.
+  * Searching, overall, takes less than five minutes which is a big leap down from the original 3.5 hours.
