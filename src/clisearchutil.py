@@ -10,6 +10,7 @@ from pprint import pprint
 import re
 import shelve
 import shutil
+import subprocess
 import sys
 from time import asctime
 from time import time
@@ -71,11 +72,11 @@ def file_path(song: str, dict_: dict) -> str:
     return dict_[song][0]
 
 
-def format_pi_cmd(pi, pattern):
-    """Formats a command for pi-node. Returns String."""
-    return "ssh pi@" + \
-           pi + " 'sudo python3 lyricsearch/src/lyricsearch_pi.py " + \
-           pattern + "'"
+# def format_pi_cmd(pi, pattern):
+#     """Formats a command for pi-node. Returns String."""
+#     return "ssh pi@" + \
+#            pi + " 'sudo python3 lyricsearch/src/lyricsearch_pi.py " + \
+#            pattern + "'"
 
 
 def get_files(dir_: str) -> list:
@@ -203,6 +204,7 @@ def search_pattern() -> str:
         quit()
     return pattern
 
+
 def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     """Checks if pattern is subset of song. Returns Boolean. """
     return pattern.issubset(song)
@@ -211,6 +213,41 @@ def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
 def text_files(dir_):
     """Returns generator of dir_'s '.txt' files, recursive."""
 #     if ismac():
-    return ((yield str(f)) for f in Path(dir_).rglob("*.txt"))
+#     return ((yield str(f)) for f in Path(dir_).rglob("*.txt"))
+    return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))
 #     elif ispi():
 #         return ((yield str(f)) for f in Path(dir_).glob("*.txt"))
+
+
+
+
+def start_processes(processes: List[str]) -> None:
+    """Starts subprocesses. Returns None."""
+    a = subprocess.run(processes[0], encoding="utf-8", shell=True,
+                       stdout=subprocess.PIPE).stdout
+#     b = subprocess.run(process, encoding="utf-8", shell=True,
+#                        stdout=subprocess.PIPE).stdout
+#     c = subprocess.run(process, encoding="utf-8", shell=True,
+#                        stdout=subprocess.PIPE).stdout
+#     d = subprocess.run(process, encoding="utf-8", shell=True,
+#                        stdout=subprocess.PIPE).stdout
+    workers = [a] #,b,c,d]
+    for w in workers:
+        print(w)
+
+    return None
+
+
+def pi_cmd(pi: str, pattern: str) -> str:
+    """Formats search command for the pi. Returns String."""
+    return "ssh pi@" + pi + \
+           " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
+           "'" + pattern + "'" + "\""
+
+TEST_CLUSTER = ["192.168.1.33"]
+def cluster_commands(pattern: str) -> List[str]:
+    """Formats commands for the cluster. Returns List."""
+    commands = []
+    for pi in TEST_CLUSTER:
+        commands.append(pi_cmd(pi, pattern))
+    return commands

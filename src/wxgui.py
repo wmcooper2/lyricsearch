@@ -3,6 +3,9 @@
 # 3rd party
 import wx
 
+# custom
+from clisearchutil import *
+
 COL_1 = 20
 COL_2 = 60
 ROW_1 = 20
@@ -16,7 +19,7 @@ class Gui(wx.Frame):
         self.menu_()
         self.search_input_()
         self.button_()
-        self.Bind(wx.EVT_BUTTON, self.get_input, id=self.button.GetId())
+        self.Bind(wx.EVT_BUTTON, self.search, id=self.button.GetId())
         self.SetBackgroundColour(wx.BLACK)
         self.SetTitle("Lyric Search")
 
@@ -40,14 +43,16 @@ class Gui(wx.Frame):
         self.button = wx.Button(self, pos=(COL_2, ROW_2), label="Search")
         self.Show(True)
 
-    def get_input(self, event):
-        value = self.search_box.GetValue()
-        print(value)
+    def search(self, event):
+        pattern = self.search_box.GetValue()
+        path_check(PATHS)
+        possible_results = possible_match_search(pattern)
+        exact_results = exact_match_search(possible_results, pattern)
+        save_results(exact_results[0], pattern)
+        print_stats(possible_results, exact_results)
 
-    def quit_(self, e):
+    def quit_(self, event):
         self.Close()
-        
-        
 
 app = wx.App()
 gui = Gui(None)

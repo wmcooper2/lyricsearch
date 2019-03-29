@@ -15,15 +15,25 @@ COMBINE_DIR = "../combine/"
 DEBUG = False
 DEBUG_ERRORS = "../debug/debugerrors.txt"
 
+
+def ps1():
+    """Returns $PS1 as a String."""
+    return os.popen("echo $PS1").read().strip()
+
+
 if ismac():
     DATA_DIR = MAC_EXT_DRIVE  # 38,520 songs
     RESULT_DIR = MAC_EXT_DRIVE_RESULT_DIR
     SET_DIR = MAC_EXT_DRIVE_SET_DIR
-
-if ispi():
+elif ps1() == "pi5$":
+    DATA_DIR = "/mnt/usb/testlyrics/"
+    RESULT_DIR = "../results/"
+    SET_DIR = "../setdir/"
+elif ispi():
     DATA_DIR = PI_DATA_DIR
     RESULT_DIR = "../results/"
     SET_DIR = "../setdir/"
+
 
 if DEBUG:
     DATA_DIR = "../testdata/"  # 54 songs

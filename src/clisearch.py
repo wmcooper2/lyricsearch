@@ -14,5 +14,7 @@ def cli_search() -> None:
     print_stats(possible_results, exact_results)
     return None
 
+
+
 if __name__ == "__main__":
     cli_search()
