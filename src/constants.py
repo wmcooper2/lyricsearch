@@ -2,6 +2,7 @@
 """Constants module for Lyric Search program."""
 # stand lib
 from pathlib import Path
+from pprint import pprint
 import os
 
 # custom
@@ -31,8 +32,8 @@ elif ps1() == "pi5$":
     SET_DIR = "../setdir/"
 elif ispi():
     DATA_DIR = PI_DATA_DIR
-    RESULT_DIR = "../results/"
-    SET_DIR = "../setdir/"
+    RESULT_DIR = PI_RESULT_DIR
+    SET_DIR = PI_SET_DIR
 
 
 if DEBUG:
@@ -43,3 +44,6 @@ PATHS = [COMBINE_DIR,
          DEBUG_ERRORS,
          RESULT_DIR,
          SET_DIR]
+print("constants.py")
+pprint(PATHS)
+

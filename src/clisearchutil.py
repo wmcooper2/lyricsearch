@@ -221,21 +221,23 @@ def text_files(dir_):
 
 
 
-def start_processes(processes: List[str]) -> None:
-    """Starts subprocesses. Returns None."""
+def start_processes(processes: List[str]) -> List[Any]:
+    """Starts subprocesses. Returns List of workers."""
     a = subprocess.run(processes[0], encoding="utf-8", shell=True,
                        stdout=subprocess.PIPE).stdout
-#     b = subprocess.run(process, encoding="utf-8", shell=True,
-#                        stdout=subprocess.PIPE).stdout
-#     c = subprocess.run(process, encoding="utf-8", shell=True,
-#                        stdout=subprocess.PIPE).stdout
-#     d = subprocess.run(process, encoding="utf-8", shell=True,
-#                        stdout=subprocess.PIPE).stdout
-    workers = [a] #,b,c,d]
+    b = subprocess.run(processes[1], encoding="utf-8", shell=True,
+                       stdout=subprocess.PIPE).stdout
+    c = subprocess.run(processes[2], encoding="utf-8", shell=True,
+                       stdout=subprocess.PIPE).stdout
+    d = subprocess.run(processes[3], encoding="utf-8", shell=True,
+                       stdout=subprocess.PIPE).stdout
+    workers = [a]
+
+    workers = [a,b,c,d]
     for w in workers:
         print(w)
-
-    return None
+    print(a.strip())
+    return workers
 
 
 def pi_cmd(pi: str, pattern: str) -> str:
@@ -243,11 +245,16 @@ def pi_cmd(pi: str, pattern: str) -> str:
     return "ssh pi@" + pi + \
            " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
            "'" + pattern + "'" + "\""
+#     return "ssh pi@" + pi + " 'sudo echo $PS1'"
+#     return "ssh pi@" + pi + " hostname"
+#     print(os.popen("echo $PS1").read().strip())
 
-TEST_CLUSTER = ["192.168.1.33"]
+# TEST_CLUSTER = ["192.168.1.33"]
+# TEST_CLUSTER = ["192.168.1.11"]
 def cluster_commands(pattern: str) -> List[str]:
     """Formats commands for the cluster. Returns List."""
     commands = []
-    for pi in TEST_CLUSTER:
+    for pi in CLUSTER:
+#     for pi in TEST_CLUSTER:
         commands.append(pi_cmd(pi, pattern))
     return commands

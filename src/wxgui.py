@@ -1,5 +1,8 @@
 #!/usr/bin/env python3.7
 """GUI for lyric searching program."""
+# stand lib
+from pprint import pprint
+
 # 3rd party
 import wx
 
@@ -45,11 +48,21 @@ class Gui(wx.Frame):
 
     def search(self, event):
         pattern = self.search_box.GetValue()
-        path_check(PATHS)
-        possible_results = possible_match_search(pattern)
-        exact_results = exact_match_search(possible_results, pattern)
-        save_results(exact_results[0], pattern)
-        print_stats(possible_results, exact_results)
+#         path_check(PATHS)
+#         possible_results = possible_match_search(pattern)
+#         exact_results = exact_match_search(possible_results, pattern)
+#         save_results(exact_results[0], pattern)
+#         print_stats(possible_results, exact_results)
+
+#         print(cluster_commands(pattern)[0])
+        cmds = cluster_commands(pattern)
+        print("command = ", cmds)
+        for c in cmds:
+            print(c.strip())
+
+        results = start_processes(cmds)
+        for r in results:
+            print(r.strip())
 
     def quit_(self, event):
         self.Close()
