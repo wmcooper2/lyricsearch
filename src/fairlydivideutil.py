@@ -3,6 +3,7 @@
 # stand lib
 from pathlib import Path
 from collections import deque
+from typing import Any
 from typing import Deque
 from typing import List
 from typing import Text
@@ -52,7 +53,8 @@ def divide_remainder(files: Deque, groups: List) -> None:
     return None
 
 
-def get_files(dir_: str) -> list:
+# def get_files(dir_: str) -> list:
+def get_files(dir_: str) -> Any:
     """Gets text files from dir_, recursively. Returns Generator."""
     return (file_ for file_ in Path(dir_).glob("**/*.txt"))
 
