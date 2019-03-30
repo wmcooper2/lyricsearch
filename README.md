@@ -23,28 +23,34 @@ Pi-nodes:
 
 ### Preparing the Data
 The pi-nodes have 1GB RAM, therefore the data needs to be set up before a search is performed.
-There are about 620,000 text files.
+There are 616,323 text files.
 The text files are divided into 16 dirs (4 for each pi-node).
 Each pi-node will have 4 dirs, and these 4 dirs are divided into 100 mini sets kept in shelve databases in `SET_DIR`.
 
-To divide the data;
+#### On macbook
+To divide the text files;
   * Run fairlydivide.py
     * This will divide all of the text files into the number of directories you specify.
     * Choose 16 blocks.
 Divide the data among the pi-nodes.
   * 4 (block) dirs to each pi-node.
   * Manually copy to the nodes with `scp -r <dir> $<pi>:<dest>`
-On the pi-nodes;
-  * For each (block) directory,
-    * Make sure any shelve databases transferred from the macbook to the pi have been deleted from the pi (db.gnu error?).
-    * Run fairlydividesets.py
-    * Choose 100 sets.
-    * This takes less than one hour to complete.
-    * This is to prevent running out of RAM on the pi.
+#### On the pi-nodes
+  * Make sure any shelve databases transferred from the macbook to the pi have been deleted from the pi (db.gnu error?).
+  * Run `python3.7 fairlydividesets.py 100`
+  * This takes less than one hour to complete.
+  * This is to prevent running out of RAM on the pi.
 
 ### Issues
 * wxpython - need to read more on this one. This library is not like Tkinter, in my opinion.
+  * Make the gui cleaner, nicer to look at.
 
+
+
+
+
+
+(rework the instructions below)
 ### Normal search on macbook
 * Turn on pi-cluster.
 * Connect "MONTHLY" external device.
@@ -87,7 +93,6 @@ On the pi-nodes;
 
 
 
-(rework the instructions below)
 ## Setup Process
 ### Distribute the files among the nodes
 1. Divide all the files as evenly as possible among 4 dirs

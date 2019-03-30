@@ -26,14 +26,12 @@ if ismac():
     DATA_DIR = MAC_EXT_DRIVE  # 38,520 songs
     RESULT_DIR = MAC_EXT_DRIVE_RESULT_DIR
     SET_DIR = MAC_EXT_DRIVE_SET_DIR
-elif ps1() == "pi5$":
-    DATA_DIR = "/mnt/usb/testlyrics/"
-    RESULT_DIR = "../results/"
-    SET_DIR = "../setdir/"
 elif ispi():
     DATA_DIR = PI_DATA_DIR
     RESULT_DIR = PI_RESULT_DIR
     SET_DIR = PI_SET_DIR
+    if ps1() == "pi5$":
+        DATA_DIR = PI5_DATA_DIR
 
 
 if DEBUG:
@@ -44,6 +42,6 @@ PATHS = [COMBINE_DIR,
          DEBUG_ERRORS,
          RESULT_DIR,
          SET_DIR]
-print("constants.py")
+print("Current path setup;")
 pprint(PATHS)
 

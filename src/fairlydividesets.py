@@ -17,13 +17,16 @@ from typing import Deque
 print("Source dir:", DATA_DIR)
 print("Save dir:", SET_DIR)
 
-# get user input
 try:
-    bins = int(input("How many sets do you want to sort into? "))
+    bins = int(sys.argv[1])
+    print("bins", bins)
 except ValueError:
     print("Please choose a number. Quitting...")
     quit()
-
+except IndexError:
+    print("Please add an argument. Quitting...")
+    quit()
+ 
 # divide the files into number of "bins"
 prep_start = time()
 if valid_bins(bins):
