@@ -7,6 +7,7 @@ import shelve
 from time import time
 from typing import Any
 from typing import Deque
+from typing import List
 from pprint import pprint
 
 def filepath(song: str, dict_: dict) -> str:
@@ -100,13 +101,13 @@ def progress(finished: int, total: int, step: int) -> None:
     return None
 
 
-def read_file(file_: str) -> list:
+def read_file(file_: str) -> List[str]:
     """Gets contents of a file. Returns list."""
     with open(file_, "r") as s:
         return list(s.read().split())
 
 
-def read_file_lines(file_: str) -> list:
+def read_file_lines(file_: str) -> List[str]:
     """Gets contents of a file, nested lines. Returns List."""
     with open(file_, "r") as s:
         return [line.strip() for line in s.readlines()]
@@ -125,16 +126,3 @@ def show_progress(num: int) -> None:
     if num % 5000 == 0:
         print(str(round((num/616324)*100, 2)), "%")
     return None
-
- 
-# def single_db() -> None:
-#     """Makes a single set database. Returns None."""
-#     with shelve.open(LYRICS_SET) as db:
-#         song_list = Path(DATA_DIR).glob("**/*.txt")
-#         for song in song_list:
-#             title = str(Path(song).resolve().name).strip(".txt")
-#             words = set(read_file(str(Path(song))))
-# 
-#             # Tuple(artist_song, set)
-#             value = (str(Path(song).resolve()), words)
-#             db[title] = value

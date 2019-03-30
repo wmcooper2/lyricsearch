@@ -212,13 +212,7 @@ def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
 
 def text_files(dir_):
     """Returns generator of dir_'s '.txt' files, recursive."""
-#     if ismac():
-#     return ((yield str(f)) for f in Path(dir_).rglob("*.txt"))
     return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))
-#     elif ispi():
-#         return ((yield str(f)) for f in Path(dir_).glob("*.txt"))
-
-
 
 
 def start_processes(processes: List[str]) -> List[Any]:
@@ -231,13 +225,7 @@ def start_processes(processes: List[str]) -> List[Any]:
                        stdout=subprocess.PIPE).stdout
     d = subprocess.run(processes[3], encoding="utf-8", shell=True,
                        stdout=subprocess.PIPE).stdout
-    workers = [a]
-
-    workers = [a,b,c,d]
-    for w in workers:
-        print(w)
-    print(a.strip())
-    return workers
+    return [a,b,c,d]
 
 
 def pi_cmd(pi: str, pattern: str) -> str:
@@ -245,16 +233,12 @@ def pi_cmd(pi: str, pattern: str) -> str:
     return "ssh pi@" + pi + \
            " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
            "'" + pattern + "'" + "\""
-#     return "ssh pi@" + pi + " 'sudo echo $PS1'"
 #     return "ssh pi@" + pi + " hostname"
 #     print(os.popen("echo $PS1").read().strip())
 
-# TEST_CLUSTER = ["192.168.1.33"]
-# TEST_CLUSTER = ["192.168.1.11"]
 def cluster_commands(pattern: str) -> List[str]:
     """Formats commands for the cluster. Returns List."""
     commands = []
     for pi in CLUSTER:
-#     for pi in TEST_CLUSTER:
         commands.append(pi_cmd(pi, pattern))
     return commands

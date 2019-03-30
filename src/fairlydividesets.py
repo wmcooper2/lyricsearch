@@ -47,7 +47,10 @@ if valid_bins(bins):
             pi_set_from_deque(deq, SET_DIR, blockname)
             print("blockname:", blockname)
             setcount += 1
+            print("Before resetting deq:", len(deq), "items")
+            del deq
             deq = deque()
+            print("After resetting deq:", len(deq), "items")
 
     #catch the last one
     pi_set_from_deque(deq, SET_DIR, blockname)
