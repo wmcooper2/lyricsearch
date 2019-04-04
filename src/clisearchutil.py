@@ -22,12 +22,22 @@ from typing import Text
 from typing import Tuple
 
 # custom
-from constants import *
+from constants import CLUSTER
+from constants import DEBUG
+from constants import RESULT_DIR
+from constants import SET_DIR
+from constants import VERBOSE
+from constants import ismac
+from constants import ispi
+from fairlydivideutil import progress_bar
 
-add_suffix = lambda x: x+".txt"
-file_name = lambda d, s: d+s+".txt"
-progress = lambda s: print("Progress:", s, "%")
-wkr_progress = lambda d, s, t: print("[{0}] {1}/{2}".format(d, s, t))
+
+def cluster_commands(pattern: str) -> List[str]:
+    """Formats commands for the cluster. Returns List."""
+    commands = []
+    for pi in CLUSTER:
+        commands.append(pi_cmd(pi, pattern))
+    return commands
 
 
 def count_files(dir_: str) -> int:
@@ -36,16 +46,24 @@ def count_files(dir_: str) -> int:
 
 
 def exact_match_search(possible: Tuple[List[str], int], 
-                       pattern: str) -> Tuple[List[str], int]:
+                       pattern: str) -> Tuple[List[str], float]:
     """Checks text files for exact matches. Returns Tuple.
     
         returns; (<exact matches>: list, <time taken>: int): tuple
     """
     exact_matches = []
+    searched = 0
     start = time()
     for match in possible[0]:
         if exact_search(match, pattern):
+            if VERBOSE and DEBUG:
+                print("{0:<15} {1}".format("Exact match:",
+                      Path(match).name))
             exact_matches.append(match)
+        searched += 1
+        progress_bar(searched, len(possible[0]), prefix="Progress:",
+                     suffix="Complete:", decimals=1, length=100,
+                     fill="█")
     end = time()
     return (exact_matches, end - start)
 
@@ -65,6 +83,10 @@ def exact_search(target: str, pattern: str) -> bool:
 def exists(path: str) -> bool:
     """Checks if path exists. Returns Boolean."""
     return Path(path).exists()
+
+
+def file_name(dir_: str, string: str) -> str:
+    return dir_+string+".txt"
 
 
 def file_path(song: str, dict_: dict) -> str:
@@ -101,16 +123,16 @@ def make_file(file_):
         Path(file_).touch()
 
 
-def missing(paths: List[str]) -> List[Tuple[str, bool]]:
+def missing(paths: List[Tuple[str, str]]) -> List[Tuple[str, bool]]:
     """Returns List of missing paths."""
     temp = []
     for path in paths:
-        temp.append((path, Path(path).exists()))
+        temp.append((path[1], Path(path[1]).exists()))
     return temp
 
 
-def path_check(paths: List[str]) -> None:
-    """Performs an 'existence' check for the needed paths. Returns None."""
+def path_check(paths: List[Tuple[str, str]]) -> None:
+    """Performs an 'existence' check for needed paths. Returns None."""
     if paths_okay(paths):
         print("Files and directories check complete.")
     else:
@@ -119,22 +141,22 @@ def path_check(paths: List[str]) -> None:
         quit()
 
 
-def paths_okay(paths: List[str]) -> bool:
+def paths_okay(paths: List[Tuple[str,str]]) -> bool:
     """Checks that all paths exist. Returns Boolean."""
-    return all(Path(path).exists for path in paths)
-            
+    return all(Path(path[1]).exists for path in paths)
 
-def possible_match_search(pattern: str) -> Tuple[List[str], int]:
-    """check the sets for possible matches. Returns Tuple.
-    
-        returns; (<possible matches>: list, <time taken>: int): tuple
-    """
-    start = time()
-    possible_matches = []
-    for song_set_db in Path(SET_DIR).glob("**/*.db"):
-        possible_matches += search_db(pattern, str(song_set_db))
-    end = time()
-    return (possible_matches, end - start)
+
+def pi_cmd(pi: str, pattern: str) -> str:
+    """Formats search command for the pi. Returns String."""
+    return "ssh pi@" + pi + \
+           " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
+           "'" + pattern + "'" + "\""
+#     return "ssh pi@" + pi + " hostname"
+#     print(os.popen("echo $PS1").read().strip())
+
+
+# def progress(string: str) -> None:
+#     print("Progress:", string, "%")
 
 
 def print_stats(possible: Tuple[List[str], int], 
@@ -167,7 +189,7 @@ def save(src: List[str], dest: str) -> None:
 def save_results(results: List[str], pattern: str) -> None:
     """Saves to RESULT_DIR/<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
-    file_name = [t[4], t[1], t[2], t[3], t[0]]
+    file_name = [t[5], t[1], t[3], t[0], t[4]]
     save_to = RESULT_DIR + "_".join(file_name) + "_" + pattern
     save(results, save_to)
     return None
@@ -177,6 +199,8 @@ def search_db(pattern: str, db: str) -> List[str]:
     """Searches db for 'pattern'. Returns List."""
     pset = set(pattern.split())
     matches = []
+    if VERBOSE and DEBUG:
+        print("\tSearching:", Path(db).resolve())
     with shelve.open(db) as miniset:
         for name, tuple_ in miniset.items():
             if subset_match(lyric_set(name, miniset), pset):
@@ -188,31 +212,21 @@ def search_pattern() -> str:
     """decides which machine is running, gets search pattern."""
     if ismac():
         pattern = str(input("Enter a search pattern: "))
-        print("Searching for: '" + pattern + "'. Please wait...")
     elif ispi():
         try:
             pattern = sys.argv[1]
         except IndexError:
             pattern = None
-        if pattern is not None:
-            print("Searching for: " + pattern)
-        else:
+#         if pattern is not None:
+#             print("Searching for: " + pattern)
+#             pass
+        if pattern is None:
             print("Give a string to search for.")
             quit()
     else:
         print("Machine not recognized. Quitting program.")
         quit()
     return pattern
-
-
-def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
-    """Checks if pattern is subset of song. Returns Boolean. """
-    return pattern.issubset(song)
-
-
-def text_files(dir_):
-    """Returns generator of dir_'s '.txt' files, recursive."""
-    return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))
 
 
 def start_processes(processes: List[str]) -> List[Any]:
@@ -228,17 +242,36 @@ def start_processes(processes: List[str]) -> List[Any]:
     return [a,b,c,d]
 
 
-def pi_cmd(pi: str, pattern: str) -> str:
-    """Formats search command for the pi. Returns String."""
-    return "ssh pi@" + pi + \
-           " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
-           "'" + pattern + "'" + "\""
-#     return "ssh pi@" + pi + " hostname"
-#     print(os.popen("echo $PS1").read().strip())
+def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
+    """Checks if pattern is subset of song. Returns Boolean. """
+    return pattern.issubset(song)
 
-def cluster_commands(pattern: str) -> List[str]:
-    """Formats commands for the cluster. Returns List."""
-    commands = []
-    for pi in CLUSTER:
-        commands.append(pi_cmd(pi, pattern))
-    return commands
+
+def subset_search(pattern: str) -> Tuple[List[str], float]:
+    """Check for subset matches. Returns Tuple.
+
+        returns; (<possible matches>: list, <time taken>: int): tuple
+    """
+    possible_matches = []
+    searched = 0
+    start = time()
+    total = 100
+    for song_set_db in Path(SET_DIR).glob("**/*.db"):
+        possible_matches += search_db(pattern, str(song_set_db))
+        searched += 1
+        progress_bar(searched, total, prefix="Progress:",
+                     suffix="Complete:", decimals=1, length=100,
+                     fill="█")
+        if VERBOSE and DEBUG:
+            print("\tSearched:", song_set_db)
+    end = time()
+    return (possible_matches, end - start)
+
+
+def text_files(dir_):
+    """Returns generator of dir_'s '.txt' files, recursive."""
+    return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))
+
+
+# def wkr_progress(d, s, t) -> None:
+#     print("[{0}] {1}/{2}".format(d, s, t))

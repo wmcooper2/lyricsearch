@@ -8,22 +8,28 @@ import os
 # custom
 from personal import *
 
-ismac = lambda: os.uname().sysname == "Darwin"
-ispi = lambda: os.uname().sysname == "Linux"
+
+def ismac() -> bool:
+    return os.uname().sysname == "Darwin"
+
+
+def ispi() -> bool:
+    return os.uname().sysname == "Linux"
+
+
+def ps1() -> str:
+    """Returns $PS1 as a String."""
+    return os.popen("echo $PS1").read().strip()
+
 
 CLUSTER = PI_NODES
 COMBINE_DIR = "../combine/"
 DEBUG = False
 DEBUG_ERRORS = "../debug/debugerrors.txt"
-
-
-def ps1():
-    """Returns $PS1 as a String."""
-    return os.popen("echo $PS1").read().strip()
-
+VERBOSE = True
 
 if ismac():
-    DATA_DIR = MAC_EXT_DRIVE  # 38,520 songs
+    DATA_DIR = MAC_EXT_DRIVE_DATA_DIR  # 616,323 files
     RESULT_DIR = MAC_EXT_DRIVE_RESULT_DIR
     SET_DIR = MAC_EXT_DRIVE_SET_DIR
 elif ispi():
@@ -33,15 +39,19 @@ elif ispi():
     if ps1() == "pi5$":
         DATA_DIR = PI5_DATA_DIR
 
-
 if DEBUG:
-    DATA_DIR = "../testdata/"  # 54 songs
+    DATA_DIR = "../testdata/"  # 54 files
+
+NAMED_PATHS = [
+        ("COMBINE_DIR", COMBINE_DIR),
+        ("DATA_DIR", DATA_DIR),
+        ("DEBUG_ERRORS", DEBUG_ERRORS),
+        ("RESULT_DIR", RESULT_DIR),
+        ("SET_DIR", SET_DIR)]
 
 PATHS = [COMBINE_DIR,
          DATA_DIR,
          DEBUG_ERRORS,
          RESULT_DIR,
          SET_DIR]
-print("Current path setup;")
-pprint(PATHS)
-
+        

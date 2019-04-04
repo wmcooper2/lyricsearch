@@ -39,7 +39,7 @@ def make_mega_set(dir_: str) -> set:
             for word in lyrics:
                 mega_set.add(word)
             song_count += 1
-            show_progress(song_count)
+#             show_progress(song_count)
         except UnicodeDecodeError:
             save_error(str(song_file))
             print("Error:", song_file)
@@ -69,7 +69,7 @@ def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
                 save_error(str(song))
                 print("Error:", str(song))
             finished_songs += 1
-            progress(finished_songs, song_count, 500)
+#             progress(finished_songs, song_count, 500)
 
 
 def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
@@ -89,16 +89,15 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
                 db[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
-                print("Error:", str(song))
             finished_songs += 1
         set_end = time()
 
 
-def progress(finished: int, total: int, step: int) -> None:
-    """Prints progress to terminal. Returns None."""
-    if finished % step == 0:
-        print("% completed:", str(round((finished/total)*100, 2)))
-    return None
+# def progress(finished: int, total: int, step: int) -> None:
+#     """Prints progress to terminal. Returns None."""
+#     if finished % step == 0:
+#         print("% completed:", str(round((finished/total)*100, 2)))
+#     return None
 
 
 def read_file(file_: str) -> List[str]:
@@ -121,8 +120,8 @@ def save_error(error: str) -> None:
     return None
 
 
-def show_progress(num: int) -> None:
-    """Update user terminal. Returns None."""
-    if num % 5000 == 0:
-        print(str(round((num/616324)*100, 2)), "%")
-    return None
+# def show_progress(num: int) -> None:
+#     """Update user terminal. Returns None."""
+#     if num % 5000 == 0:
+#         print(str(round((num/616324)*100, 2)), "%")
+#     return None

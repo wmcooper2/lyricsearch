@@ -92,8 +92,8 @@ class Gui(wx.Frame):
 #         results = start_processes(cmds)
 #         for r in results:
 #             print(r.strip())
-#         path_check(PATHS)
-#         possible_results = possible_match_search(pattern)
+#         path_check(NAMED_PATHS)
+#         possible_results = subset_search(pattern)
 #         exact_results = exact_match_search(possible_results, pattern)
 #         save_results(exact_results[0], pattern)
 #         print_stats(possible_results, exact_results)

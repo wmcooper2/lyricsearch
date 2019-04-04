@@ -8,7 +8,6 @@ from typing import Deque
 from typing import List
 from typing import Text
 
-no_remainder = lambda x, y: x % y == 0
 
 def block_dir(num: int) -> Text:
     """Formats dir name. Returns String."""
@@ -21,7 +20,7 @@ def block_set(num: int) -> Text:
 
 
 def count_files(dir_: str) -> int:
-    """Counts the files that end in '.txt' in 'path_'. Returns Integer."""
+    """Counts txt files. Returns Integer."""
     return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
 
@@ -38,7 +37,7 @@ def divide_bulk(files: Deque, sub: Deque, num: int) -> None:
     for x in range(num):
         sub.append(files.pop())
         divided += 1
-        progress(divided, len(files), 100)
+#         progress(divided, len(files), 100)
     return None
 
 
@@ -53,7 +52,6 @@ def divide_remainder(files: Deque, groups: List) -> None:
     return None
 
 
-# def get_files(dir_: str) -> list:
 def get_files(dir_: str) -> Any:
     """Gets text files from dir_, recursively. Returns Generator."""
     return (file_ for file_ in Path(dir_).glob("**/*.txt"))
@@ -67,7 +65,7 @@ def fairly_divide(deques: Deque, bins: int) -> List[Deque]:
     for group in groups:
         divide_bulk(deques, group, group_size)
         finished += 1
-        progress(finished, len(groups), 1)
+#         progress(finished, len(groups), 1)
     if no_remainder(len(deques), bins):
         pass
     else:
@@ -75,11 +73,40 @@ def fairly_divide(deques: Deque, bins: int) -> List[Deque]:
     return groups
 
 
-def progress(finished: int, total: int, step: int) -> None:
-    """Prints progress to terminal. Returns None."""
-    if finished % step == 0:
-        print("% completed:", str(round((finished/total)*100, 2)))
-    return None
+def no_remainder(x: int, y: int) -> bool:
+    return x % y == 0
+
+
+# def progress(finished: int, total: int, step: int) -> None:
+#     """Prints progress to terminal. Returns None."""
+#     if finished % step == 0:
+#         print("% completed:", str(round((finished/total)*100, 2)))
+#     return None
+
+# taken from StackOverflow
+def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1,
+                 length = 100, fill = '█'):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals 
+                                  in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * 
+               (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix),
+          end = '\r')
+    # Print New Line on Complete
+    if iteration == total:
+        print()
 
 
 def valid_bins(num: int) -> bool:
