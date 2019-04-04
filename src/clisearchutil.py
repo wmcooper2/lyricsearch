@@ -94,13 +94,6 @@ def file_path(song: str, dict_: dict) -> str:
     return dict_[song][0]
 
 
-# def format_pi_cmd(pi, pattern):
-#     """Formats a command for pi-node. Returns String."""
-#     return "ssh pi@" + \
-#            pi + " 'sudo python3 lyricsearch/src/lyricsearch_pi.py " + \
-#            pattern + "'"
-
-
 def get_files(dir_: str) -> list:
     """Gets text files from dir_, recursively. Returns List."""
     return [file_ for file_ in Path(dir_).glob("**/*.txt")]
@@ -149,32 +142,10 @@ def paths_okay(paths: List[Tuple[str,str]]) -> bool:
 def pi_cmd(pi: str, pattern: str) -> str:
     """Formats search command for the pi. Returns String."""
     return "ssh pi@" + pi + \
-           " \"sudo python3.7 lyricsearch/src/clisearch.py " + \
+           " \"sudo python3.7 lyricsearch/src/main.py " + \
            "'" + pattern + "'" + "\""
 #     return "ssh pi@" + pi + " hostname"
 #     print(os.popen("echo $PS1").read().strip())
-
-
-# def progress(string: str) -> None:
-#     print("Progress:", string, "%")
-
-
-def print_stats(possible: Tuple[List[str], int], 
-                exact: Tuple[List[str], int]) -> None:
-    """Prints stats to screen. Returns None."""
-    try:
-        print("Possible match example:", possible[0][0])
-        print("Possible matches:", len(possible[0]))
-        print("Set-Search time:", round(possible[1], 2))
-    except IndexError:
-        print("No possible matches")
-    try:
-        print("Exact match example:", exact[0][0])
-        print("Exact matches:", len(exact[0]))
-        print("Exact-Search time:", round(exact[1], 2))
-    except IndexError:
-        print("No exact matches")
-    return None
 
 
 def save(src: List[str], dest: str) -> None:
@@ -206,29 +177,8 @@ def search_db(pattern: str, db: str) -> List[str]:
             if subset_match(lyric_set(name, miniset), pset):
                 matches.append(file_path(name, miniset))
     return matches
-
-
-def search_pattern() -> str:
-    """decides which machine is running, gets search pattern."""
-    if ismac():
-        pattern = str(input("Enter a search pattern: "))
-    elif ispi():
-        try:
-            pattern = sys.argv[1]
-        except IndexError:
-            pattern = None
-#         if pattern is not None:
-#             print("Searching for: " + pattern)
-#             pass
-        if pattern is None:
-            print("Give a string to search for.")
-            quit()
-    else:
-        print("Machine not recognized. Quitting program.")
-        quit()
-    return pattern
-
-
+ 
+ 
 def start_processes(processes: List[str]) -> List[Any]:
     """Starts subprocesses. Returns List of workers."""
     a = subprocess.run(processes[0], encoding="utf-8", shell=True,
@@ -271,7 +221,3 @@ def subset_search(pattern: str) -> Tuple[List[str], float]:
 def text_files(dir_):
     """Returns generator of dir_'s '.txt' files, recursive."""
     return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))
-
-
-# def wkr_progress(d, s, t) -> None:
-#     print("[{0}] {1}/{2}".format(d, s, t))
