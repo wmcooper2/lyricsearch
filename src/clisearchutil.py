@@ -45,10 +45,10 @@ def count_files(dir_: str) -> int:
     return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
 
-def exact_match_search(possible: Tuple[List[str], int], 
+def exact_match_search(possible: Tuple[List[str], int],
                        pattern: str) -> Tuple[List[str], float]:
     """Checks text files for exact matches. Returns Tuple.
-    
+
         returns; (<exact matches>: list, <time taken>: int): tuple
     """
     exact_matches = []
@@ -134,7 +134,7 @@ def path_check(paths: List[Tuple[str, str]]) -> None:
         quit()
 
 
-def paths_okay(paths: List[Tuple[str,str]]) -> bool:
+def paths_okay(paths: List[Tuple[str, str]]) -> bool:
     """Checks that all paths exist. Returns Boolean."""
     return all(Path(path[1]).exists for path in paths)
 
@@ -177,8 +177,8 @@ def search_db(pattern: str, db: str) -> List[str]:
             if subset_match(lyric_set(name, miniset), pset):
                 matches.append(file_path(name, miniset))
     return matches
- 
- 
+
+
 def start_processes(processes: List[str]) -> List[Any]:
     """Starts subprocesses. Returns List of workers."""
     a = subprocess.run(processes[0], encoding="utf-8", shell=True,
@@ -189,7 +189,7 @@ def start_processes(processes: List[str]) -> List[Any]:
                        stdout=subprocess.PIPE).stdout
     d = subprocess.run(processes[3], encoding="utf-8", shell=True,
                        stdout=subprocess.PIPE).stdout
-    return [a,b,c,d]
+    return [a, b, c, d]
 
 
 def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:

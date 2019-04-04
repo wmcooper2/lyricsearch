@@ -13,15 +13,23 @@ cluster: list = [pi1, pi2, pi3, pi4]    # ip addresses
 pi_outputs: list = []                      # holds stdout from pis
 given_args: list = []                      # command line args
 
-format_cmd = lambda s1, s2: "{0} '{1}'".format(s1, s2)
-format_node = lambda s: "pi@"+s
-format_ssh = lambda s: "ssh "+s
-
 
 def clear_terminal() -> None:
     """Clears the terminal window. Returns None."""
     subprocess.run(["clear"])
     return None
+
+
+def format_cmd(s1: str, s2: str) -> str:
+    return "{0} '{1}'".format(s1, s2)
+
+
+def format_node(pi_addr: str) -> str:
+    return "pi@" + pi_addr
+
+
+def format_ssh(pi: str) -> str:
+    return "ssh " + pi
 
 
 def show_outputs() -> None:
@@ -76,17 +84,3 @@ if __name__ == "__main__":
     print("\n")
     [custom_cmd(pi, args) for pi in cluster]
     parser.exit(status=0, message="Finished.\n")
-
-#def not_none(flag):
-#    """Checks that args for a flag are not None. Returns Boolean."""
-#    if flag[1] != None: return True
-#    else:               return False
-
-#def format_node(string):
-#    """Formats the pi name. Returns String."""
-#    piname = "pi@"+string
-#    return piname
-
-#def format_cmd(ssh, string):
-#    """Formats the full command for a node. Returns String."""
-#    return "{0} '{1}'".format(ssh, string)

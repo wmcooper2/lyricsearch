@@ -46,9 +46,7 @@ def cli_search() -> None:
         print("{0:<20} {1:>6}".format("Search time (sec):",
               round(exact_results[1], 2)))
         save_results(exact_results[0], pattern)
-        print("Saved results.")
-        
-
+        print("Finished.")
     else:
         possible_results = subset_search(pattern)
         exact_results = exact_match_search(possible_results, pattern)

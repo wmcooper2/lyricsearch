@@ -41,7 +41,7 @@ if valid_bins(bins):
         print("Counting files...")
         file_amt = count_files(DATA_DIR)
         print("File count:", str(file_amt))
- 
+
         blockname = "blank"
         deq = deque()
         file_count = 0
@@ -59,13 +59,15 @@ if valid_bins(bins):
                 blockname = str(block_set(setcount))
                 pi_set_from_deque(deq, SET_DIR, blockname)
                 setcount += 1
-                del deq         #remove
-                deq = deque()   #remove
+#                 del deq         # remove
+                deq = deque()   # remove
+            else:
+                pass
 
-        #catch the last one
+        # catch the last one
         pi_set_from_deque(deq, SET_DIR, blockname)
         end = time()
-        print("Time to make block sets:", round(end - start, 0)
+        print("Time to make block sets:", round(end - start, 0))
 
     else:
         file_amt = count_files(DATA_DIR)
@@ -81,10 +83,12 @@ if valid_bins(bins):
                 blockname = str(block_set(setcount))
                 pi_set_from_deque(deq, SET_DIR, blockname)
                 setcount += 1
-                del deq         #remove
-                deq = deque()   #remove
+                del deq         # remove
+                deq = deque()   # remove
+            else:
+                pass
 
-        #catch the last one
+        # catch the last one
         pi_set_from_deque(deq, SET_DIR, blockname)
         end = time()
     print("Finished dividing sets.")

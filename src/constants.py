@@ -54,4 +54,3 @@ PATHS = [COMBINE_DIR,
          DEBUG_ERRORS,
          RESULT_DIR,
          SET_DIR]
-        

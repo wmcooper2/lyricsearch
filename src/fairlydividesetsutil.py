@@ -10,6 +10,7 @@ from typing import Deque
 from typing import List
 from pprint import pprint
 
+
 def filepath(song: str, dict_: dict) -> str:
     """Gets the song path. Returns String."""
     return dict_[song][0]

@@ -47,7 +47,7 @@ def divide_remainder(files: Deque, groups: List) -> None:
         for group in groups:
             try:
                 group.append(files.pop())
-            except IndexError: # empty deque
+            except IndexError:  # empty deque
                 pass
     return None
 
@@ -65,7 +65,6 @@ def fairly_divide(deques: Deque, bins: int) -> List[Deque]:
     for group in groups:
         divide_bulk(deques, group, group_size)
         finished += 1
-#         progress(finished, len(groups), 1)
     if no_remainder(len(deques), bins):
         pass
     else:
@@ -77,15 +76,9 @@ def no_remainder(x: int, y: int) -> bool:
     return x % y == 0
 
 
-# def progress(finished: int, total: int, step: int) -> None:
-#     """Prints progress to terminal. Returns None."""
-#     if finished % step == 0:
-#         print("% completed:", str(round((finished/total)*100, 2)))
-#     return None
-
 # taken from StackOverflow
-def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1,
-                 length = 100, fill = '█'):
+def progress_bar(iteration, total, prefix='', suffix='', decimals=1,
+                 length=100, fill='█'):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -93,17 +86,17 @@ def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1,
         total       - Required  : total iterations (Int)
         prefix      - Optional  : prefix string (Str)
         suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals 
+        decimals    - Optional  : positive number of decimals
                                   in percent complete (Int)
         length      - Optional  : character length of bar (Int)
         fill        - Optional  : bar fill character (Str)
     """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * 
-               (iteration / float(total)))
+    percent = ("{0:." + str(decimals) +
+               "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix),
-          end = '\r')
+          end='\r')
     # Print New Line on Complete
     if iteration == total:
         print()
