@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.7
+# clisearchutil.py
 """Utility module for Lyric Search program."""
 # stand lib
 from collections import deque
@@ -41,7 +42,7 @@ def cluster_commands(pattern: str) -> List[str]:
 
 
 def count_files(dir_: str) -> int:
-    """Counts the files that end in '.txt' in 'path_'. Returns Integer."""
+    """Counts files ending in '.txt'. Returns Integer."""
     return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
 
@@ -125,7 +126,7 @@ def missing(paths: List[Tuple[str, str]]) -> List[Tuple[str, bool]]:
 
 
 def path_check(paths: List[Tuple[str, str]]) -> None:
-    """Performs an 'existence' check for needed paths. Returns None."""
+    """Performs 'existence' check. Returns None."""
     if paths_okay(paths):
         print("Files and directories check complete.")
     else:
