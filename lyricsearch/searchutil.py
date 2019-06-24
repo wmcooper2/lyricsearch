@@ -56,7 +56,7 @@ def exact_match_search(possible: Tuple[List[Text], int],
                      suffix="Complete:", decimals=1, length=100,
                      fill="█")
     end = time()
-    return (exact_matches, end - start)
+    return (exact_matches, end-start)
 
 
 def exact_search(target: Text, pattern: Text) -> bool:
@@ -88,11 +88,12 @@ def save(src: List[Text], dest: Text) -> None:
 def save_results(results: List[Text], pattern: Text) -> None:
     """Saves to RESULTSDIR<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
+    print("searchutil.py, save_results(), asctime():", t)
     try:
         file_name = [t[5], t[1], t[3], t[0], t[4]]
     except:
         file_name = "tempsave"
-    save_to = RESULTSDIR + "_".join(file_name) + "_" + pattern
+    save_to = RESULTSDIR+"_".join(file_name)+"_"+pattern
     save(results, save_to)
     return None
 
@@ -133,4 +134,4 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
         if VERBOSE and DEBUG:
             print("\tSearched:", song_set_db)
     end = time()
-    return (possible_matches, end - start)
+    return (possible_matches, end-start)
