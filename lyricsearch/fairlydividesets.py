@@ -5,6 +5,7 @@ from collections import deque
 from math import floor
 import sys
 from time import time
+from typing import Deque
 
 # custom
 from constants import DATA_DIR
@@ -17,7 +18,6 @@ from fairlydivideutil import valid_bins
 from fairlydividesetsutil import count_files
 from fairlydividesetsutil import pi_set_from_deque
 from fairlydividesetsutil import progress
-from typing import Deque
 
 
 try:
@@ -59,7 +59,6 @@ if valid_bins(bins):
                 blockname = str(block_set(setcount))
                 pi_set_from_deque(deq, SET_DIR, blockname)
                 setcount += 1
-#                 del deq         # remove
                 deq = deque()   # remove
             else:
                 pass
@@ -83,7 +82,6 @@ if valid_bins(bins):
                 blockname = str(block_set(setcount))
                 pi_set_from_deque(deq, SET_DIR, blockname)
                 setcount += 1
-                del deq         # remove
                 deq = deque()   # remove
             else:
                 pass

@@ -161,7 +161,10 @@ def save(src: List[str], dest: str) -> None:
 def save_results(results: List[str], pattern: str) -> None:
     """Saves to RESULT_DIR/<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
-    file_name = [t[5], t[1], t[3], t[0], t[4]]
+    try:
+        file_name = [t[5], t[1], t[3], t[0], t[4]]
+    except:
+        file_name = "tempsave"
     save_to = RESULT_DIR + "_".join(file_name) + "_" + pattern
     save(results, save_to)
     return None

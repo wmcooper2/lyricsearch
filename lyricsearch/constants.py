@@ -6,7 +6,17 @@ from pprint import pprint
 import os
 
 # custom
-from personal import *
+from personal import MAC_EXT_DRIVE_SET_DIR
+from personal import MAC_EXT_DRIVE_DATA_DIR 
+from personal import MAC_EXT_DRIVE_RESULT_DIR 
+from personal import MAC_LOCAL_RESULT_DIR 
+from personal import PI_NODES
+from personal import PI_DATA_DIR
+from personal import PI_RESULT_DIR
+from personal import PI_SET_DIR
+from personal import PI5_DATA_DIR
+from personal import TEST_DIR
+from personal import WEEKLY_EXT_DRIVE
 
 
 def ismac() -> bool:
