@@ -6,10 +6,13 @@ from pprint import pprint
 import os
 
 # custom
-from personal import DEBUGDIR
-from personal import LYRICSDIR 
-from personal import RESULTSDIR 
-from personal import SETSDIR
+from personal import (
+        DEBUGDIR,
+        DEBUGFILE,
+        LYRICSDIR,
+        RESULTSDIR,
+        SETSDIR,
+        )
 # from personal import MAC_EXT_DRIVE_RESULT_DIR 
 # from personal import PI_NODES
 # from personal import PI_DATA_DIR
@@ -20,12 +23,6 @@ from personal import SETSDIR
 # from personal import WEEKLY_EXT_DRIVE
 
 
-# def ismac() -> bool:
-#     return os.uname().sysname == "Darwin"
-
-
-# def ispi() -> bool:
-#     return os.uname().sysname == "Linux"
 
 
 # def ps1() -> str:
@@ -34,7 +31,7 @@ from personal import SETSDIR
 
 
 # CLUSTER = PI_NODES
-COMBINE_DIR = "../combine/"
+COMBINEDIR = "../combine/"
 DEBUG = False
 VERBOSE = True
 
@@ -43,13 +40,13 @@ if DEBUG:
     LYRICSDIR = "../.testdata/"  # 54 files
 
 NAMED_PATHS = [
-        ("COMBINE_DIR", COMBINE_DIR),
+        ("COMBINEDIR", COMBINEDIR),
         ("DEBUGDIR", DEBUGDIR),
         ("LYRICSDIR", LYRICSDIR),
         ("RESULTSDIR", RESULTSDIR),
         ("SETSDIR", SETSDIR)]
 
-PATHS = [COMBINE_DIR,
+PATHS = [COMBINEDIR,
          DEBUGDIR,
          LYRICSDIR,
          RESULTSDIR,

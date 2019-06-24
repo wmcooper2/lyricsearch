@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.7
-# clisearchutil.py
+# searchutil.py
 """Utility module for Lyric Search program."""
 # stand lib
 from collections import deque
@@ -17,6 +17,7 @@ from time import asctime, time
 from typing import (
         Any,
         Deque,
+        Dict,
         List,
         Set,
         Text,
@@ -24,7 +25,6 @@ from typing import (
         )
 
 # custom
-# from constants import CLUSTER
 from constants import (
         DEBUG,
         DEBUGDIR,
@@ -32,20 +32,8 @@ from constants import (
         SETSDIR,
         VERBOSE,
         )
-from fairlydivideutil import progress_bar
-
-
-def cluster_commands(pattern: Text) -> List[Text]:
-    """Formats commands for the cluster. Returns List."""
-    commands = []
-    for pi in CLUSTER:
-        commands.append(pi_cmd(pi, pattern))
-    return commands
-
-
-def count_files(dir_: Text) -> int:
-    """Counts files ending in '.txt'. Returns Integer."""
-    return sum([1 for x in Path(dir_).glob("**/*.txt")])
+from dividingwork.fairlydivideutil import progress_bar
+from filesanddirs import file_path
 
 
 def exact_match_search(possible: Tuple[List[Text], int],
@@ -83,72 +71,9 @@ def exact_search(target: Text, pattern: Text) -> bool:
     return False
 
 
-def exists(path: Text) -> bool:
-    """Checks if path exists. Returns Boolean."""
-    return Path(path).exists()
-
-
-def file_name(dir_: Text, string: Text) -> Text:
-    return dir_+string+".txt"
-
-
-def file_path(song: Text, dict_: dict) -> Text:
-    """Gets the song path. Returns String."""
-    return dict_[song][0]
-
-
-def get_files(dir_: Text) -> List[Text]:
-    """Gets text files from dir_, recursively. Returns List."""
-    return [file_ for file_ in Path(dir_).glob("**/*.txt")]
-
-
-def lyric_set(song: Text, dict_: dict) -> set:
+def lyric_set(song: Text, dict_: Dict[Text, Text]) -> Set:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
-
-
-def make_dir(dir_):
-    """Makes 'dir_' if it doesn't exist. Returns None."""
-    if not Path(dir_).exists():
-        Path(dir_).mkdir()
-
-
-def make_file(file_):
-    """Makes file_ if it doesn't exist. Returns None."""
-    if not Path(file_).exists():
-        Path(file_).touch()
-
-
-def missing(paths: List[Tuple[Text, Text]]) -> List[Tuple[Text, bool]]:
-    """Returns List of missing paths."""
-    temp = []
-    for path in paths:
-        temp.append((path[1], Path(path[1]).exists()))
-    return temp
-
-
-def path_check(paths: List[Tuple[Text, Text]]) -> None:
-    """Performs 'existence' check. Returns None."""
-    if paths_okay(paths):
-        print("Files and directories check complete.")
-    else:
-        pprint(missing(paths))
-        raise Exception("Error: Missing paths. Quitting...")
-        quit()
-
-
-def paths_okay(paths: List[Tuple[Text, Text]]) -> bool:
-    """Checks that all paths exist. Returns Boolean."""
-    return all(Path(path[1]).exists for path in paths)
-
-
-def pi_cmd(pi: Text, pattern: Text) -> Text:
-    """Formats search command for the pi. Returns String."""
-    return "ssh pi@" + pi + \
-           " \"sudo python3.7 lyricsearch/src/main.py " + \
-           "'" + pattern + "'" + "\""
-#     return "ssh pi@" + pi + " hostname"
-#     print(os.popen("echo $PS1").read().strip())
 
 
 def save(src: List[Text], dest: Text) -> None:
@@ -185,19 +110,6 @@ def search_db(pattern: Text, db: Text) -> List[Text]:
     return matches
 
 
-def start_processes(processes: List[Text]) -> List[Any]:
-    """Starts subprocesses. Returns List of workers."""
-    a = subprocess.run(processes[0], encoding="utf-8", shell=True,
-                       stdout=subprocess.PIPE).stdout
-    b = subprocess.run(processes[1], encoding="utf-8", shell=True,
-                       stdout=subprocess.PIPE).stdout
-    c = subprocess.run(processes[2], encoding="utf-8", shell=True,
-                       stdout=subprocess.PIPE).stdout
-    d = subprocess.run(processes[3], encoding="utf-8", shell=True,
-                       stdout=subprocess.PIPE).stdout
-    return [a, b, c, d]
-
-
 def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     """Checks if pattern is subset of song. Returns Boolean. """
     return pattern.issubset(song)
@@ -211,7 +123,7 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
     possible_matches = []
     searched = 0
     start = time()
-    total = 100
+    total = 1000
     for song_set_db in Path(SETSDIR).glob("**/*.db"):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
@@ -222,8 +134,3 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
             print("\tSearched:", song_set_db)
     end = time()
     return (possible_matches, end - start)
-
-
-def text_files(dir_):
-    """Returns generator of dir_'s '.txt' files, recursive."""
-    return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))

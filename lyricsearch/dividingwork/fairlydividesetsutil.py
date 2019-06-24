@@ -1,35 +1,35 @@
 #!/usr/bin/env python3.7
 """Utility module for making sets of the lyrics files."""
 # stand lib
-from constants import *
+from constants import DEBUGFILE
 from pathlib import Path
+from pprint import pprint
 import shelve
 from time import time
-from typing import Any
-from typing import Deque
-from typing import List
-from pprint import pprint
+from typing import (
+        Any,
+        Deque,
+        Dict,
+        List,
+        Text,
+        )
+
+# custom
+from filesanddirs import count_files
 
 
-def filepath(song: str, dict_: dict) -> str:
+def filepath(song: Text, dict_: Dict[Text, Text]) -> Text:
     """Gets the song path. Returns String."""
     return dict_[song][0]
 
 
-def lyricset(song: str, dict_: dict) -> str:
+def lyricset(song: Text, dict_: Dict[Text, Text]) -> Text:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
 
 
-def count_files(dir_: str) -> int:
-    """Counts files. Returns Integer."""
-    files = 0
-    for f in Path(dir_).glob("**/*.txt"):
-        files += 1
-    return files
 
-
-def make_mega_set(dir_: str) -> set:
+def make_mega_set(dir_: Text) -> set:
     """Make single set from '.txt' files in dir_. Returns Set."""
     mega_set = set()
     song_count = 0
@@ -49,7 +49,7 @@ def make_mega_set(dir_: str) -> set:
     return mega_set
 
 
-def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
+def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
     """Set up database with the same name as 'song_dir'. Returns None."""
     db_name = dest_dir+str(Path(song_dir).name)+".db"
     print("Counting files...")
@@ -73,7 +73,7 @@ def pi_set_from_dir(song_dir: str, dest_dir: str) -> None:
 #             progress(finished_songs, song_count, 500)
 
 
-def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
+def make_set(song_list: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(song_list)
     save_to = dest_dir+name+".db"
@@ -101,21 +101,21 @@ def pi_set_from_deque(song_list: Deque, dest_dir: str, name: str) -> None:
 #     return None
 
 
-def read_file(file_: str) -> List[str]:
+def read_file(file_: Text) -> List[Text]:
     """Gets contents of a file. Returns list."""
     with open(file_, "r") as s:
         return list(s.read().split())
 
 
-def read_file_lines(file_: str) -> List[str]:
+def read_file_lines(file_: Text) -> List[Text]:
     """Gets contents of a file, nested lines. Returns List."""
     with open(file_, "r") as s:
         return [line.strip() for line in s.readlines()]
 
 
-def save_error(error: str) -> None:
+def save_error(error: Text) -> None:
     """Saves error to debug file. Returns None."""
-    with open(DEBUG_ERRORS, "a+") as e:
+    with open(DEBUGFILE, "a+") as e:
         e.write(str(Path(error).resolve()))
         e.write("\n")
     return None

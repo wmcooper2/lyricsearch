@@ -3,25 +3,17 @@
 # stand lib
 from pathlib import Path
 from collections import deque
-from typing import Any
-from typing import Deque
-from typing import List
-from typing import Text
-
-
-def block_dir(num: int) -> Text:
-    """Formats dir name. Returns String."""
-    return "block"+str(num)
+from typing import (
+        Any,
+        Deque,
+        List,
+        Text,
+        )
 
 
 def block_set(num: int) -> Text:
     """Formats block set name. Returns String."""
     return "blockset"+str(num)
-
-
-def count_files(dir_: str) -> int:
-    """Counts txt files. Returns Integer."""
-    return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
 
 def copy_deque_files(group: Deque, dest: Text) -> None:
@@ -37,7 +29,6 @@ def divide_bulk(files: Deque, sub: Deque, num: int) -> None:
     for x in range(num):
         sub.append(files.pop())
         divided += 1
-#         progress(divided, len(files), 100)
     return None
 
 
@@ -52,15 +43,10 @@ def divide_remainder(files: Deque, groups: List) -> None:
     return None
 
 
-def get_files(dir_: str) -> Any:
-    """Gets text files from dir_, recursively. Returns Generator."""
-    return (file_ for file_ in Path(dir_).glob("**/*.txt"))
-
-
 def fairly_divide(deques: Deque, bins: int) -> List[Deque]:
     """Fairly divides files. Returns List of Deque Objects."""
     group_size = len(deques)//bins
-    groups: List = [deque() for x in range(bins)]
+    groups: List[Deque] = [deque() for x in range(bins)]
     finished = 0
     for group in groups:
         divide_bulk(deques, group, group_size)
@@ -104,4 +90,4 @@ def progress_bar(iteration, total, prefix='', suffix='', decimals=1,
 
 def valid_bins(num: int) -> bool:
     """Checks valid bin amount. Returns Boolean."""
-    return 2 <= num and num <= 100
+    return 2 <= num and num <= 1000

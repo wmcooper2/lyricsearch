@@ -3,15 +3,24 @@
 # stand lib
 import argparse as ap
 import subprocess
-from typing import Any
+from typing import (
+    Any,
+    List,
+    Text,
+    )
 
 # custom
-from constants import *
-from personal import *
+# from constants import *
+from personal import (
+    PI1,
+    PI2,
+    PI3,
+    PI4,
+    )
 
-cluster: list = [pi1, pi2, pi3, pi4]    # ip addresses
-pi_outputs: list = []                      # holds stdout from pis
-given_args: list = []                      # command line args
+cluster: List[Text] = [PI1, PI2, PI3, PI4]
+pi_outputs: List[Text] = []
+given_args: List[Text] = []
 
 
 def clear_terminal() -> None:
@@ -20,22 +29,23 @@ def clear_terminal() -> None:
     return None
 
 
-def format_cmd(s1: str, s2: str) -> str:
+def format_cmd(s1: Text, s2: Text) -> Text:
     return "{0} '{1}'".format(s1, s2)
 
 
-def format_node(pi_addr: str) -> str:
+def format_node(pi_addr: Text) -> Text:
     return "pi@" + pi_addr
 
 
-def format_ssh(pi: str) -> str:
+def format_ssh(pi: Text) -> Text:
     return "ssh " + pi
 
 
-def show_outputs() -> None:
+# outputs is "pi_outputs" var
+def show_outputs(outputs: Any) -> None:
     """Shows the outputs of the pis. Returns None."""
-    for output in pi_outputs:
-        print(str(pi_outputs.index(output)), "::", output)
+    for msg in outputs:
+        print(str(outputs.index(msg)), "::", msg)
     return None
 
 
@@ -49,17 +59,18 @@ def print_kwargs() -> None:
 
 def print_pi_outputs():
     """Displays contents of pi_outputs. Returns None."""
-    [print(out.stdout) for out in pi_outputs]
+    for out in pi_outputs:
+        print(out.stdout) 
 
 
 def run_cmd(cmd):
-    """Runs cmd in a subprocess. Returns stdout String."""
+    """Runs 'cmd' in a subprocess. Returns String."""
     return subprocess.run(cmd, encoding="utf-8", shell=True,
                           stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE).stdout
 
 
-def custom_cmd(pi: str, args: Any) -> str:
+def custom_cmd(pi: Text, args: Any) -> Text:
     """Sends custom command to a node. Returns String."""
     node = format_node(pi)
     ssh = format_ssh(node)
@@ -82,5 +93,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     clear_terminal()
     print("\n")
-    [custom_cmd(pi, args) for pi in cluster]
+    for pi in cluster:
+        custom_cmd(pi, args)
     parser.exit(status=0, message="Finished.\n")

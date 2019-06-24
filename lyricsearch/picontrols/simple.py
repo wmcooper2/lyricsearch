@@ -5,28 +5,38 @@ import argparse as ap
 import os
 from pathlib import Path
 import subprocess
+from typing import (
+    List,
+    Text,
+    )
 
 # custom
-from constants import *
-from personal import *
+# from constants import *
+from personal import (
+    PI1,
+    PI2,
+    PI3,
+    PI4,
+    PI5,
+    )
 
-cluster: list = [pi1, pi2, pi3, pi4]      # ip addresses
-pi_outputs: list = []                        # holds stdout from pis
-valid_args: list = ["1", "2", "3", "4"]
-given_args: list = []                        # command line args
-patternfile: str = "searchpattern.txt"
-noderesult: str = "../results/noderesult.txt"
+cluster: List[Text] = [PI1, PI2, PI3, PI4]
+pi_outputs: List[Text] = []
+valid_args: List[Text] = ["1", "2", "3", "4"]
+given_args: List[Text] = []
+patternfile: Text = "searchpattern.txt"
+noderesult: Text = "../results/noderesult.txt"
 
 
-def good_arg(flag: List[str]) -> bool:
+def good_arg(flag: List[Text]) -> bool:
     return flag[1] is not None
 
 
-def format_cmd(s1: str, s2: str) -> str:
+def format_cmd(s1: Text, s2: Text) -> Text:
     return "ssh "+s1+" '"+s2+"'"
 
 
-def format_pi_name(pi_addr: str) -> str:
+def format_pi_name(pi_addr: Text) -> Text:
     return "pi@"+pi_addr
 
 
@@ -65,13 +75,13 @@ def print_kwargs() -> None:
 #         print(out.stdout)
 
 
-def run_cmd(cmd: str) -> str:
+def run_cmd(cmd: Text) -> Text:
     """Runs cmd in a subprocess. Returns stdout String."""
     return subprocess.run(cmd, encoding="utf-8", shell=True,
                           stdout=subprocess.PIPE).stdout
 
 
-# def scp_from_pi(pi: str, mac_dir: str) -> str:
+# def scp_from_pi(pi: Text, mac_dir: Text) -> Text:
 #     """Copies all 'noderesult.txt' files to the macbook. Returns None."""
 #     return "scp "+pi+":/home/pi/lyricsearch/results/noderesult.txt "+mac_dir
 

@@ -11,9 +11,12 @@ from constants import (
         PATHS,
         VERBOSE,
         )
-from clisearchutil import (
-        exact_match_search,
+from dividingwork.fairlydivideutil import progress_bar
+from filesanddirs import (
         path_check,
+        )
+from searchutil import (
+        exact_match_search,
         save_results,
         subset_search,
         )
@@ -21,7 +24,8 @@ from clisearchutil import (
 
 def cli_search() -> None:
     try:
-        pattern = sys.argv[1]
+#         pattern = sys.argv[1]
+        pattern = input("What do you want to search for? ")
     except IndexError:
         pattern = None
     if pattern is None:
