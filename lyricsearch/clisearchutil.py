@@ -13,27 +13,29 @@ import shelve
 import shutil
 import subprocess
 import sys
-from time import asctime
-from time import time
-from typing import Any
-from typing import Deque
-from typing import List
-from typing import Set
-from typing import Text
-from typing import Tuple
+from time import asctime, time
+from typing import (
+        Any,
+        Deque,
+        List,
+        Set,
+        Text,
+        Tuple,
+        )
 
 # custom
-from constants import CLUSTER
-from constants import DEBUG
-from constants import RESULT_DIR
-from constants import SET_DIR
-from constants import VERBOSE
-from constants import ismac
-from constants import ispi
+# from constants import CLUSTER
+from constants import (
+        DEBUG,
+        DEBUGDIR,
+        RESULTSDIR,
+        SETSDIR,
+        VERBOSE,
+        )
 from fairlydivideutil import progress_bar
 
 
-def cluster_commands(pattern: str) -> List[str]:
+def cluster_commands(pattern: Text) -> List[Text]:
     """Formats commands for the cluster. Returns List."""
     commands = []
     for pi in CLUSTER:
@@ -41,13 +43,13 @@ def cluster_commands(pattern: str) -> List[str]:
     return commands
 
 
-def count_files(dir_: str) -> int:
+def count_files(dir_: Text) -> int:
     """Counts files ending in '.txt'. Returns Integer."""
     return sum([1 for x in Path(dir_).glob("**/*.txt")])
 
 
-def exact_match_search(possible: Tuple[List[str], int],
-                       pattern: str) -> Tuple[List[str], float]:
+def exact_match_search(possible: Tuple[List[Text], int],
+                       pattern: Text) -> Tuple[List[Text], float]:
     """Checks text files for exact matches. Returns Tuple.
 
         returns; (<exact matches>: list, <time taken>: int): tuple
@@ -69,7 +71,7 @@ def exact_match_search(possible: Tuple[List[str], int],
     return (exact_matches, end - start)
 
 
-def exact_search(target: str, pattern: str) -> bool:
+def exact_search(target: Text, pattern: Text) -> bool:
     """Performs brute force pattern matching. Returns Boolean."""
     try:
         with open(target, "r") as f:
@@ -81,26 +83,26 @@ def exact_search(target: str, pattern: str) -> bool:
     return False
 
 
-def exists(path: str) -> bool:
+def exists(path: Text) -> bool:
     """Checks if path exists. Returns Boolean."""
     return Path(path).exists()
 
 
-def file_name(dir_: str, string: str) -> str:
+def file_name(dir_: Text, string: Text) -> Text:
     return dir_+string+".txt"
 
 
-def file_path(song: str, dict_: dict) -> str:
+def file_path(song: Text, dict_: dict) -> Text:
     """Gets the song path. Returns String."""
     return dict_[song][0]
 
 
-def get_files(dir_: str) -> list:
+def get_files(dir_: Text) -> List[Text]:
     """Gets text files from dir_, recursively. Returns List."""
     return [file_ for file_ in Path(dir_).glob("**/*.txt")]
 
 
-def lyric_set(song: str, dict_: dict) -> set:
+def lyric_set(song: Text, dict_: dict) -> set:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
 
@@ -117,7 +119,7 @@ def make_file(file_):
         Path(file_).touch()
 
 
-def missing(paths: List[Tuple[str, str]]) -> List[Tuple[str, bool]]:
+def missing(paths: List[Tuple[Text, Text]]) -> List[Tuple[Text, bool]]:
     """Returns List of missing paths."""
     temp = []
     for path in paths:
@@ -125,7 +127,7 @@ def missing(paths: List[Tuple[str, str]]) -> List[Tuple[str, bool]]:
     return temp
 
 
-def path_check(paths: List[Tuple[str, str]]) -> None:
+def path_check(paths: List[Tuple[Text, Text]]) -> None:
     """Performs 'existence' check. Returns None."""
     if paths_okay(paths):
         print("Files and directories check complete.")
@@ -135,12 +137,12 @@ def path_check(paths: List[Tuple[str, str]]) -> None:
         quit()
 
 
-def paths_okay(paths: List[Tuple[str, str]]) -> bool:
+def paths_okay(paths: List[Tuple[Text, Text]]) -> bool:
     """Checks that all paths exist. Returns Boolean."""
     return all(Path(path[1]).exists for path in paths)
 
 
-def pi_cmd(pi: str, pattern: str) -> str:
+def pi_cmd(pi: Text, pattern: Text) -> Text:
     """Formats search command for the pi. Returns String."""
     return "ssh pi@" + pi + \
            " \"sudo python3.7 lyricsearch/src/main.py " + \
@@ -149,7 +151,7 @@ def pi_cmd(pi: str, pattern: str) -> str:
 #     print(os.popen("echo $PS1").read().strip())
 
 
-def save(src: List[str], dest: str) -> None:
+def save(src: List[Text], dest: Text) -> None:
     """Appends 'src' elements to 'dest'. Returns None."""
     with open(dest, "a+") as file_:
         for line in src:
@@ -158,19 +160,19 @@ def save(src: List[str], dest: str) -> None:
     return None
 
 
-def save_results(results: List[str], pattern: str) -> None:
-    """Saves to RESULT_DIR/<time stamp>/pattern.txt. Returns None."""
+def save_results(results: List[Text], pattern: Text) -> None:
+    """Saves to RESULTSDIR<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
     try:
         file_name = [t[5], t[1], t[3], t[0], t[4]]
     except:
         file_name = "tempsave"
-    save_to = RESULT_DIR + "_".join(file_name) + "_" + pattern
+    save_to = RESULTSDIR + "_".join(file_name) + "_" + pattern
     save(results, save_to)
     return None
 
 
-def search_db(pattern: str, db: str) -> List[str]:
+def search_db(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
     pset = set(pattern.split())
     matches = []
@@ -183,7 +185,7 @@ def search_db(pattern: str, db: str) -> List[str]:
     return matches
 
 
-def start_processes(processes: List[str]) -> List[Any]:
+def start_processes(processes: List[Text]) -> List[Any]:
     """Starts subprocesses. Returns List of workers."""
     a = subprocess.run(processes[0], encoding="utf-8", shell=True,
                        stdout=subprocess.PIPE).stdout
@@ -201,7 +203,7 @@ def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     return pattern.issubset(song)
 
 
-def subset_search(pattern: str) -> Tuple[List[str], float]:
+def subset_search(pattern: Text) -> Tuple[List[Text], float]:
     """Check for subset matches. Returns Tuple.
 
         returns; (<possible matches>: list, <time taken>: int): tuple
@@ -210,7 +212,7 @@ def subset_search(pattern: str) -> Tuple[List[str], float]:
     searched = 0
     start = time()
     total = 100
-    for song_set_db in Path(SET_DIR).glob("**/*.db"):
+    for song_set_db in Path(SETSDIR).glob("**/*.db"):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
         progress_bar(searched, total, prefix="Progress:",

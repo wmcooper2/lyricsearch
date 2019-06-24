@@ -19,12 +19,12 @@ if ismac():
 
     if valid_bins(bins):
         print("Counting files...")
-        file_amt = count_files(DATA_DIR)
+        file_amt = count_files(LYRICSDIR)
         print("File count:", str(file_amt))
 
         fs: Deque = deque()
         print("Collecting files...")
-        for f in get_files(DATA_DIR):
+        for f in get_files(LYRICSDIR):
             fs.append(str(f.resolve()).strip())
         print("Finished collecting files.")
 

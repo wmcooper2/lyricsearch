@@ -6,13 +6,17 @@ from pathlib import Path
 import sys
 
 # custom
-from constants import NAMED_PATHS
-from constants import PATHS
-from constants import VERBOSE
-from clisearchutil import exact_match_search
-from clisearchutil import path_check
-from clisearchutil import save_results
-from clisearchutil import subset_search
+from constants import (
+        NAMED_PATHS,
+        PATHS,
+        VERBOSE,
+        )
+from clisearchutil import (
+        exact_match_search,
+        path_check,
+        save_results,
+        subset_search,
+        )
 
 
 def cli_search() -> None:

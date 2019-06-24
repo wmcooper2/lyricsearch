@@ -8,7 +8,7 @@ from time import time
 from typing import Deque
 
 # custom
-from constants import DATA_DIR
+from constants import LYRICSDIR
 from constants import SET_DIR
 from constants import VERBOSE
 from fairlydivideutil import block_set
@@ -35,11 +35,11 @@ except IndexError:
 prep_start = time()
 if valid_bins(bins):
     if VERBOSE:
-        print("{0:<12} {1:<20}".format("Source dir:", DATA_DIR))
+        print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
         print("{0:<12} {1:<20}".format("Save dir:", SET_DIR))
 
         print("Counting files...")
-        file_amt = count_files(DATA_DIR)
+        file_amt = count_files(LYRICSDIR)
         print("File count:", str(file_amt))
 
         blockname = "blank"
@@ -47,7 +47,7 @@ if valid_bins(bins):
         file_count = 0
         setcount = 1
         start = time()
-        for file_ in get_files(DATA_DIR):
+        for file_ in get_files(LYRICSDIR):
             deq.append(file_)
             file_count += 1
             progress_bar(file_count, file_amt, prefix="Progress:",
@@ -69,12 +69,12 @@ if valid_bins(bins):
         print("Time to make block sets:", round(end - start, 0))
 
     else:
-        file_amt = count_files(DATA_DIR)
+        file_amt = count_files(LYRICSDIR)
         deq = deque()
         setcount = 1
         blockname = "blank"
         start = time()
-        for file_ in get_files(DATA_DIR):
+        for file_ in get_files(LYRICSDIR):
             deq.append(file_)
 
             # write to file, clear the deque
