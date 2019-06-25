@@ -4,6 +4,7 @@ from pprint import pprint
 from typing import (
     Any,
     Dict,
+    Generator,
     List,
     Text,
     Tuple,
@@ -43,7 +44,7 @@ def file_path(song: Text, dict_: Dict[Text, Tuple[Text, Text]]) -> Text:
 #     return (file_ for file_ in Path(dir_).glob("**/*.txt"))
 
 
-def get_dbs(dir_: Text) -> Any:
+def get_dbs(dir_: Text) -> Generator[Text, None, None]:
     """Gets databases from 'dir_'. Returns Generator."""
     return (file_ for file_ in Path(dir_).glob("*.db"))
 
@@ -97,8 +98,3 @@ def path_check(paths: List[Tuple[Text, Text]]) -> None:
 def paths_okay(paths: List[Tuple[Text, Text]]) -> bool:
     """Checks that all paths exist. Returns Boolean."""
     return all(Path(pair[1]).exists() for pair in paths)
-
-
-def text_files(dir_):
-    """Returns generator of dir_'s '.txt' files, recursive."""
-    return ((yield str(f)) for f in Path(dir_).glob("**/*.txt"))

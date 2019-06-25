@@ -74,3 +74,5 @@ def test_paths_okay():
     nonpaths = [("1", "cheese/"), ("2", "cats/"), ("3", "artifacts/"),]
     assert fd.paths_okay(paths)
     assert not fd.paths_okay(nonpaths)
+
+

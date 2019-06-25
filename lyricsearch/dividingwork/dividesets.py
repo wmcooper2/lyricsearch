@@ -53,9 +53,7 @@ if __name__ == "__main__":
                 deq.append(file_)
                 file_count += 1
 #                 breakpoint()
-                progress_bar(file_count, file_amt, prefix="Progress:",
-                             suffix="Complete:", decimals=1, length=100,
-                             fill="█")
+                progress_bar(file_count, file_amt)
 
                 # write to file, clear the deque
                 if len(deq) >= floor(file_amt/bins):

@@ -64,8 +64,8 @@ def no_remainder(x: int, y: int) -> bool:
 
 
 # taken from StackOverflow
-def progress_bar(iteration, total, prefix='', suffix='', decimals=1,
-                 length=100, fill='█'):
+def progress_bar(iteration, total, prefix='Progress:',
+                 suffix='Complete:', decimals=1, length=50, fill='█'):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -86,11 +86,9 @@ def progress_bar(iteration, total, prefix='', suffix='', decimals=1,
         print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix),
               end='\r')
         # Print New Line on Complete
-    except:
-        print("total:", total)
-#     except ZeroDivisionError:
-#         print("Zero division error in:", os.path.abspath(__file__),
-#               ":: "+progress_bar.__name__+"()")
+    except ZeroDivisionError:
+        print("Zero division error in:", os.path.abspath(__file__),
+              ":: "+progress_bar.__name__+"()")
     if iteration == total:
         print()
 
