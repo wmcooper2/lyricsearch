@@ -1,6 +1,6 @@
 __all__ = [
-    "fairlydivide",
-    "fairlydividesets",
-    "fairlydividesetsutil",
-    "fairlydivideutil",
+    "dividefiles",
+    "dividefilesutil",
+    "dividesets",
+    "dividesetsutil",
     ]

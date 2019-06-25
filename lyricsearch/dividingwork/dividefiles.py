@@ -10,7 +10,7 @@ from constants import (
     LYRICSDIR,
     RESULTSDIR,
     )
-from fairlydivideutil import (
+from dividefilesutil import (
     valid_bins,
     fairly_divide,
     )

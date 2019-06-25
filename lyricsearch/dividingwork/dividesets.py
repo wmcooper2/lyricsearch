@@ -13,12 +13,12 @@ from constants import (
         SETSDIR,
         VERBOSE,
         )
-from fairlydivideutil import (
+from dividefilesutil import (
         block_set,
         progress_bar,
         valid_bins,
         )
-from fairlydividesetsutil import make_set
+from dividesetsutil import make_set
 from filesanddirs import count_files, get_files
 
 if __name__ == "__main__":

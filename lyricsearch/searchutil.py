@@ -131,7 +131,7 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
         progress_bar(searched, total, prefix="Progress:",
                      suffix="Complete:", decimals=1, length=100,
                      fill="█")
-        if VERBOSE and DEBUG:
-            print("\tSearched:", song_set_db)
+#         if VERBOSE and DEBUG:
+#             print("\tSearched:", song_set_db)
     end = time()
     return (possible_matches, end-start)

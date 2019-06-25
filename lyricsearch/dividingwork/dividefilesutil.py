@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.7
-"""Utility module for fairlydivide.py"""
+"""Utility module for dividefiles.py"""
 # stand lib
 from pathlib import Path
 from collections import deque
