@@ -32,7 +32,8 @@ from personal import (
 
 # CLUSTER = PI_NODES
 COMBINEDIR = "../combine/"
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 VERBOSE = True
 
 

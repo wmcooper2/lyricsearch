@@ -14,7 +14,7 @@ from constants import (
 # from searchutil import *
 from filesanddirs import (
     node_result_name,
-    node_result_files,
+    get_files_non_recursive,
     )
 
 
@@ -28,8 +28,8 @@ def node_results() -> None:
     """Combine each core's results on a pi-node into a single text file.
         Returns None."""
     node = get_node_name()
-    with open(node_result_name(node), "a+") as combined:
-        for file_ in node_result_files():
+    with open(node_result_name(COMBINEDIR, node), "a+") as combined:
+        for file_ in get_files_non_recursive(RESULTSDIR):
             with open(file_, "r") as results:
                 results_count = 0
                 for line in results.readlines():

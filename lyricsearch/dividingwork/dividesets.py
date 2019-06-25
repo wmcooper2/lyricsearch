@@ -22,17 +22,16 @@ from dividesetsutil import make_set
 from filesanddirs import count_files, get_files
 
 if __name__ == "__main__":
+    # adjust path to find ".debug/" in root dir
+    SETSDIR = "../"+SETSDIR
+    LYRICSDIR = "../"+LYRICSDIR
+
     try:
-#         bins = int(sys.argv[1])
         bins = int(input("How many lyric sets do you want to make? "))
         print("Sets", bins)
     except ValueError:
         print("Please choose a number. Quitting...")
         quit()
-#     except IndexError:
-#         print("Please add an argument. Quitting...")
-#         quit()
-
 
     # divide the files
     prep_start = time()
@@ -50,10 +49,10 @@ if __name__ == "__main__":
             file_count = 0
             setcount = 1
             start = time()
-            breakpoint()
             for file_ in get_files(LYRICSDIR):
                 deq.append(file_)
                 file_count += 1
+#                 breakpoint()
                 progress_bar(file_count, file_amt, prefix="Progress:",
                              suffix="Complete:", decimals=1, length=100,
                              fill="█")

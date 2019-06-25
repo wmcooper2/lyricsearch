@@ -25,25 +25,20 @@ from searchutil import (
 def cli_search() -> None:
     try:
         pattern = input("What do you want to search for? ")
-#     except IndexError:
-#         pattern = None
-#     if pattern is None:
-#         print("Give a string to search for.")
-#         quit()
     except:
         print("Unknown error getting user input. Naked exception.")
     if len(pattern) is 0:
         print("Give a string to search for.")
         quit()
 
-    path_check(PATHS)
     if VERBOSE:
         print("Machine:", os.uname().sysname)
         print("Paths status;")
         for path in NAMED_PATHS:
             print("\t{0} {1:<15} {2}".format(Path(path[1]).exists(),
-                  path[0], path[1]))
+                  path[0], Path(path[1]).resolve()))
 
+#         path_check(PATHS)
         print("Searching for: '" + pattern + "'. Please wait...")
 
         possible_results = subset_search(pattern)

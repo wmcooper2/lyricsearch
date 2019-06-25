@@ -26,14 +26,17 @@ from typing import (
 
 # custom
 from constants import (
-        DEBUG,
         DEBUGDIR,
         RESULTSDIR,
         SETSDIR,
-        VERBOSE,
         )
 from dividingwork.dividefilesutil import progress_bar
-from filesanddirs import file_path
+from filesanddirs import (
+        file_path,
+        count_files,
+        count_db,
+        get_files,
+        )
 
 
 def exact_match_search(possible: Tuple[List[Text], int],
@@ -47,11 +50,9 @@ def exact_match_search(possible: Tuple[List[Text], int],
     start = time()
     for match in possible[0]:
         if exact_search(match, pattern):
-            if VERBOSE and DEBUG:
-                print("{0:<15} {1}".format("Exact match:",
-                      Path(match).name))
             exact_matches.append(match)
         searched += 1
+#         breakpoint()
         progress_bar(searched, len(possible[0]), prefix="Progress:",
                      suffix="Complete:", decimals=1, length=100,
                      fill="█")
@@ -88,7 +89,6 @@ def save(src: List[Text], dest: Text) -> None:
 def save_results(results: List[Text], pattern: Text) -> None:
     """Saves to RESULTSDIR<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
-    print("searchutil.py, save_results(), asctime():", t)
     file_name = [t[4], t[1], t[2], t[0], t[3]]
     save_to = RESULTSDIR+"_".join(file_name)+"_"+pattern
     save(results, save_to)
@@ -99,8 +99,6 @@ def search_db(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
     pset = set(pattern.split())
     matches = []
-    if VERBOSE and DEBUG:
-        print("\tSearching:", Path(db).resolve())
     with shelve.open(db) as miniset:
         for name, tuple_ in miniset.items():
             if subset_match(lyric_set(name, miniset), pset):
@@ -121,14 +119,14 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
     possible_matches = []
     searched = 0
     start = time()
-    total = 1000
+    total = count_db(SETSDIR)
     for song_set_db in Path(SETSDIR).glob("**/*.db"):
+#     for song_set_db in get_files(SETSDIR):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
+#         breakpoint()
         progress_bar(searched, total, prefix="Progress:",
                      suffix="Complete:", decimals=1, length=100,
                      fill="█")
-#         if VERBOSE and DEBUG:
-#             print("\tSearched:", song_set_db)
     end = time()
     return (possible_matches, end-start)

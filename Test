@@ -1,2 +1,2 @@
 #!/bin/bash
-pytest tests/*_test.py
+pytest **/*_test.py
