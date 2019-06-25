@@ -9,6 +9,8 @@ import sys
 from constants import (
         NAMED_PATHS,
         PATHS,
+        RESULTSDIR,
+        SETSDIR,
         VERBOSE,
         )
 from dividingwork.dividefilesutil import progress_bar
@@ -41,7 +43,7 @@ def cli_search() -> None:
 #         path_check(PATHS)
         print("Searching for: '" + pattern + "'. Please wait...")
 
-        possible_results = subset_search(pattern)
+        possible_results = subset_search(SETSDIR, pattern)
         print("{0:<20} {1:>6}".format("Possible matches:",
               len(possible_results[0])))
         print("{0:<20} {1:>6}".format("Search time (sec):",
@@ -52,12 +54,12 @@ def cli_search() -> None:
               len(exact_results[0])))
         print("{0:<20} {1:>6}".format("Search time (sec):",
               round(exact_results[1], 2)))
-        save_results(exact_results[0], pattern)
+        save_results(RESULTSDIR, exact_results[0], pattern)
         print("Finished.")
     else:
-        possible_results = subset_search(pattern)
+        possible_results = subset_search(SETSDIR, pattern)
         exact_results = exact_match_search(possible_results, pattern)
-        save_results(exact_results[0], pattern)
+        save_results(RESULTSDIR, exact_results[0], pattern)
     return None
 
 

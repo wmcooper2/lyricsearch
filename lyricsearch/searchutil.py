@@ -25,11 +25,6 @@ from typing import (
         )
 
 # custom
-from constants import (
-        DEBUGDIR,
-        RESULTSDIR,
-        SETSDIR,
-        )
 from dividingwork.dividefilesutil import progress_bar
 from filesanddirs import (
         file_path,
@@ -86,11 +81,11 @@ def save(src: List[Text], dest: Text) -> None:
     return None
 
 
-def save_results(results: List[Text], pattern: Text) -> None:
-    """Saves to RESULTSDIR<time stamp>/pattern.txt. Returns None."""
+def save_results(dir_: Text, results: List[Text], pattern: Text) -> None:
+    """Saves to 'dir_<time stamp>/pattern.txt'. Returns None."""
     t = asctime().split(" ")
     file_name = [t[4], t[1], t[2], t[0], t[3]]
-    save_to = RESULTSDIR+"_".join(file_name)+"_"+pattern
+    save_to = dir_+"_".join(file_name)+"_"+pattern
     save(results, save_to)
     return None
 
@@ -111,7 +106,7 @@ def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     return pattern.issubset(song)
 
 
-def subset_search(pattern: Text) -> Tuple[List[Text], float]:
+def subset_search(dir_: Text, pattern: Text) -> Tuple[List[Text], float]:
     """Check for subset matches. Returns Tuple.
 
         returns; (<possible matches>: list, <time taken>: int): tuple
@@ -119,9 +114,9 @@ def subset_search(pattern: Text) -> Tuple[List[Text], float]:
     possible_matches = []
     searched = 0
     start = time()
-    total = count_db(SETSDIR)
-    for song_set_db in Path(SETSDIR).glob("**/*.db"):
-#     for song_set_db in get_files(SETSDIR):
+    total = count_db(dir_)
+    for song_set_db in Path(dir_).glob("**/*.db"):
+#     for song_set_db in get_files(dir_):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
 #         breakpoint()
