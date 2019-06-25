@@ -32,7 +32,7 @@ from constants import (
         SETSDIR,
         VERBOSE,
         )
-from dividingwork.fairlydivideutil import progress_bar
+from dividingwork.dividefilesutil import progress_bar
 from filesanddirs import file_path
 
 
@@ -89,10 +89,7 @@ def save_results(results: List[Text], pattern: Text) -> None:
     """Saves to RESULTSDIR<time stamp>/pattern.txt. Returns None."""
     t = asctime().split(" ")
     print("searchutil.py, save_results(), asctime():", t)
-    try:
-        file_name = [t[5], t[1], t[3], t[0], t[4]]
-    except:
-        file_name = "tempsave"
+    file_name = [t[4], t[1], t[2], t[0], t[3]]
     save_to = RESULTSDIR+"_".join(file_name)+"_"+pattern
     save(results, save_to)
     return None

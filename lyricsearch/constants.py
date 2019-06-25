@@ -37,7 +37,10 @@ VERBOSE = True
 
 
 if DEBUG:
-    LYRICSDIR = "../.testdata/"  # 54 files
+    DEBUGDIR = "../.debug/"
+    LYRICSDIR = DEBUGDIR+"lyrics/"  # 54 files
+    RESULTSDIR = DEBUGDIR+"results/"
+    SETSDIR = DEBUGDIR+"sets/"
 
 NAMED_PATHS = [
         ("COMBINEDIR", COMBINEDIR),

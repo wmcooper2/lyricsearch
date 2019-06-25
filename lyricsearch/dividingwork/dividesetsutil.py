@@ -77,6 +77,7 @@ def make_set(song_list: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(song_list)
     save_to = dest_dir+name+".db"
+#     breakpoint()
     with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()

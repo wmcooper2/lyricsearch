@@ -50,6 +50,7 @@ if __name__ == "__main__":
             file_count = 0
             setcount = 1
             start = time()
+            breakpoint()
             for file_ in get_files(LYRICSDIR):
                 deq.append(file_)
                 file_count += 1
@@ -69,7 +70,7 @@ if __name__ == "__main__":
             # catch the last one
             make_set(deq, SETSDIR, blockname)
             end = time()
-            print("Time to make block sets:", round(end - start, 0))
+            print("Time to make block sets:", round(end-start, 0))
 
         else:
             file_amt = count_files(LYRICSDIR)

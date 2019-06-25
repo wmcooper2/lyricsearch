@@ -11,7 +11,7 @@ from constants import (
         PATHS,
         VERBOSE,
         )
-from dividingwork.fairlydivideutil import progress_bar
+from dividingwork.dividefilesutil import progress_bar
 from filesanddirs import (
         path_check,
         )
@@ -24,11 +24,15 @@ from searchutil import (
 
 def cli_search() -> None:
     try:
-#         pattern = sys.argv[1]
         pattern = input("What do you want to search for? ")
-    except IndexError:
-        pattern = None
-    if pattern is None:
+#     except IndexError:
+#         pattern = None
+#     if pattern is None:
+#         print("Give a string to search for.")
+#         quit()
+    except:
+        print("Unknown error getting user input. Naked exception.")
+    if len(pattern) is 0:
         print("Give a string to search for.")
         quit()
 
