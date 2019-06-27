@@ -47,10 +47,7 @@ def exact_match_search(possible: Tuple[List[Text], int],
         if exact_search(match, pattern):
             exact_matches.append(match)
         searched += 1
-#         breakpoint()
-        progress_bar(searched, len(possible[0]), prefix="Progress:",
-                     suffix="Complete:", decimals=1, length=100,
-                     fill="█")
+        progress_bar(searched, len(possible[0]), prefix="Exact search:")
     end = time()
     return (exact_matches, end-start)
 
@@ -119,9 +116,6 @@ def subset_search(dir_: Text, pattern: Text) -> Tuple[List[Text], float]:
 #     for song_set_db in get_files(dir_):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
-#         breakpoint()
-        progress_bar(searched, total, prefix="Progress:",
-                     suffix="Complete:", decimals=1, length=100,
-                     fill="█")
+        progress_bar(searched, total, prefix="Subset search:")
     end = time()
     return (possible_matches, end-start)

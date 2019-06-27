@@ -1,10 +1,12 @@
-from ..lyricsearch import filesanddirs as fd
+"""Test module for filesanddirs.py"""
+from . import filesanddirs as fd
 from pathlib import Path
 import os
 
-DEBUGDIR = ".debug/"
-LYRICSDIR = ".debug/lyrics/"
-SETSDIR = ".debug/sets/"
+
+DEBUGDIR = "../.debug/"
+LYRICSDIR = DEBUGDIR+"lyrics/"
+SETSDIR = DEBUGDIR+"sets/"
 
  
 def test_block_dir():

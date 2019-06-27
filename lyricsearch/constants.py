@@ -1,3 +1,10 @@
+# print("__NAME__", __name__)
+# print(dir())
+# import os
+# print(os.path.abspath(__file__))
+# print(__package__)
+
+
 #!/usr/bin/env python3.7
 """Constants module for Lyric Search program."""
 # stand lib
@@ -31,27 +38,25 @@ from personal import (
 
 
 # CLUSTER = PI_NODES
-COMBINEDIR = "../combine/"
 DEBUG = True
 # DEBUG = False
 VERBOSE = True
 
 
 if DEBUG:
-    DEBUGDIR = "../.debug/"
+    DEBUGDIR = ".debug/"
     LYRICSDIR = DEBUGDIR+"lyrics/"  # 54 files
     RESULTSDIR = DEBUGDIR+"results/"
     SETSDIR = DEBUGDIR+"sets/"
 
 NAMED_PATHS = [
-        ("COMBINEDIR", COMBINEDIR),
-        ("DEBUGDIR", DEBUGDIR),
-        ("LYRICSDIR", LYRICSDIR),
-        ("RESULTSDIR", RESULTSDIR),
-        ("SETSDIR", SETSDIR)]
+    ("DEBUGDIR", DEBUGDIR),
+    ("LYRICSDIR", LYRICSDIR),
+    ("RESULTSDIR", RESULTSDIR),
+    ("SETSDIR", SETSDIR)]
 
-PATHS = [COMBINEDIR,
-         DEBUGDIR,
-         LYRICSDIR,
-         RESULTSDIR,
-         SETSDIR]
+PATHS = [
+     DEBUGDIR,
+     LYRICSDIR,
+     RESULTSDIR,
+     SETSDIR]

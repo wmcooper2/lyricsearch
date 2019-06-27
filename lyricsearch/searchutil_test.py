@@ -1,4 +1,4 @@
-from ..lyricsearch import searchutil as su
+from . import searchutil as su
 
 
 fake_text = "I went to the store the other day."

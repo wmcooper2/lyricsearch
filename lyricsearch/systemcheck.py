@@ -3,9 +3,9 @@
 import os
 
 
- def ismac() -> bool:
-     return os.uname().sysname == "Darwin"
+def ismac() -> bool:
+    return os.uname().sysname == "Darwin"
 
 
- def ispi() -> bool:
-     return os.uname().sysname == "Linux"
+def ispi() -> bool:
+    return os.uname().sysname == "Linux"

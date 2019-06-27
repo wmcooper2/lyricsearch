@@ -5,3 +5,7 @@ __all__ = [
     "personal",
     "searchutil",
     "systemcheck",]
+
+__path__ = [
+    "dividingwork",
+    "picontrols",]

@@ -13,7 +13,6 @@ from constants import (
         SETSDIR,
         VERBOSE,
         )
-from dividingwork.dividefilesutil import progress_bar
 from filesanddirs import (
         path_check,
         )
@@ -41,18 +40,18 @@ def cli_search() -> None:
                   path[0], Path(path[1]).resolve()))
 
 #         path_check(PATHS)
-        print("Searching for: '" + pattern + "'. Please wait...")
+        print("Searching for: \n\t'"+pattern+"'")
 
         possible_results = subset_search(SETSDIR, pattern)
-        print("{0:<20} {1:>6}".format("Possible matches:",
+        print("\t{0:<20} {1:>6}".format("Possible matches:",
               len(possible_results[0])))
-        print("{0:<20} {1:>6}".format("Search time (sec):",
+        print("\t{0:<20} {1:>6}".format("Search time (sec):",
               round(possible_results[1], 2)))
 
         exact_results = exact_match_search(possible_results, pattern)
-        print("{0:<20} {1:>6}".format("Exact matches:",
+        print("\t{0:<20} {1:>6}".format("Exact matches:",
               len(exact_results[0])))
-        print("{0:<20} {1:>6}".format("Search time (sec):",
+        print("\t{0:<20} {1:>6}".format("Search time (sec):",
               round(exact_results[1], 2)))
         save_results(RESULTSDIR, exact_results[0], pattern)
         print("Finished.")

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3.7
 """Utility module for making sets of the lyrics files."""
 # stand lib
-from constants import DEBUGFILE
 from pathlib import Path
 from pprint import pprint
 import shelve
@@ -15,6 +14,7 @@ from typing import (
         )
 
 # custom
+from constants import DEBUGFILE
 from filesanddirs import count_files
 
 
