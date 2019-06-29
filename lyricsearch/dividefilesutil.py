@@ -4,6 +4,7 @@
 import os
 from pathlib import Path
 from collections import deque
+import shutil
 from typing import (
         Any,
         Deque,
@@ -17,10 +18,25 @@ def block_set(num: int) -> Text:
     return "blockset"+str(num)
 
 
+def move_deque_files(group: Deque, dest: Text) -> None:
+    """Moves files in group to 'dest/'. Returns None."""
+    file_amt = len(group)
+    moved = 0
+    for file_ in group:
+        shutil.move(str(file_), dest, copy_function=shutil.copy)
+        moved += 1
+        progress_bar(moved, file_amt, prefix=str(moved)+"/"+str(file_amt)
+                     newline=False)
+    return None
+
 def copy_deque_files(group: Deque, dest: Text) -> None:
     """Copies files in group to 'dest/'. Returns None."""
+    file_amt = len(group)
+    copied_files = 0
     for file_ in group:
         shutil.copy(file_, dest)
+        copied_files += 1
+        progress_bar(copied_files, file_amt, prefix="Copied:")
     return None
 
 
@@ -65,7 +81,8 @@ def no_remainder(x: int, y: int) -> bool:
 
 # taken from StackOverflow
 def progress_bar(iteration, total, prefix='Progress:',
-                 suffix='Complete:', decimals=1, length=50, fill='█'):
+                 suffix='Complete:', decimals=1, length=50, fill='█',
+                 newline=True) -> None:
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -89,8 +106,9 @@ def progress_bar(iteration, total, prefix='Progress:',
     except ZeroDivisionError:
         print("Zero division error in:", os.path.abspath(__file__),
               ":: "+progress_bar.__name__+"()")
-    if iteration == total:
+    if iteration == total and newline:
         print()
+    return None
 
 
 def valid_bins(num: int) -> bool:

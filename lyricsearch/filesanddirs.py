@@ -11,6 +11,14 @@ from typing import (
     )
 
 
+def collect_file_names(dir_: Text) -> Generator[Text, None, None]:
+    """Collect the file names from the database. Returns generator."""
+#     return (name for name in Path(dir_).glob("**/*.txt"))
+#     for name in Path(dir_).glob("**/*.txt"):
+#         yield
+    
+
+
 def block_dir(num: int) -> Text:
     """Formats dir name. Returns String."""
     return "block"+str(num)

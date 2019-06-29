@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.7
-# searchutil.py
 """Utility module for Lyric Search program."""
 # stand lib
 from collections import deque
