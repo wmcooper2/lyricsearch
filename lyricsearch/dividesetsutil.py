@@ -47,6 +47,27 @@ def make_mega_set(dir_: Text) -> set:
     return mega_set
 
 
+def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
+    """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
+    song_count = len(songs)
+    save_to = dest_dir+name+".db"
+    with shelve.open(save_to) as db:
+        finished_songs = 0
+        set_start = time()
+        for song in songs:
+            try:
+                title = str(Path(song).resolve().name).strip(".txt")
+                words = set(read_file(str(Path(song))))
+
+                # Tuple(artist_song, set)
+                value = (str(Path(song).resolve()), words)
+                db[title] = value
+            except UnicodeDecodeError:
+                save_error(str(song))
+            finished_songs += 1
+        set_end = time()
+
+
 def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
     """Set up database with the same name as 'song_dir'. Returns None."""
     db_name = dest_dir+str(Path(song_dir).name)+".db"
@@ -68,27 +89,7 @@ def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
                 save_error(str(song))
                 print("Error:", str(song))
             finished_songs += 1
-
-
-def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
-    """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
-    song_count = len(songs)
-    save_to = dest_dir+name+".db"
-    with shelve.open(save_to) as db:
-        finished_songs = 0
-        set_start = time()
-        for song in songs:
-            try:
-                title = str(Path(song).resolve().name).strip(".txt")
-                words = set(read_file(str(Path(song))))
-
-                # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), words)
-                db[title] = value
-            except UnicodeDecodeError:
-                save_error(str(song))
-            finished_songs += 1
-        set_end = time()
+    return None
 
 
 def read_file(file_: Text) -> List[Text]:

@@ -1,6 +1,8 @@
 """Module for working with files and directories."""
+# stand lib
 from pathlib import Path
 from pprint import pprint
+import shelve
 from typing import (
     Any,
     Dict,
@@ -72,17 +74,18 @@ def get_files_non_recursive(dir_: Text) -> List[Text]:
     return [p for p in Path(dir_).glob("*.txt")]
 
 
-def make_artist_db(dir_: Text) -> None:
+def make_artist_db(dir_: Text, database: Text) -> None:
     """Creates the 'artist.db' from files in 'dir_'. Returns None."""
     artists = {}
-    file_amt = count_files(lyricsdir)
+    file_amt = count_files(dir_)
     for path in collect_file_names(dir_):  # recursive
         artist, song = artist_song(path)
         if artist not in artists:
             artists[artist] = set()
         artists[artist].add(song)
     pprint(artists)
-    with shelve.open(ARTIST_DB) as db:
+    print("database:", database)
+    with shelve.open(database) as db:
         db["artists"] = artists
 
 

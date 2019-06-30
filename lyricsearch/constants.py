@@ -7,6 +7,7 @@ import os
 
 # custom
 from personal import (
+        ARTISTDB,
         DEBUGDIR,
         DEBUGFILE,
         LYRICSDIR,
@@ -39,12 +40,14 @@ VERBOSE = True
 
 if DEBUG:
     DEBUGDIR = ".debug/"
+    ARTISTDB = DEBUGDIR+"artist.db"
     LYRICSDIR = DEBUGDIR+"lyrics/"  # 54 files
     RESULTSDIR = DEBUGDIR+"results/"
     SETSDIR = DEBUGDIR+"sets/"
     SOURCETEXT = DEBUGDIR+"sourcetext/"
 
 NAMED_PATHS = [
+    ("ARTISTDB", ARTISTDB),
     ("DEBUGDIR", DEBUGDIR),
     ("LYRICSDIR", LYRICSDIR),
     ("RESULTSDIR", RESULTSDIR),
@@ -52,6 +55,7 @@ NAMED_PATHS = [
     ("SOURCETEXT", SOURCETEXT)]
 
 PATHS = [
+     ARTISTDB,
      DEBUGDIR,
      LYRICSDIR,
      RESULTSDIR,

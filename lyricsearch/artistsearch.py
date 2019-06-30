@@ -7,14 +7,19 @@ from typing import Any, Text, Tuple
 
 
 # custom
-from constants import LYRICSDIR
-from filesanddirs import collect_file_names, artist_song, count_files
+from constants import LYRICSDIR, ARTISTDB
+from filesanddirs import (
+        collect_file_names,
+        count_files,
+        make_artist_db,)
 
 
 # make artist db
+# prepend because not ran in "./run"
 lyricsdir = "../"+LYRICSDIR
 print("Making artist database...")
-make_artist_db(lyricsdir, ARTIST_DB)
+make_artist_db(lyricsdir, "../"+ARTISTDB)
+print("Artist database created.")
 
 
 # "Overtime" in a["artists"]["Akon"]
