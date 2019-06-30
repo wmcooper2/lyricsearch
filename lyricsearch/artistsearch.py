@@ -1,20 +1,18 @@
 """Search for artist in lyrics database."""
 # stand lib
+from pathlib import Path
+from typing import Any, Text, Tuple
 
 
 # custom
 from constants import LYRICSDIR
-# from .searchutil import collect_file_names
-from filesanddirs import collect_file_names
+from filesanddirs import collect_file_names, artist_song
 
 
 # collect the file names.
 print(Path(LYRICSDIR).resolve())
 a = collect_file_names(LYRICSDIR)
-print(type(a))
-# print(next(a))
+b = next(a)
+print(artist_song(b))
 
-
-# split the file names into artist and song
-# write the sorted artist list to a shelve.db
-# same for songs
+# write the sorted artist list to an sql database?

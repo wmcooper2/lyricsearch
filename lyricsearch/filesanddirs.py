@@ -11,12 +11,20 @@ from typing import (
     )
 
 
+def artist_song(path: Any) -> Tuple[Text, Text]:
+    """Extracts the artist and song name from 'path'. Returns String."""
+    parent = path.parents[0]
+    parts = path.parts
+    file_name = path.name
+    stem = path.stem
+    artist = stem.split("_")[0]
+    song = stem.split("_")[1]
+    return artist, song
+
+
 def collect_file_names(dir_: Text) -> Generator[Text, None, None]:
     """Collect the file names from the database. Returns generator."""
-#     return (name for name in Path(dir_).glob("**/*.txt"))
-#     for name in Path(dir_).glob("**/*.txt"):
-#         yield
-    
+    return Path(dir_).glob("**/*.txt")
 
 
 def block_dir(num: int) -> Text:
@@ -33,10 +41,6 @@ def count_db(db: Text) -> int:
     """Counts database files. Returns Integer."""
     return sum([1 for x in Path(db).glob("**/*.db")])
 
-
-# def exists(path: Text) -> bool:
-#     """Checks if path exists. Returns Boolean."""
-#     return Path(path).exists()
 
 def file_name(dir_: Text, string: Text) -> Text:
     return dir_+string+".txt"
