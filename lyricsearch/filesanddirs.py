@@ -72,6 +72,20 @@ def get_files_non_recursive(dir_: Text) -> List[Text]:
     return [p for p in Path(dir_).glob("*.txt")]
 
 
+def make_artist_db(dir_: Text) -> None:
+    """Creates the 'artist.db' from files in 'dir_'. Returns None."""
+    artists = {}
+    file_amt = count_files(lyricsdir)
+    for path in collect_file_names(dir_):  # recursive
+        artist, song = artist_song(path)
+        if artist not in artists:
+            artists[artist] = set()
+        artists[artist].add(song)
+    pprint(artists)
+    with shelve.open(ARTIST_DB) as db:
+        db["artists"] = artists
+
+
 def make_dir(dir_) -> None:
     """Makes 'dir_' if it doesn't exist. Returns None."""
     if not Path(dir_).exists():

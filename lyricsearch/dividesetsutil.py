@@ -28,7 +28,6 @@ def lyricset(song: Text, dict_: Dict[Text, Text]) -> Text:
     return dict_[song][1]
 
 
-
 def make_mega_set(dir_: Text) -> set:
     """Make single set from '.txt' files in dir_. Returns Set."""
     mega_set = set()
@@ -40,7 +39,6 @@ def make_mega_set(dir_: Text) -> set:
             for word in lyrics:
                 mega_set.add(word)
             song_count += 1
-#             show_progress(song_count)
         except UnicodeDecodeError:
             save_error(str(song_file))
             print("Error:", song_file)
@@ -70,18 +68,16 @@ def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
                 save_error(str(song))
                 print("Error:", str(song))
             finished_songs += 1
-#             progress(finished_songs, song_count, 500)
 
 
-def make_set(song_list: Deque, dest_dir: Text, name: Text) -> None:
+def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
-    song_count = len(song_list)
+    song_count = len(songs)
     save_to = dest_dir+name+".db"
-#     breakpoint()
     with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()
-        for song in song_list:
+        for song in songs:
             try:
                 title = str(Path(song).resolve().name).strip(".txt")
                 words = set(read_file(str(Path(song))))
@@ -93,13 +89,6 @@ def make_set(song_list: Deque, dest_dir: Text, name: Text) -> None:
                 save_error(str(song))
             finished_songs += 1
         set_end = time()
-
-
-# def progress(finished: int, total: int, step: int) -> None:
-#     """Prints progress to terminal. Returns None."""
-#     if finished % step == 0:
-#         print("% completed:", str(round((finished/total)*100, 2)))
-#     return None
 
 
 def read_file(file_: Text) -> List[Text]:
@@ -120,10 +109,3 @@ def save_error(error: Text) -> None:
         e.write(str(Path(error).resolve()))
         e.write("\n")
     return None
-
-
-# def show_progress(num: int) -> None:
-#     """Update user terminal. Returns None."""
-#     if num % 5000 == 0:
-#         print(str(round((num/616324)*100, 2)), "%")
-#     return None

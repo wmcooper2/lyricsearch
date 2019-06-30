@@ -1,18 +1,20 @@
 """Search for artist in lyrics database."""
 # stand lib
 from pathlib import Path
+from pprint import pprint
+import shelve
 from typing import Any, Text, Tuple
 
 
 # custom
 from constants import LYRICSDIR
-from filesanddirs import collect_file_names, artist_song
+from filesanddirs import collect_file_names, artist_song, count_files
 
 
-# collect the file names.
-print(Path(LYRICSDIR).resolve())
-a = collect_file_names(LYRICSDIR)
-b = next(a)
-print(artist_song(b))
+# make artist db
+lyricsdir = "../"+LYRICSDIR
+print("Making artist database...")
+make_artist_db(lyricsdir, ARTIST_DB)
 
-# write the sorted artist list to an sql database?
+
+# "Overtime" in a["artists"]["Akon"]
