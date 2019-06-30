@@ -1,4 +1,3 @@
-# from . import searchutil as su
 import searchutil as su
 
 

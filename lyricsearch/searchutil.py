@@ -24,7 +24,7 @@ from typing import (
         )
 
 # custom
-from dividingwork.dividefilesutil import progress_bar
+from dividefilesutil import progress_bar
 from filesanddirs import (
         file_path,
         count_files,
@@ -46,7 +46,7 @@ def exact_match_search(possible: Tuple[List[Text], int],
         if exact_search(match, pattern):
             exact_matches.append(match)
         searched += 1
-        progress_bar(searched, len(possible[0]), prefix="Exact search:")
+        progress_bar(searched, len(possible[0]), prefix="Exact:")
     end = time()
     return (exact_matches, end-start)
 
@@ -115,6 +115,6 @@ def subset_search(dir_: Text, pattern: Text) -> Tuple[List[Text], float]:
 #     for song_set_db in get_files(dir_):
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
-        progress_bar(searched, total, prefix="Subset search:")
+        progress_bar(searched, total, prefix="Subsets:")
     end = time()
     return (possible_matches, end-start)

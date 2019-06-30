@@ -1,5 +1,4 @@
 """Test module for filesanddirs.py"""
-# from . import filesanddirs as fd
 import filesanddirs as fd
 from pathlib import Path
 import os

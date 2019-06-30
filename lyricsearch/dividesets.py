@@ -22,10 +22,6 @@ from dividesetsutil import make_set
 from filesanddirs import count_files, get_files
 
 if __name__ == "__main__":
-    # adjust path to find ".debug/" in root dir
-    SETSDIR = "../"+SETSDIR
-    LYRICSDIR = "../"+LYRICSDIR
-
     try:
         bins = int(input("How many lyric sets do you want to make? "))
         print("Sets", bins)

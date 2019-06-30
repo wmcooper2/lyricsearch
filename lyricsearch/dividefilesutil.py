@@ -25,7 +25,7 @@ def move_deque_files(group: Deque, dest: Text) -> None:
     for file_ in group:
         shutil.move(str(file_), dest, copy_function=shutil.copy)
         moved += 1
-        progress_bar(moved, file_amt, prefix=str(moved)+"/"+str(file_amt)
+        progress_bar(moved, file_amt, prefix=str(moved)+"/"+str(file_amt),
                      newline=False)
     return None
 
