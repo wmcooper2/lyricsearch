@@ -33,8 +33,8 @@ from personal import (
 
 
 # CLUSTER = PI_NODES
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 VERBOSE = True
 
 

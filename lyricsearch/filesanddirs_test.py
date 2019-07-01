@@ -7,11 +7,19 @@ import os
 DEBUGDIR = "../.debug/"
 LYRICSDIR = DEBUGDIR+"lyrics/"
 SETSDIR = DEBUGDIR+"sets/"
-
+PATHS = [("1", DEBUGDIR), ("2", LYRICSDIR), ("3", SETSDIR),]
+NONPATHS = [("1", "cheese/"), ("2", "cats/"), ("3", "artifacts/"),]
+FAKEPATHS = [("notneeded", "somepath/"),]
+DIR_ = "mydir/"
+STRING = "string"
+SONG = "I like to eat"
+DICT_ = {"I like to eat": ("its/here/boss.txt", "apples and bananas")}
  
-def test_block_dir():
-    assert fd.block_dir(1) == "block1"
+def test_block_dir_0():
     assert fd.block_dir(0) == "block0"
+
+def test_block_dir_1():
+    assert fd.block_dir(1) == "block1"
 
 def test_count_files():
     assert fd.count_files(LYRICSDIR) == 54
@@ -20,27 +28,33 @@ def test_count_db():
     assert fd.count_db(SETSDIR) > 0
 
 def test_file_name():
-    dir_ = "mydir/"
-    string = "string"
-    assert fd.file_name(dir_, string) == "mydir/string.txt"
+    assert fd.file_name(DIR_, STRING) == "mydir/string.txt"
 
 def test_file_path():
-    song = "I like to eat"
-    dict_ = {"I like to eat": ("its/here/boss.txt", "apples and bananas")}
-    assert fd.file_path(song, dict_) == "its/here/boss.txt"
+    assert fd.file_path(SONG, DICT_) == "its/here/boss.txt"
 
 def test_get_dbs():
     assert len(list(fd.get_dbs(SETSDIR))) == 2
+
+def test_get_dbs_returns_generator():
     assert type(fd.get_dbs(SETSDIR)).__name__ == "generator"
 
-def test_get_files():
+def test_get_files_returns_list():
     assert isinstance(fd.get_files(LYRICSDIR), list)
+
+def test_get_files_all_files():
     assert len(fd.get_files(LYRICSDIR)) == 54
+
+def test_get_files_returns_0_from_nonexsistent_dir():
     assert len(fd.get_files("nonexistent/dir/")) == 0
 
-def test_get_files_non_recursive():
+def test_get_files_non_recursive_returns_one_file():
     assert len(fd.get_files_non_recursive(DEBUGDIR)) == 1  # only error file
+
+def test_get_files_non_recursive_returns_list():
     assert isinstance(fd.get_files_non_recursive(DEBUGDIR), list)
+
+def test_get_files_non_recursive_returns_0_from_nonexistent_dir():
     assert len(fd.get_files_non_recursive("nonexistentdir/")) == 0
 
 def test_make_dir():
@@ -59,22 +73,25 @@ def test_make_file():
     os.remove(fakefile)
     assert not Path(fakefile).exists()
 
-def test_missing():
-    fakepaths = [("notneeded", "somepath/"),]
-    assert fd.missing(fakepaths) == [("somepath/", False)]
+def test_missing_FAKEPATHS():
+    assert fd.missing(FAKEPATHS) == [("somepath/", False)]
+
+def test_missing_empty_list():
     assert fd.missing([]) == []
 
 def test_node_result_name():
     assert fd.node_result_name("somedir/", "1") == "somedir/node1result.txt"
+
+def test_node_result_name_empty_string():
     assert fd.node_result_name("", "") == "noderesult.txt"
 
 def test_path_check():
     pass
 
-def test_paths_okay():
-    paths = [("1", DEBUGDIR), ("2", LYRICSDIR), ("3", SETSDIR),]
-    nonpaths = [("1", "cheese/"), ("2", "cats/"), ("3", "artifacts/"),]
-    assert fd.paths_okay(paths)
-    assert not fd.paths_okay(nonpaths)
+def test_paths_okay_PATHS():
+    assert fd.paths_okay(PATHS)
+
+def test_paths_okay_NONPATHS():
+    assert not fd.paths_okay(NONPATHS)
 
 
