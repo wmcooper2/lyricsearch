@@ -50,6 +50,8 @@ def make_bigram_set(songs: Deque, dest_dir: Text, name: Text) -> None:
                 db[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
+            except RuntimeError:  # gen error
+                save_error("GEN:"+str(song))
             finished_songs += 1
         set_end = time()
 

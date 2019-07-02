@@ -10,6 +10,7 @@ from typing import Deque
 # custom
 from constants import (
         BIGRAMSETS,
+        DEBUG,
         LYRICSDIR,
         SETSDIR,
         VERBOSE,
@@ -98,6 +99,7 @@ def main():
 
 
 if __name__ == "__main__":
-    SETSDIR = "../"+SETSDIR
-    LYRICSDIR = "../"+LYRICSDIR
+    if DEBUG:
+        SETSDIR = "../"+SETSDIR
+        LYRICSDIR = "../"+LYRICSDIR
     main()
