@@ -20,6 +20,7 @@ from searchutil import (
         exact_match_search,
         save_results,
         subset_search,
+        subset_search_bigrams,
         )
 
 
@@ -42,7 +43,8 @@ def cli_search() -> None:
 #         path_check(PATHS)
         print("Searching for: \n\t'"+pattern+"'")
 
-        possible_results = subset_search(SETSDIR, pattern)
+#         possible_results = subset_search(SETSDIR, pattern)
+        possible_results = subset_search_bigrams(SETSDIR, pattern)
         print("\t{0:<20} {1:>6}".format("Possible matches:",
               len(possible_results[0])))
         print("\t{0:<20} {1:>6}".format("Search time (sec):",
@@ -56,7 +58,8 @@ def cli_search() -> None:
         save_results(RESULTSDIR, exact_results[0], pattern)
         print("Finished.")
     else:
-        possible_results = subset_search(SETSDIR, pattern)
+#         possible_results = subset_search(SETSDIR, pattern)
+        possible_results = subset_search_bigrams(SETSDIR, pattern)
         exact_results = exact_match_search(possible_results, pattern)
         save_results(RESULTSDIR, exact_results[0], pattern)
     return None

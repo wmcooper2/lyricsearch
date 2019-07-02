@@ -33,8 +33,8 @@ from personal import (
 
 
 # CLUSTER = PI_NODES
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 VERBOSE = True
 
 
@@ -45,6 +45,7 @@ if DEBUG:
     RESULTSDIR = DEBUGDIR+"results/"
     SETSDIR = DEBUGDIR+"sets/"
     SOURCETEXT = DEBUGDIR+"sourcetext/"
+    BIGRAMSETS = DEBUGDIR+"bigramsets/"
 
 NAMED_PATHS = [
     ("ARTISTDB", ARTISTDB),

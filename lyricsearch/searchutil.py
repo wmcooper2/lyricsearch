@@ -23,6 +23,9 @@ from typing import (
         Tuple,
         )
 
+# 3rd party
+from nltk import bigrams, word_tokenize
+
 # custom
 from dividefilesutil import progress_bar
 from filesanddirs import (
@@ -96,6 +99,19 @@ def search_db(pattern: Text, db: Text) -> List[Text]:
                 matches.append(file_path(name, miniset))
     return matches
 
+def search_db_bigrams(pattern: Text, db: Text) -> List[Text]:
+    """Searches db for 'pattern'. Returns List."""
+#     pset = set(pattern.split())
+    # needs to be bigram set 
+    # move the set creation up the pipeline to the main() function.
+    pset = set(bigrams(word_tokenize(pattern)))
+#     pset = set(pattern.split())
+    matches = []
+    with shelve.open(db) as miniset:
+        for name, tuple_ in miniset.items():
+            if subset_match(lyric_set(name, miniset), pset):
+                matches.append(file_path(name, miniset))
+    return matches
 
 def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
     """Checks if pattern is subset of song. Returns Boolean. """
@@ -116,5 +132,24 @@ def subset_search(dir_: Text, pattern: Text) -> Tuple[List[Text], float]:
         possible_matches += search_db(pattern, str(song_set_db))
         searched += 1
         progress_bar(searched, total, prefix="Subsets:")
+    end = time()
+    return (possible_matches, end-start)
+
+
+def subset_search_bigrams(dir_: Text,
+                          pattern: Text) -> Tuple[List[Text], float]:
+    """Check for subset matches. Returns Tuple.
+
+        returns; (<possible matches>: list, <time taken>: int): tuple
+    """
+    possible_matches = []
+    searched = 0
+    start = time()
+    total = count_db(dir_)
+    for song_set_db in Path(dir_).glob("**/*.db"):
+#     for song_set_db in get_files(dir_):
+        possible_matches += search_db_bigrams(pattern, str(song_set_db))
+        searched += 1
+        progress_bar(searched, total, prefix="Bigram Subsets:")
     end = time()
     return (possible_matches, end-start)

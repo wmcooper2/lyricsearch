@@ -13,6 +13,10 @@ from typing import (
         Text,
         )
 
+# 3rd party
+from nltk import bigrams
+# from nltk import word_tokenize
+
 # custom
 from constants import DEBUGFILE
 from filesanddirs import count_files
@@ -27,6 +31,27 @@ def lyricset(song: Text, dict_: Dict[Text, Text]) -> Text:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
 
+
+def make_bigram_set(songs: Deque, dest_dir: Text, name: Text) -> None:
+    """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
+    song_count = len(songs)
+    save_to = dest_dir+name+".db"
+    with shelve.open(save_to) as db:
+        finished_songs = 0
+        set_start = time()
+        for song in songs:
+            try:
+                title = str(Path(song).resolve().name).strip(".txt")
+                bi_grams = bigrams(read_file(str(Path(song))))  # gen obj
+                bi_set = set(bi_grams)
+
+                # Tuple(artist_song, set)
+                value = (str(Path(song).resolve()), bi_set)
+                db[title] = value
+            except UnicodeDecodeError:
+                save_error(str(song))
+            finished_songs += 1
+        set_end = time()
 
 def make_mega_set(dir_: Text) -> set:
     """Make single set from '.txt' files in dir_. Returns Set."""

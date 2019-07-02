@@ -9,6 +9,7 @@ from typing import Deque
 
 # custom
 from constants import (
+        BIGRAMSETS,
         LYRICSDIR,
         SETSDIR,
         VERBOSE,
@@ -18,10 +19,68 @@ from dividefilesutil import (
         progress_bar,
         valid_bins,
         )
-from dividesetsutil import make_set
+# from dividesetsutil import make_set
+from dividesetsutil import make_bigram_set
 from filesanddirs import count_files, get_files
 
-if __name__ == "__main__":
+def divide_sets(bins: int) -> None:
+    file_amt = count_files(LYRICSDIR)
+    deq = deque()
+    setcount = 1
+    blockname = "blank"
+    start = time()
+    for file_ in get_files(LYRICSDIR):
+        deq.append(file_)
+
+        # write to file, clear the deque
+        if len(deq) >= floor(file_amt/bins):
+            blockname = str(block_set(setcount))
+            make_bigram_set(deq, SETSDIR, blockname)
+#             make_set(deq, SETSDIR, blockname)
+            setcount += 1
+            deq = deque()   # remove
+
+    # catch the last one
+    make_bigram_set(deq, SETSDIR, blockname)
+#     make_set(deq, SETSDIR, blockname)
+    end = time()
+    print("Finished dividing sets.")
+    return None
+
+def divide_sets_verbose(bins: int) -> None:
+    print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
+    print("{0:<12} {1:<20}".format("Save dir:", SETSDIR))
+
+    print("Counting files...")
+    file_amt = count_files(LYRICSDIR)
+    print("File count:", str(file_amt))
+
+    blockname = "blank"
+    deq = deque()
+    file_count = 0
+    setcount = 1
+    start = time()
+    for file_ in get_files(LYRICSDIR):
+        deq.append(file_)
+        file_count += 1
+        progress_bar(file_count, file_amt)
+
+        # write to file, clear the deque
+        if len(deq) >= floor(file_amt/bins):
+            blockname = str(block_set(setcount))
+            make_bigram_set(deq, SETSDIR, blockname)
+#             make_set(deq, SETSDIR, blockname)
+            setcount += 1
+            deq = deque()   # remove
+
+    # catch the last one
+#     make_set(deq, SETSDIR, blockname)
+    make_bigram_set(deq, SETSDIR, blockname)
+    end = time()
+    print("Time to make block sets:", round(end-start, 0))
+    return None
+
+def main():
     try:
         bins = int(input("How many lyric sets do you want to make? "))
         print("Sets", bins)
@@ -29,63 +88,16 @@ if __name__ == "__main__":
         print("Please choose a number. Quitting...")
         quit()
 
-    # divide the files
-    prep_start = time()
     if valid_bins(bins):
         if VERBOSE:
-            print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
-            print("{0:<12} {1:<20}".format("Save dir:", SETSDIR))
-
-            print("Counting files...")
-            file_amt = count_files(LYRICSDIR)
-            print("File count:", str(file_amt))
-
-            blockname = "blank"
-            deq = deque()
-            file_count = 0
-            setcount = 1
-            start = time()
-            for file_ in get_files(LYRICSDIR):
-                deq.append(file_)
-                file_count += 1
-#                 breakpoint()
-                progress_bar(file_count, file_amt)
-
-                # write to file, clear the deque
-                if len(deq) >= floor(file_amt/bins):
-                    blockname = str(block_set(setcount))
-                    make_set(deq, SETSDIR, blockname)
-                    setcount += 1
-                    deq = deque()   # remove
-                else:
-                    pass
-
-            # catch the last one
-            make_set(deq, SETSDIR, blockname)
-            end = time()
-            print("Time to make block sets:", round(end-start, 0))
-
+            divide_sets_verbose(bins)
         else:
-            file_amt = count_files(LYRICSDIR)
-            deq = deque()
-            setcount = 1
-            blockname = "blank"
-            start = time()
-            for file_ in get_files(LYRICSDIR):
-                deq.append(file_)
-
-                # write to file, clear the deque
-                if len(deq) >= floor(file_amt/bins):
-                    blockname = str(block_set(setcount))
-                    make_set(deq, SETSDIR, blockname)
-                    setcount += 1
-                    deq = deque()   # remove
-                else:
-                    pass
-
-            # catch the last one
-            make_set(deq, SETSDIR, blockname)
-            end = time()
-        print("Finished dividing sets.")
+            divide_sets()
     else:
         print("Choose between 2 and 100 sets to make.")
+
+
+if __name__ == "__main__":
+    SETSDIR = "../"+SETSDIR
+    LYRICSDIR = "../"+LYRICSDIR
+    main()
