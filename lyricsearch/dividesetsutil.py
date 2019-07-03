@@ -15,7 +15,7 @@ from typing import (
 
 # 3rd party
 from nltk import bigrams
-# from nltk import word_tokenize
+from nltk import word_tokenize
 
 # custom
 from constants import DEBUGFILE
@@ -74,6 +74,32 @@ def make_mega_set(dir_: Text) -> set:
     return mega_set
 
 
+def make_no_punct_norm_set(songs: Deque,
+                           dest_dir: Text,
+                           name: Text) -> None:
+    """Makes song sets without punctuation and normalized (all lowercase)
+       to 'name.db' in 'song_dir'. Returns None."""
+    song_count = len(songs)
+    save_to = dest_dir+name+".db"
+    with shelve.open(save_to) as db:
+        finished_songs = 0
+        set_start = time()
+        for song in songs:
+            try:
+                title = str(Path(song).resolve().name).strip(".txt")
+
+
+                # this has to return no punct normalized
+                words = set(read_file(str(Path(song))))
+
+                # Tuple(artist_song, set)
+                value = (str(Path(song).resolve()), words)
+                db[title] = value
+            except UnicodeDecodeError:
+                save_error(str(song))
+            finished_songs += 1
+        set_end = time()
+
 def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(songs)
@@ -127,8 +153,31 @@ def read_file(file_: Text) -> List[Text]:
 
 def read_file_lines(file_: Text) -> List[Text]:
     """Gets contents of a file, nested lines. Returns List."""
+    ### ISSUE: What do I mean by "nested lines"?
     with open(file_, "r") as s:
         return [line.strip() for line in s.readlines()]
+
+
+def read_file_no_punct_lowercased(file_: Text) -> List[Text]:
+    """Gets contents of a file without punctuation and normalized
+       (all lowercased). Returns List."""
+    with open(file_, "r") as f:
+        whole_file = f.read()
+    tokens = word_tokenize(whole_file)
+    return [no_punct_normalize(token) for token in tokens]
+
+
+def no_punct_normalize(word: Text) -> Text:
+    """Removes punctuation from the word. Returns String."""
+    # remove the empty elements
+
+
+
+
+
+
+    and len(result) > 0
+    return ''.join([char.lower() for char in word if char.isalpha()]) 
 
 
 def save_error(error: Text) -> None:

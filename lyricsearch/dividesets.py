@@ -13,18 +13,18 @@ from constants import (
         DEBUG,
         LYRICSDIR,
         SETSDIR,
-        VERBOSE,
         )
 from dividefilesutil import (
         block_set,
         progress_bar,
         valid_bins,
         )
-# from dividesetsutil import make_set
 from dividesetsutil import make_bigram_set
+from dividesetsutil import make_set
 from filesanddirs import count_files, get_files
 
-def divide_sets(bins: int) -> None:
+
+def divide_sets(bins: int, bigram_set=False) -> None:
     file_amt = count_files(LYRICSDIR)
     deq = deque()
     setcount = 1
@@ -36,19 +36,23 @@ def divide_sets(bins: int) -> None:
         # write to file, clear the deque
         if len(deq) >= floor(file_amt/bins):
             blockname = str(block_set(setcount))
-            make_bigram_set(deq, SETSDIR, blockname)
-#             make_set(deq, SETSDIR, blockname)
+            if bigram_set:
+                make_bigram_set(deq, SETSDIR, blockname)
+            else:
+                make_set(deq, SETSDIR, blockname)
             setcount += 1
             deq = deque()   # remove
 
     # catch the last one
-    make_bigram_set(deq, SETSDIR, blockname)
-#     make_set(deq, SETSDIR, blockname)
+    if bigram_set:
+        make_bigram_set(deq, SETSDIR, blockname)
+    else:
+        make_set(deq, SETSDIR, blockname)
     end = time()
     print("Finished dividing sets.")
     return None
 
-def divide_sets_verbose(bins: int) -> None:
+def divide_sets_verbose(bins: int, make_bigrams: bool) -> None:
     print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
     print("{0:<12} {1:<20}".format("Save dir:", SETSDIR))
 
@@ -66,40 +70,59 @@ def divide_sets_verbose(bins: int) -> None:
         file_count += 1
         progress_bar(file_count, file_amt)
 
-        # write to file, clear the deque
+        # write to file when deque is full
         if len(deq) >= floor(file_amt/bins):
             blockname = str(block_set(setcount))
-            make_bigram_set(deq, SETSDIR, blockname)
-#             make_set(deq, SETSDIR, blockname)
+            if make_bigrams:
+                make_bigram_set(deq, SETSDIR, blockname)
+            else:
+                make_set(deq, SETSDIR, blockname)
             setcount += 1
-            deq = deque()   # remove
+            deq = deque()   # remove???
 
-    # catch the last one
-#     make_set(deq, SETSDIR, blockname)
-    make_bigram_set(deq, SETSDIR, blockname)
+    # catch the last deque (not full)
+    if make_bigrams:
+        make_bigram_set(deq, SETSDIR, blockname)
+    else:
+        make_set(deq, SETSDIR, blockname)
     end = time()
     print("Time to make block sets:", round(end-start, 0))
     return None
 
-def main():
+
+def make_sets_from_files(verbose: bool) -> None:
     try:
         bins = int(input("How many lyric sets do you want to make? "))
-        print("Sets", bins)
     except ValueError:
         print("Please choose a number. Quitting...")
         quit()
 
     if valid_bins(bins):
-        if VERBOSE:
-            divide_sets_verbose(bins)
-        else:
-            divide_sets()
+        print('"'+bins+" sets will be created.")
     else:
-        print("Choose between 2 and 100 sets to make.")
+        print("Choose between 2 and 1000 sets to make.")
+        quit()
+
+    try:
+        answer = str(input("Do you want to make bigram sets? [y/n]: ")).lower()
+    except ValueError:
+        print("Please choose yes or no. Quitting...")
+        quit()
+
+    if answer == "y" or answer == "yes":
+        make_bigrams = True
+    else:
+        make_bigrams = False
+
+    if verbose:
+        divide_sets_verbose(bins, make_bigrams)
+    else:
+        divide_sets(bins, make_bigrams)
+    return None
 
 
 if __name__ == "__main__":
     if DEBUG:
         SETSDIR = "../"+SETSDIR
         LYRICSDIR = "../"+LYRICSDIR
-    main()
+    make_sets_from_files(True)

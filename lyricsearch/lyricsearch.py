@@ -1,69 +1,47 @@
 #!/usr/bin/env python3.7
 """A CLI tool for pattern matching in the lyrics text files."""
 # stand lib
-import os
-from pathlib import Path
-import sys
+import argparse
 
 # custom
-from constants import (
-        NAMED_PATHS,
-        PATHS,
-        RESULTSDIR,
-        SETSDIR,
-        VERBOSE,
+from dividefiles import divide_all_files
+from lyricsearchutil import (
+        exact_search,
+        exact_search_verbose,
+        get_user_input,
         )
-from filesanddirs import (
-        path_check,
-        )
-from searchutil import (
-        exact_match_search,
-        save_results,
-        subset_search,
-        subset_search_bigrams,
-        )
-
-
-def cli_search() -> None:
-    try:
-        pattern = input("What do you want to search for? ")
-    except:
-        print("Unknown error getting user input. Naked exception.")
-    if len(pattern) is 0:
-        print("Give a string to search for.")
-        quit()
-
-    if VERBOSE:
-        print("Machine:", os.uname().sysname)
-        print("Paths status;")
-        for path in NAMED_PATHS:
-            print("\t{0} {1:<15} {2}".format(Path(path[1]).exists(),
-                  path[0], Path(path[1]).resolve()))
-
-#         path_check(PATHS)
-        print("Searching for: \n\t'"+pattern+"'")
-
-#         possible_results = subset_search(SETSDIR, pattern)
-        possible_results = subset_search_bigrams(SETSDIR, pattern)
-        print("\t{0:<20} {1:>6}".format("Possible matches:",
-              len(possible_results[0])))
-        print("\t{0:<20} {1:>6}".format("Search time (sec):",
-              round(possible_results[1], 2)))
-
-        exact_results = exact_match_search(possible_results, pattern)
-        print("\t{0:<20} {1:>6}".format("Exact matches:",
-              len(exact_results[0])))
-        print("\t{0:<20} {1:>6}".format("Search time (sec):",
-              round(exact_results[1], 2)))
-        save_results(RESULTSDIR, exact_results[0], pattern)
-        print("Finished.")
-    else:
-#         possible_results = subset_search(SETSDIR, pattern)
-        possible_results = subset_search_bigrams(SETSDIR, pattern)
-        exact_results = exact_match_search(possible_results, pattern)
-        save_results(RESULTSDIR, exact_results[0], pattern)
-    return None
 
 
 if __name__ == "__main__":
-    cli_search()
+    parser = argparse.ArgumentParser(description="Search through lyrics files.")
+    parser.add_argument("-v", "--verbose", help="Make Verbose.", action="store_true")
+    parser.add_argument("-e", "--exact", help="Perform exact search.", action="store_true")
+    parser.add_argument("-b", "--bigram", help="Perform exact bigram search.", action="store_true")
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-d", "--dividefiles", help="Divides files into multiple dirs.", action="store_true")
+        # moving files to dir blocks
+        # setting debug flag
+        # making normal sets
+    args = parser.parse_args()
+    search_pattern = get_user_input()
+
+    # performing exact search
+    if args.verbose and args.bigram:
+        exact_search_verbose(search_pattern, bigram_search=True)
+    elif args.bigram:
+        exact_search(search_pattern, bigram_search=True)
+    elif args.verbose:
+        exact_search_verbose(search_pattern)
+    elif args.exact:
+        # ISSUE: time stamp on results file is weird with this path in the code.
+        exact_search(search_pattern)
+    elif args.dividefiles:
+        dividefiles.divide_all_files()
+    else:
+        print("Please use a flag. Try '--help' for a list of commands.")
+
+    # flexible search
+        # performing gap search
+        # searching for artists
+        # searching for song names

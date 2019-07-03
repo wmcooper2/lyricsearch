@@ -3,8 +3,8 @@ import filesanddirs as fd
 from pathlib import Path
 import os
 
+from constants import DEBUGDIR
 
-DEBUGDIR = "../.debug/"
 LYRICSDIR = DEBUGDIR+"lyrics/"
 SETSDIR = DEBUGDIR+"sets/"
 PATHS = [("1", DEBUGDIR), ("2", LYRICSDIR), ("3", SETSDIR),]

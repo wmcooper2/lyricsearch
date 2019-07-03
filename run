@@ -1,4 +1,4 @@
 #!/bin/bash
 #cd lyricsearch/
 #python3 lyricsearch.py
-python3 lyricsearch/lyricsearch.py
+python3 lyricsearch/lyricsearch.py $1
