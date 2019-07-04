@@ -44,33 +44,38 @@ def divide_sets_messages(*args) -> None:
 @divide_sets_messages  # not tested yet
 def divide_sets(bins: int, make_bigrams: bool) -> None:
     print("Counting files...")
-    file_amt = count_files(LYRICSDIR)
-    print("File count:", str(file_amt))
-    blockname = "blank"
+    file_tot = count_files(LYRICSDIR)
+    print("File count:", str(file_tot))
+
     deq = deque()
-    file_count = 0
-    setcount = 1
+    files = 0
+    sets = 1
     for file_ in get_files(LYRICSDIR):
         deq.append(file_)
-        file_count += 1
-        progress_bar(file_count, file_amt)
+        files += 1
+        progress_bar(files, file_tot)
 
         # write to file when deque is full
-        if len(deq) >= floor(file_amt/bins):
-            blockname = str(block_set(setcount))
+        if len(deq) >= floor(file_tot/bins):
+            blockname = str(block_set(sets))
             if make_bigrams:
+                #change SETSDIR to BIGRAMSETSDIR
                 make_bigram_set(deq, SETSDIR, blockname)
             else:
+                # change SETSDIR to NOPUNCTNORMSETSDIR
                 make_no_punct_norm_set(deq, SETSDIR, blockname)
 #                 make_set(deq, SETSDIR, blockname)
-            setcount += 1
+            sets += 1
             deq = deque()
 
     # catch the last deque (not full)
     if make_bigrams:
+        #change SETSDIR to BIGRAMSETSDIR
         make_bigram_set(deq, SETSDIR, blockname)
     else:
+        # change SETSDIR to NOPUNCTNORMSETSDIR
         make_no_punct_norm_set(deq, SETSDIR, blockname)
+#           make_set(deq, SETSDIR, blockname)
     return None
 
 
@@ -82,7 +87,7 @@ def make_sets() -> None:
         quit()
 
     if valid_bins(bins):
-        print('"'+str(bins)+" sets will be created.")
+        print(str(bins)+" sets will be created.")
     else:
         print("Choose between 2 and 1000 sets to make.")
         quit()

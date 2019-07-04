@@ -37,7 +37,7 @@ from filesanddirs import (
         )
 
 
-def exact_match_search(possible: Tuple[List[Text], int],
+def exact_search(possible: Tuple[List[Text], int],
                        pattern: Text) -> Tuple[List[Text], float]:
     """Checks text files for exact matches. Returns Tuple.
 
@@ -47,7 +47,7 @@ def exact_match_search(possible: Tuple[List[Text], int],
     searched = 0
     start = time()
     for poss in possible[0]:
-        if exact_search(poss, pattern):
+        if brute_force_search(poss, pattern):
             matches.append(poss)
         searched += 1
         progress_bar(searched, len(possible[0]), prefix="Exact:")
@@ -55,7 +55,7 @@ def exact_match_search(possible: Tuple[List[Text], int],
     return (matches, end-start)
 
 
-def exact_search(target: Text, pattern: Text) -> bool:
+def brute_force_search(target: Text, pattern: Text) -> bool:
     """Performs brute force pattern matching. Returns Boolean."""
     try:
         with open(target, "r") as f:

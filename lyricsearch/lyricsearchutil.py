@@ -10,7 +10,7 @@ from constants import (
         RESULTSDIR,
         )
 from searchutil import (
-        exact_match_search,
+        exact_search,
         save_results,
         search_db,
         search_db_bigrams,
@@ -21,7 +21,7 @@ from searchutil import (
 def exact_lyrics(pattern: Text, set_dir: Text) -> None:
     """Performs exact match search. Returns None."""
     possible_results = subset_search(set_dir, search_db, pattern)
-    exact_results = exact_match_search(possible_results, pattern)
+    exact_results = exact_search(possible_results, pattern)
     save_results(RESULTSDIR, exact_results[0], pattern)
     return None
 
@@ -29,7 +29,7 @@ def exact_lyrics(pattern: Text, set_dir: Text) -> None:
 def exact_lyrics_bigram(pattern: Text, set_dir: Text) -> None:
     """Performs exact bigram search. Returns None."""
     possible_results = subset_search(set_dir, search_db_bigrams, pattern)
-    exact_results = exact_match_search(possible_results, pattern)
+    exact_results = exact_search(possible_results, pattern)
     save_results(RESULTSDIR, exact_results[0], pattern)
     return None
 
@@ -37,7 +37,7 @@ def exact_lyrics_bigram(pattern: Text, set_dir: Text) -> None:
 def exact_lyrics_verbose(pattern: Text, set_dir: Text) -> None:
     possible_results = subset_search(set_dir, search_db, pattern)
     verbose_possible_results(possible_results)
-    exact_results = exact_match_search(possible_results, pattern)
+    exact_results = exact_search(possible_results, pattern)
     verbose_exact_results(exact_results)
     save_results(RESULTSDIR, exact_results[0], pattern)
     return None
@@ -46,7 +46,7 @@ def exact_lyrics_verbose(pattern: Text, set_dir: Text) -> None:
 def exact_lyrics_bigram_verbose(pattern: Text, set_dir: Text) -> None:
     possible_results = subset_search(set_dir, search_db_bigrams, pattern)
     verbose_possible_results(possible_results)
-    exact_results = exact_match_search(possible_results, pattern)
+    exact_results = exact_search(possible_results, pattern)
     verbose_exact_results(exact_results)
     save_results(RESULTSDIR, exact_results[0], pattern)
     return None
