@@ -29,6 +29,7 @@ def move_deque_files(group: Deque, dest: Text) -> None:
                      newline=False)
     return None
 
+
 def copy_deque_files(group: Deque, dest: Text) -> None:
     """Copies files in group to 'dest/'. Returns None."""
     file_amt = len(group)

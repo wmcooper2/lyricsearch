@@ -15,6 +15,7 @@ import sys
 from time import asctime, time
 from typing import (
         Any,
+        Callable,
         Deque,
         Dict,
         List,
@@ -42,16 +43,16 @@ def exact_match_search(possible: Tuple[List[Text], int],
 
         returns; (<exact matches>: list, <time taken>: int): tuple
     """
-    exact_matches = []
+    matches = []
     searched = 0
     start = time()
-    for match in possible[0]:
-        if exact_search(match, pattern):
-            exact_matches.append(match)
+    for poss in possible[0]:
+        if exact_search(poss, pattern):
+            matches.append(poss)
         searched += 1
         progress_bar(searched, len(possible[0]), prefix="Exact:")
     end = time()
-    return (exact_matches, end-start)
+    return (matches, end-start)
 
 
 def exact_search(target: Text, pattern: Text) -> bool:
@@ -91,65 +92,42 @@ def save_results(dir_: Text, results: List[Text], pattern: Text) -> None:
 
 def search_db(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
-    pset = set(pattern.split())
-    matches = []
-    with shelve.open(db) as miniset:
-        for name, tuple_ in miniset.items():
-            if subset_match(lyric_set(name, miniset), pset):
-                matches.append(file_path(name, miniset))
-    return matches
+    pattern_set = set(pattern.split())
+    return subset_matches(pattern_set, db)
+
 
 def search_db_bigrams(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
-#     pset = set(pattern.split())
-    # needs to be bigram set 
-    # move the set creation up the pipeline to the main() function.
-    pset = set(bigrams(word_tokenize(pattern)))
-#     pset = set(pattern.split())
+    pattern_set = set(bigrams(word_tokenize(pattern)))
+    return subset_matches(pattern_set, db)
+
+
+def subset_matches(pattern_set: Set, db: Text) -> List[Text]:
+    """Gets 'pattern_set' matches in db. Returns List."""
     matches = []
     with shelve.open(db) as miniset:
         for name, tuple_ in miniset.items():
-            if subset_match(lyric_set(name, miniset), pset):
+            song = lyric_set(name, miniset)
+            if pattern_set.issubset(song):
                 matches.append(file_path(name, miniset))
     return matches
 
-def subset_match(song: Set[Any], pattern: Set[Any]) -> bool:
-    """Checks if pattern is subset of song. Returns Boolean. """
-    return pattern.issubset(song)
 
-
-def subset_search(dir_: Text, pattern: Text) -> Tuple[List[Text], float]:
+def subset_search(set_dir: Text,
+                  search_funct: Callable[[Text, Text], List[Text]],
+                  pattern: Text) -> Tuple[List[Text], float]:
     """Check for subset matches. Returns Tuple.
 
-        returns; (<possible matches>: list, <time taken>: int): tuple
+        - returns; (<possible matches>: list, <time taken>: float): tuple
+        - displays progress bar
     """
     possible_matches = []
     searched = 0
     start = time()
-    total = count_db(dir_)
-    for song_set_db in Path(dir_).glob("**/*.db"):
-#     for song_set_db in get_files(dir_):
-        possible_matches += search_db(pattern, str(song_set_db))
+    total = count_db(set_dir)
+    for song_set_db in Path(set_dir).glob("**/*.db"):
+        possible_matches += search_funct(pattern, str(song_set_db))
         searched += 1
         progress_bar(searched, total, prefix="Subsets:")
-    end = time()
-    return (possible_matches, end-start)
-
-
-def subset_search_bigrams(dir_: Text,
-                          pattern: Text) -> Tuple[List[Text], float]:
-    """Check for subset matches. Returns Tuple.
-
-        returns; (<possible matches>: list, <time taken>: int): tuple
-    """
-    possible_matches = []
-    searched = 0
-    start = time()
-    total = count_db(dir_)
-    for song_set_db in Path(dir_).glob("**/*.db"):
-#     for song_set_db in get_files(dir_):
-        possible_matches += search_db_bigrams(pattern, str(song_set_db))
-        searched += 1
-        progress_bar(searched, total, prefix="Bigram Subsets:")
     end = time()
     return (possible_matches, end-start)

@@ -87,18 +87,16 @@ def make_no_punct_norm_set(songs: Deque,
         for song in songs:
             try:
                 title = str(Path(song).resolve().name).strip(".txt")
-
-
-                # this has to return no punct normalized
-                words = set(read_file(str(Path(song))))
-
-                # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), words)
+                wordset = set(read_file_no_punct_lowercased(str(Path(song))))
+                artist_song = str(Path(song).resolve())
+                value = (artist_song, wordset)
+#                 value = (str(Path(song).resolve()), wordset)
                 db[title] = value
             except UnicodeDecodeError:
                 save_error(str(song))
             finished_songs += 1
         set_end = time()
+
 
 def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
@@ -164,20 +162,24 @@ def read_file_no_punct_lowercased(file_: Text) -> List[Text]:
     with open(file_, "r") as f:
         whole_file = f.read()
     tokens = word_tokenize(whole_file)
-    return [no_punct_normalize(token) for token in tokens]
+    return remove_empty_elements(tokens)
+
+
+def remove_empty_elements(tokens: List[Text]) -> List[Text]:
+    """Removes empty elements from list. Returns List."""
+    result = []
+    for token in tokens:
+        new_token = no_punct_normalize(token)
+        if new_token != None:
+            result.append(new_token)
+    return result
 
 
 def no_punct_normalize(word: Text) -> Text:
     """Removes punctuation from the word. Returns String."""
-    # remove the empty elements
-
-
-
-
-
-
-    and len(result) > 0
-    return ''.join([char.lower() for char in word if char.isalpha()]) 
+    result = ''.join([char.lower() for char in word if char.isalpha()]) 
+    if len(result) > 0 and result != None:
+        return result 
 
 
 def save_error(error: Text) -> None:

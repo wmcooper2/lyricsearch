@@ -5,7 +5,7 @@ from collections import deque
 from math import floor
 import sys
 from time import time
-from typing import Deque
+from typing import Callable, Deque
 
 # custom
 from constants import (
@@ -19,52 +19,37 @@ from dividefilesutil import (
         progress_bar,
         valid_bins,
         )
-from dividesetsutil import make_bigram_set
-from dividesetsutil import make_set
+from dividesetsutil import (
+        make_bigram_set,
+        make_set,
+        make_no_punct_norm_set,
+        )
 from filesanddirs import count_files, get_files
 
 
-def divide_sets(bins: int, bigram_set=False) -> None:
-    file_amt = count_files(LYRICSDIR)
-    deq = deque()
-    setcount = 1
-    blockname = "blank"
-    start = time()
-    for file_ in get_files(LYRICSDIR):
-        deq.append(file_)
+def divide_sets_messages(*args) -> None:
+    def wrap(funct):
+        print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
+        print("{0:<12} {1:<20}".format("Save dir:", SETSDIR))
+        start = time()
+        def wrapped_f(*args):
+            funct(*args)
+        return wrapped_f
+        end = time()
+        print("Time to make block sets:", round(end-start, 0))
+    return wrap
 
-        # write to file, clear the deque
-        if len(deq) >= floor(file_amt/bins):
-            blockname = str(block_set(setcount))
-            if bigram_set:
-                make_bigram_set(deq, SETSDIR, blockname)
-            else:
-                make_set(deq, SETSDIR, blockname)
-            setcount += 1
-            deq = deque()   # remove
 
-    # catch the last one
-    if bigram_set:
-        make_bigram_set(deq, SETSDIR, blockname)
-    else:
-        make_set(deq, SETSDIR, blockname)
-    end = time()
-    print("Finished dividing sets.")
-    return None
-
-def divide_sets_verbose(bins: int, make_bigrams: bool) -> None:
-    print("{0:<12} {1:<20}".format("Source dir:", LYRICSDIR))
-    print("{0:<12} {1:<20}".format("Save dir:", SETSDIR))
-
+# @divide_sets_messages()  # works
+@divide_sets_messages  # not tested yet
+def divide_sets(bins: int, make_bigrams: bool) -> None:
     print("Counting files...")
     file_amt = count_files(LYRICSDIR)
     print("File count:", str(file_amt))
-
     blockname = "blank"
     deq = deque()
     file_count = 0
     setcount = 1
-    start = time()
     for file_ in get_files(LYRICSDIR):
         deq.append(file_)
         file_count += 1
@@ -76,21 +61,20 @@ def divide_sets_verbose(bins: int, make_bigrams: bool) -> None:
             if make_bigrams:
                 make_bigram_set(deq, SETSDIR, blockname)
             else:
-                make_set(deq, SETSDIR, blockname)
+                make_no_punct_norm_set(deq, SETSDIR, blockname)
+#                 make_set(deq, SETSDIR, blockname)
             setcount += 1
-            deq = deque()   # remove???
+            deq = deque()
 
     # catch the last deque (not full)
     if make_bigrams:
         make_bigram_set(deq, SETSDIR, blockname)
     else:
-        make_set(deq, SETSDIR, blockname)
-    end = time()
-    print("Time to make block sets:", round(end-start, 0))
+        make_no_punct_norm_set(deq, SETSDIR, blockname)
     return None
 
 
-def make_sets_from_files(verbose: bool) -> None:
+def make_sets() -> None:
     try:
         bins = int(input("How many lyric sets do you want to make? "))
     except ValueError:
@@ -98,7 +82,7 @@ def make_sets_from_files(verbose: bool) -> None:
         quit()
 
     if valid_bins(bins):
-        print('"'+bins+" sets will be created.")
+        print('"'+str(bins)+" sets will be created.")
     else:
         print("Choose between 2 and 1000 sets to make.")
         quit()
@@ -114,10 +98,7 @@ def make_sets_from_files(verbose: bool) -> None:
     else:
         make_bigrams = False
 
-    if verbose:
-        divide_sets_verbose(bins, make_bigrams)
-    else:
-        divide_sets(bins, make_bigrams)
+    divide_sets(bins, make_bigrams)
     return None
 
 
@@ -125,4 +106,4 @@ if __name__ == "__main__":
     if DEBUG:
         SETSDIR = "../"+SETSDIR
         LYRICSDIR = "../"+LYRICSDIR
-    make_sets_from_files(True)
+    make_sets()
