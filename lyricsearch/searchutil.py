@@ -29,6 +29,7 @@ from nltk import bigrams, word_tokenize
 
 # custom
 from dividefilesutil import progress_bar
+from dividesetsutil import set_timer, normalized_pattern
 from filesanddirs import (
         file_path,
         count_files,
@@ -92,13 +93,14 @@ def save_results(dir_: Text, results: List[Text], pattern: Text) -> None:
 
 def search_db(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
-    pattern_set = set(pattern.split())
+    pattern_set = set(normalized_pattern(pattern))
+#     pattern_set = set(pattern.split())
     return subset_matches(pattern_set, db)
 
 
 def search_db_bigrams(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
-    pattern_set = set(bigrams(word_tokenize(pattern)))
+    pattern_set = set(bigrams(normalized_pattern(pattern)))
     return subset_matches(pattern_set, db)
 
 
@@ -113,21 +115,21 @@ def subset_matches(pattern_set: Set, db: Text) -> List[Text]:
     return matches
 
 
-def subset_search(set_dir: Text,
-                  search_funct: Callable[[Text, Text], List[Text]],
-                  pattern: Text) -> Tuple[List[Text], float]:
-    """Check for subset matches. Returns Tuple.
+@set_timer()
+def rough_search(pattern: Text,
+                 set_dir: Text,
+                 result_dir: Text,
+                 search_funct: Callable[[Text, Text], List[Text]],
+                 ) -> List[Text]:
+    """Check for subset matches. Returns List.
 
-        - returns; (<possible matches>: list, <time taken>: float): tuple
         - displays progress bar
     """
-    possible_matches = []
+    matches = []
     searched = 0
-    start = time()
     total = count_db(set_dir)
-    for song_set_db in Path(set_dir).glob("**/*.db"):
-        possible_matches += search_funct(pattern, str(song_set_db))
+    for song_db in Path(set_dir).glob("**/*.db"):
+        matches += search_funct(pattern, str(song_db))
         searched += 1
         progress_bar(searched, total, prefix="Subsets:")
-    end = time()
-    return (possible_matches, end-start)
+    return matches

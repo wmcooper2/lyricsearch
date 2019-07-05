@@ -16,6 +16,7 @@ from personal import (
         RESULTSDIR,
         SETSDIR,
         SOURCETEXT,
+        VOCABSETSDIR,
         )
 
 # DEBUG = True
@@ -23,13 +24,15 @@ DEBUG = False
 
 if DEBUG:
     ARTISTDB = DEBUGDIR+"artist.db"
+    BIGRAMSETS = DEBUGDIR+"bigramsets/"
     LYRICSDIR = DEBUGDIR+"lyrics/"  # 54 files
+    NOPUNCTNORMSETSDIR = DEBUGDIR+"nopunctnormsets/"
     RESULTSDIR = DEBUGDIR+"results/"
     SETSDIR = DEBUGDIR+"sets/"
     SOURCETEXT = DEBUGDIR+"sourcetext/"
-    BIGRAMSETS = DEBUGDIR+"bigramsets/"
-    NOPUNCTNORMSETSDIR = DEBUGDIR+"nopunctnormsets/"
+    VOCABSETSDIR = DEBUGDIR+"vocabsets/"
 
+# remove?
 NAMEDPATHS = [
     ("ARTISTDB", ARTISTDB),
     ("DEBUGDIR", DEBUGDIR),
@@ -37,7 +40,8 @@ NAMEDPATHS = [
     ("NOPUNCTNORMSETSDIR", NOPUNCTNORMSETSDIR),
     ("RESULTSDIR", RESULTSDIR),
     ("SETSDIR", SETSDIR),
-    ("SOURCETEXT", SOURCETEXT)]
+    ("SOURCETEXT", SOURCETEXT),
+    ("VOCABSETSDIR", VOCABSETSDIR),]
 
 PATHS = [
      ARTISTDB,
@@ -46,4 +50,5 @@ PATHS = [
      NOPUNCTNORMSETSDIR,
      RESULTSDIR,
      SETSDIR,
-     SOURCETEXT,]
+     SOURCETEXT,
+     VOCABSETSDIR,]

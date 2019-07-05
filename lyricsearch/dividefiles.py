@@ -5,7 +5,7 @@ from collections import deque
 from pathlib import Path
 import sys
 from time import time
-from typing import Any, Deque
+from typing import Any, Deque, Text
 
 # custom
 from constants import (
@@ -24,16 +24,6 @@ from filesanddirs import (
     count_files,
     get_files,
     )
-
-
-def get_user_input() -> int:
-    """Get user input from prompt. Returns Integer."""
-    try:
-        bins = int(input("How many bins do you want to sort into? "))
-    except ValueError:
-        print("Please choose a number. Quitting...")
-        quit()
-    return bins
 
 
 def make_groups(bins: int) -> Any:
@@ -80,14 +70,10 @@ def move_files(groups: Any) -> None:
     return None
 
 
-def divide_all_files() -> None:
-    bins = get_user_input()
+def divide_all_files(dest_dir: Text) -> None:
+    """Divides files among 'num_dirs'. Returns None."""
     groups = make_groups(bins)
-    if not Path(LYRICSDIR).exists():
-        Path(LYRICSDIR).mkdir(mode=0o755)
+    if not Path(dest_dir).exists():
+        Path(dest_dir).mkdir(mode=0o755)
     move_files(groups)
     return None
-
-
-if __name__ == "__main__":
-    divide_all_files()
