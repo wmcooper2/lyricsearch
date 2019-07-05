@@ -30,7 +30,9 @@ if __name__ == "__main__":
     # making sets
     group.add_argument("-s", "--dividesets", help="Divides sets into multiple shelve.db files.", action="store_true")
     args = parser.parse_args()
-    pattern = get_user_input()
+    
+    if not args.dividesets:
+        pattern = get_user_input()
 
     # search
     if args.verbose:

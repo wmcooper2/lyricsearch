@@ -22,6 +22,18 @@ from constants import DEBUGFILE
 from filesanddirs import count_files
 
 
+def ensure_exists(path: Text) -> None:
+    """If 'path' doesn't exist, it is created. Returns None."""
+    dest = Path(path)
+    if not dest.exists():
+        if dest.is_dir():
+            dest.mkdir()
+        elif dest.is_file():
+            dest.touch()
+        print(dest, "created")
+    return None
+
+
 def filepath(song: Text, dict_: Dict[Text, Text]) -> Text:
     """Gets the song path. Returns String."""
     return dict_[song][0]
@@ -32,28 +44,31 @@ def lyricset(song: Text, dict_: Dict[Text, Text]) -> Text:
     return dict_[song][1]
 
 
-def make_bigram_set(songs: Deque, dest_dir: Text, name: Text) -> None:
+def bigram_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
     song_count = len(songs)
     save_to = dest_dir+name+".db"
+#     breakpoint()
     with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()
         for song in songs:
             try:
+                # default; lowercase, no punct, bigrams
                 title = str(Path(song).resolve().name).strip(".txt")
-                bi_grams = bigrams(read_file(str(Path(song))))  # gen obj
+                words = normalized(str(Path(song)))
+                bi_grams = bigrams(words)  # gen obj
                 bi_set = set(bi_grams)
-
-                # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), bi_set)
-                db[title] = value
+                artist_song = str(Path(song).resolve())
+                result = (artist_song, bi_set)
+                db[title] = result
             except UnicodeDecodeError:
                 save_error(str(song))
             except RuntimeError:  # gen error
                 save_error("GEN:"+str(song))
             finished_songs += 1
         set_end = time()
+
 
 def make_mega_set(dir_: Text) -> set:
     """Make single set from '.txt' files in dir_. Returns Set."""
@@ -74,40 +89,38 @@ def make_mega_set(dir_: Text) -> set:
     return mega_set
 
 
-def make_no_punct_norm_set(songs: Deque,
-                           dest_dir: Text,
-                           name: Text) -> None:
-    """Makes song sets without punctuation and normalized (all lowercase)
-       to 'name.db' in 'song_dir'. Returns None."""
+# def make_no_punct_norm_set(songs: Deque,
+#                            dest_dir: Text,
+#                            name: Text) -> None:
+#     """Make set entries into 'name.db'. Returns None."""
+#     song_count = len(songs)
+#     save_to = dest_dir+name+".db"
+#     with shelve.open(save_to) as db:
+#         finished_songs = 0
+#         set_start = time()
+#         for song in songs:
+#             try:
+#                 title = str(Path(song).resolve().name).strip(".txt")
+#                 wordset = set(normalized(str(Path(song))))
+#                 artist_song = str(Path(song).resolve())
+#                 value = (artist_song, wordset)
+#                 db[title] = value
+#             except UnicodeDecodeError:
+#                 save_error(str(song))
+#             finished_songs += 1
+#         set_end = time()
+ 
+
+def make_set(songs: Deque, dest_dir: Text, set_name: Text) -> None:
+    """Saves song sets to 'set_name.db' in 'dest_dir'. Returns None."""
     song_count = len(songs)
-    save_to = dest_dir+name+".db"
+    save_to = dest_dir+set_name+".db"
     with shelve.open(save_to) as db:
         finished_songs = 0
         set_start = time()
         for song in songs:
             try:
-                title = str(Path(song).resolve().name).strip(".txt")
-                wordset = set(read_file_no_punct_lowercased(str(Path(song))))
-                artist_song = str(Path(song).resolve())
-                value = (artist_song, wordset)
-#                 value = (str(Path(song).resolve()), wordset)
-                db[title] = value
-            except UnicodeDecodeError:
-                save_error(str(song))
-            finished_songs += 1
-        set_end = time()
-
-
-def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
-    """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
-    song_count = len(songs)
-    save_to = dest_dir+name+".db"
-    with shelve.open(save_to) as db:
-        finished_songs = 0
-        set_start = time()
-        for song in songs:
-            try:
-                title = str(Path(song).resolve().name).strip(".txt")
+                title = str(Path(song).resolve().set_name).strip(".txt")
                 words = set(read_file(str(Path(song))))
 
                 # Tuple(artist_song, set)
@@ -119,28 +132,28 @@ def make_set(songs: Deque, dest_dir: Text, name: Text) -> None:
         set_end = time()
 
 
-def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
-    """Set up database with the same name as 'song_dir'. Returns None."""
-    db_name = dest_dir+str(Path(song_dir).name)+".db"
-    print("Counting files...")
-    song_count = count_files(song_dir)
-    print(song_count, "files")
-    with shelve.open(db_name) as db:
-        song_list = Path(song_dir).glob("**/*.txt")
-        finished_songs = 0
-        for song in song_list:
-            try:
-                title = str(Path(song).resolve().name).strip(".txt")
-                words = set(read_file(str(Path(song))))
-
-                # Tuple(artist_song, set)
-                value = (str(Path(song).resolve()), words)
-                db[title] = value
-            except UnicodeDecodeError:
-                save_error(str(song))
-                print("Error:", str(song))
-            finished_songs += 1
-    return None
+# def pi_set_from_dir(song_dir: Text, dest_dir: Text) -> None:
+#     """Set up database with the same name as 'song_dir'. Returns None."""
+#     db_name = dest_dir+str(Path(song_dir).name)+".db"
+#     print("Counting files...")
+#     song_count = count_files(song_dir)
+#     print(song_count, "files")
+#     with shelve.open(db_name) as db:
+#         song_list = Path(song_dir).glob("**/*.txt")
+#         finished_songs = 0
+#         for song in song_list:
+#             try:
+#                 title = str(Path(song).resolve().name).strip(".txt")
+#                 words = set(read_file(str(Path(song))))
+# 
+#                 # Tuple(artist_song, set)
+#                 value = (str(Path(song).resolve()), words)
+#                 db[title] = value
+#             except UnicodeDecodeError:
+#                 save_error(str(song))
+#                 print("Error:", str(song))
+#             finished_songs += 1
+#     return None
 
 
 def read_file(file_: Text) -> List[Text]:
@@ -156,7 +169,7 @@ def read_file_lines(file_: Text) -> List[Text]:
         return [line.strip() for line in s.readlines()]
 
 
-def read_file_no_punct_lowercased(file_: Text) -> List[Text]:
+def normalized(file_: Text) -> List[Text]:
     """Gets contents of a file without punctuation and normalized
        (all lowercased). Returns List."""
     with open(file_, "r") as f:
