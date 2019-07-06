@@ -9,8 +9,8 @@ from typing import Any, Deque, Text
 
 # custom
 from constants import (
-    LYRICSDIR,
-    RESULTSDIR,
+    LYRICS,
+    RESULTS,
     SOURCETEXT,
     )
 from dividefilesutil import (
@@ -58,7 +58,7 @@ def move_files(groups: Any) -> None:
     start = time()
     finished_groups = 0
     for group in groups:
-        block = Path(LYRICSDIR+block_dir(finished_groups)).resolve()
+        block = Path(LYRICS+block_dir(finished_groups)).resolve()
         if not block.exists():
             block.mkdir(mode=0o755)
         move_deque_files(group, str(block.resolve()))

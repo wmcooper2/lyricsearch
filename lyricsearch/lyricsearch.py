@@ -2,14 +2,17 @@
 """A CLI tool for pattern matching in the lyrics text files."""
 # stand lib
 import argparse
+from pprint import pprint
+from typing import List, Text
 
 # custom
 from constants import (
-        SETSDIR,
-        LYRICSDIR,
+        SETS,
+        LYRICS,
         PATHS,
-        RESULTSDIR,
-        VOCABSETSDIR,
+        RESULTS,
+        VOCABSETS,
+        VOCABRESULTS,
         )
 from dividefiles import divide_all_files
 from dividesets import divide_sets
@@ -19,15 +22,17 @@ from dividesetsutil import (
         ensure_exists,
         )
 from lyricsearchutil import (
-        exact_lyrics,
-        exact_lyrics_bigram,
-        exact_lyrics_verbose,
-        exact_lyrics_bigram_verbose,
         user_input_dirs,
         user_input_pattern,
         verbose_paths,
         )
-from searchutil import rough_search, search_db_bigrams
+from searchutil import (
+        ranking_search,
+        rough_search,
+        save_results,
+        search_db_bigrams,
+        vocab_search,
+        )
 
 
 if __name__ == "__main__":
@@ -39,6 +44,9 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("-e", "--exact",
                         help="Search for exact match.",
+                        action="store_true")
+    parser.add_argument("-w", "--words",
+                        help="Search for vocabulary match.",
                         action="store_true")
 
     group = parser.add_mutually_exclusive_group()
@@ -62,28 +70,29 @@ if __name__ == "__main__":
 
         if args.messages:
             verbose_paths(pattern, PATHS)
-            possible = rough_search(pattern, SETSDIR, RESULTSDIR,
-                                    search_db_bigrams)
-            
-#             save_results(results)
-
-#             exact_lyrics_bigram_verbose(pattern, SETSDIR)
-#             exact_lyrics_verbose(pattern, SETSDIR)
+            possible: List[Text] = rough_search(pattern,
+                                                SETS,
+                                                RESULTS,
+                                                search_db_bigrams)
+            rankings: List[Text] = ranking_search(pattern, possible)
+            save_results(pattern, RESULTS, rankings)
         elif args.exact:
-            pass
-#             exact_search(pattern, set_dir, search_funct)
-#             exact_lyrics(pattern, SETSDIR) # time stamp issue
+            print("Need to work on exact search.")
+        elif args.words:
+            matches: List[Text] = vocab_search(pattern, VOCABSETS)
+            save_results(pattern, VOCABRESULTS, matches)
+#             pprint(matches[:10])
     
     # divide files
     elif args.dividefiles:
         num_dirs = user_input_dirs()
-        dividefiles.divide_all_files(LYRICSDIR, num_dirs)
+        dividefiles.divide_all_files(LYRICS, num_dirs)
 
     # divide sets
     elif args.bigramsets:
-        divide_sets(LYRICSDIR, SETSDIR, bigram_sets)
+        divide_sets(LYRICS, SETS, bigram_sets)
     elif args.vocabsets:
-        divide_sets(LYRICSDIR, VOCABSETSDIR, vocab_sets)
+        divide_sets(LYRICS, VOCABSETS, vocab_sets)
     else:
         print("Please use a flag. Try '--help' for a list of commands.")
     print("Finished.")

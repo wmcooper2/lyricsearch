@@ -5,9 +5,9 @@ import os
 
 from constants import DEBUGDIR
 
-LYRICSDIR = DEBUGDIR+"lyrics/"
-SETSDIR = DEBUGDIR+"sets/"
-PATHS = [("1", DEBUGDIR), ("2", LYRICSDIR), ("3", SETSDIR),]
+LYRICS = DEBUGDIR+"lyrics/"
+SETS = DEBUGDIR+"sets/"
+PATHS = [("1", DEBUGDIR), ("2", LYRICS), ("3", SETS),]
 NONPATHS = [("1", "cheese/"), ("2", "cats/"), ("3", "artifacts/"),]
 FAKEPATHS = [("notneeded", "somepath/"),]
 DIR_ = "mydir/"
@@ -22,10 +22,10 @@ def test_block_dir_1():
     assert fd.block_dir(1) == "block1"
 
 def test_count_files():
-    assert fd.count_files(LYRICSDIR) == 54
+    assert fd.count_files(LYRICS) == 54
 
 def test_count_db():
-    assert fd.count_db(SETSDIR) > 0
+    assert fd.count_db(SETS) > 0
 
 def test_file_name():
     assert fd.file_name(DIR_, STRING) == "mydir/string.txt"
@@ -34,16 +34,16 @@ def test_file_path():
     assert fd.file_path(SONG, DICT_) == "its/here/boss.txt"
 
 def test_get_dbs():
-    assert len(list(fd.get_dbs(SETSDIR))) == 2
+    assert len(list(fd.get_dbs(SETS))) == 2
 
 def test_get_dbs_returns_generator():
-    assert type(fd.get_dbs(SETSDIR)).__name__ == "generator"
+    assert type(fd.get_dbs(SETS)).__name__ == "generator"
 
 def test_get_files_returns_list():
-    assert isinstance(fd.get_files(LYRICSDIR), list)
+    assert isinstance(fd.get_files(LYRICS), list)
 
 def test_get_files_all_files():
-    assert len(fd.get_files(LYRICSDIR)) == 54
+    assert len(fd.get_files(LYRICS)) == 54
 
 def test_get_files_returns_0_from_nonexsistent_dir():
     assert len(fd.get_files("nonexistent/dir/")) == 0

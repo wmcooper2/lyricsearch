@@ -7,7 +7,7 @@ from typing import Any, Text, Tuple
 
 
 # custom
-from constants import LYRICSDIR, ARTISTDB
+from constants import LYRICS, ARTISTDB
 from filesanddirs import (
         collect_file_names,
         count_files,
@@ -16,7 +16,7 @@ from filesanddirs import (
 
 # make artist db
 # prepend because not ran in "./run"
-lyricsdir = "../"+LYRICSDIR
+lyricsdir = "../"+LYRICS
 print("Making artist database...")
 make_artist_db(lyricsdir, "../"+ARTISTDB)
 print("Artist database created.")
