@@ -7,22 +7,22 @@ from typing import List, Text
 
 # custom
 from constants import (
-        SETS,
         LYRICS,
         PATHS,
         RESULTS,
-        VOCABSETS,
+        SETS,
         VOCABRESULTS,
+        VOCABSETS,
         )
 from dividefiles import divide_all_files
 from dividesets import divide_sets
 from dividesetsutil import (
         bigram_sets,
         vocab_sets,
-        ensure_exists,
         )
 from lyricsearchutil import (
         user_input_dirs,
+        user_input_match_ratio,
         user_input_pattern,
         verbose_paths,
         )
@@ -78,8 +78,11 @@ if __name__ == "__main__":
             save_results(pattern, RESULTS, rankings)
         elif args.exact:
             print("Need to work on exact search.")
+            # this can be just vocab_search() with 100% match
         elif args.words:
-            matches: List[Text] = vocab_search(pattern, VOCABSETS)
+            minimum = user_input_match_ratio()
+            matches: List[Text] = vocab_search(pattern, minimum,
+                                               VOCABSETS)
             save_results(pattern, VOCABRESULTS, matches)
 #             pprint(matches[:10])
     

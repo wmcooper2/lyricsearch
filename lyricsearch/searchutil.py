@@ -1,22 +1,12 @@
 #!/usr/bin/env python3.7
 """Utility module for Lyric Search program."""
 # stand lib
-from collections import deque
-import multiprocessing as mp
-from multiprocessing import Lock
-import os
 from pathlib import Path
-from pprint import pprint
 import re
 import shelve
-import shutil
-import subprocess
-import sys
-from time import asctime, time
+from time import asctime
 from typing import (
-        Any,
         Callable,
-        Deque,
         Dict,
         List,
         Set,
@@ -25,16 +15,14 @@ from typing import (
         )
 
 # 3rd party
-from nltk import bigrams, word_tokenize
+from nltk import bigrams
 
 # custom
 from dividefilesutil import progress_bar
 from dividesetsutil import normalized_pattern
 from filesanddirs import (
+        count_sets_in_dbs,
         file_path,
-        count_files,
-        count_db,
-        get_files,
         )
 
 
@@ -50,22 +38,20 @@ def brute_force_search(target: Text, pattern: Text) -> bool:
     return False
 
 
+# is this needed?
+# if vocab_search() is 100, then is that enough?
 def exact_search(possible: Tuple[List[Text], int],
-                       pattern: Text) -> Tuple[List[Text], float]:
-    """Checks text files for exact matches. Returns Tuple.
-
-        returns; (<exact matches>: list, <time taken>: int): tuple
-    """
+                       pattern: Text) -> List[Text]:
+    """Checks text files for exact matches. Returns List."""
     matches = []
     searched = 0
-    start = time()
     for poss in possible[0]:
         if brute_force_search(poss, pattern):
             matches.append(poss)
         searched += 1
-        progress_bar(searched, len(possible[0]), prefix="Exact:")
-    end = time()
-    return (matches, end-start)
+        progress_bar(searched, len(possible[0]),
+                     prefix="Exact:"+str(len(matches)))
+    return matches
 
 
 def lyric_set(song: Text, dict_: Dict[Text, Text]) -> Set:
@@ -87,7 +73,7 @@ def ranking_search(pattern: Text,
                      prefix="Ranking: "+str(len(matches)))
     return matches
 
-# now its the same as exact_match()
+
 def rough_search(pattern: Text,
                  set_dir: Text,
                  result_dir: Text,
@@ -99,21 +85,21 @@ def rough_search(pattern: Text,
     """
     matches = []
     searched = 0
-    total = count_db(set_dir)
+    song_tot = count_sets_in_dbs(set_dir)
     for song_db in Path(set_dir).glob("**/*.db"):
         matches += search_funct(pattern, str(song_db))
         searched += 1
-        progress_bar(searched, total,
+        progress_bar(searched, song_tot,
                      prefix="Subsets: "+str(len(matches)))
     return matches
 
 
-def save(src: List[Text], dest: Text) -> None:
-    """Appends 'src' elements to 'dest'. Returns None."""
+def save(data: List[Text], dest: Text) -> None:
+    """Saves sorted 'data' elements to 'dest'. Returns None."""
     with open(dest, "a+") as file_:
-        for line in src:
+        for line in sorted(data):
             if line is not None:
-                file_.write(line + "\n")
+                file_.write(str(line) + "\n")
     return None
 
 
@@ -132,7 +118,6 @@ def save_results(pattern: Text,
 def search_db(pattern: Text, db: Text) -> List[Text]:
     """Searches db for 'pattern'. Returns List."""
     pattern_set = set(normalized_pattern(pattern))
-#     pattern_set = set(pattern.split())
     return subset_matches(pattern_set, db)
 
 
@@ -153,19 +138,39 @@ def subset_matches(pattern_set: Set, db: Text) -> List[Text]:
     return matches
 
 
-def vocab_search(pattern: Text, set_dir: Text) -> List[Text]:
-    """Checks sets for vocab matches. Returns List."""
+def vocab_ratio(song_set: Set, pattern_set: Set) -> float:
+    """Calculates the similarity between two sets. Returns Float."""
+    matches = sum([1 for word in pattern_set if word in song_set])
+    try:
+        return round(matches/len(song_set), 2)
+    except ZeroDivisionError:
+        return 0.00
+
+
+def vocab_search(pattern: Text,
+                 minimum: int, 
+                 set_dir: Text) -> List[Tuple[float, Text]]:
+    """Checks sets for vocab matches. Returns List of Tuples."""
     pattern_set = set(normalized_pattern(pattern))
     matches = []
     searched = 0
+    print("Counting songs...")
+    song_tot = count_sets_in_dbs(set_dir)
+    print("Song total:", song_tot)
     song_dbs = Path(set_dir).glob("**/*.db")
     for db in song_dbs:
         with shelve.open(str(db)) as miniset:
             for name, tuple_ in miniset.items():
-                song = lyric_set(name, miniset)
-                if pattern_set.issubset(song):
-                    matches.append(file_path(name, miniset))
+                song_set = lyric_set(name, miniset)
+#                 if pattern_set.issubset(song_set):
+#                     path = file_path(name, miniset)
+#                     matches.append((100.00, path,))
+#                 else:
+                rank = vocab_ratio(song_set, pattern_set)
+                if rank > minimum:
+                    matches.append((rank, path,))
+
                 searched += 1
-                progress_bar(searched, 616323,
+                progress_bar(searched, song_tot,
                              prefix="Vocab: "+str(len(matches)))
     return matches

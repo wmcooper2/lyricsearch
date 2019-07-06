@@ -44,6 +44,15 @@ def count_db(db: Text) -> int:
     return sum([1 for x in Path(db).glob("**/*.db")])
 
 
+def count_sets_in_dbs(set_dir: Text) -> int:
+    """Counts all the songs in all the sets. Returns Integer."""
+    total = 0
+    for db in Path(set_dir).glob("**/*.db"):
+        with shelve.open(str(db)) as miniset:
+            total += len(miniset.items())
+    return total
+
+
 def file_name(dir_: Text, string: Text) -> Text:
     return dir_+string+".txt"
 

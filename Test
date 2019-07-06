@@ -1,3 +1,4 @@
 #!/bin/bash
 cd lyricsearch
 python3 -m pytest -v *_test.py
+#python3 -m pytest -v dividesetsutil_test.py

@@ -34,7 +34,7 @@ def test_file_path():
     assert fd.file_path(SONG, DICT_) == "its/here/boss.txt"
 
 def test_get_dbs():
-    assert len(list(fd.get_dbs(SETS))) == 2
+    assert len(list(fd.get_dbs(SETS))) == 6
 
 def test_get_dbs_returns_generator():
     assert type(fd.get_dbs(SETS)).__name__ == "generator"
@@ -49,7 +49,7 @@ def test_get_files_returns_0_from_nonexsistent_dir():
     assert len(fd.get_files("nonexistent/dir/")) == 0
 
 def test_get_files_non_recursive_returns_one_file():
-    assert len(fd.get_files_non_recursive(DEBUGDIR)) == 1  # only error file
+    assert len(fd.get_files_non_recursive(DEBUGDIR)) == 3
 
 def test_get_files_non_recursive_returns_list():
     assert isinstance(fd.get_files_non_recursive(DEBUGDIR), list)
@@ -93,5 +93,3 @@ def test_paths_okay_PATHS():
 
 def test_paths_okay_NONPATHS():
     assert not fd.paths_okay(NONPATHS)
-
-

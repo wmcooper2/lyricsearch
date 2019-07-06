@@ -6,11 +6,25 @@ from typing import List, Text
 def user_input_dirs() -> int:
     """Gets dir amount from user. Returns Integer."""
     try:
-        bins = int(input("How many dirs do you want to divide among? "))
+        ans = int(input("How many dirs do you want to divide among? "))
     except ValueError:
         print("Please choose a number. Quitting...")
         quit()
-    return bins
+    return ans
+
+
+def user_input_match_ratio() -> int:
+    """Gets minimum vocabualry match ratio from user. Returns Integer."""
+    try:
+        ans = int(input("Choose a minimum match percentage [0-100]: "))
+        if ans >= 0 and ans <=100:
+            return ans
+        else:
+            print("Please choose a number between 0 and 100.")
+            quit()
+    except ValueError:
+        print("Please choose a number. Quitting...")
+        quit()
 
 
 def user_input_pattern() -> Text:

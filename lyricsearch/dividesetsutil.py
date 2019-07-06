@@ -20,7 +20,7 @@ from nltk import word_tokenize
 # custom
 from constants import DEBUGFILE
 from filesanddirs import count_files
-from dividefilesutil import valid_bins
+from dividefilesutil import valid_bins, progress_bar
 
 
 def bigram_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
@@ -46,6 +46,7 @@ def bigram_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
                 save_error("GEN:"+str(song))
             finished_songs += 1
         set_end = time()
+    return None
 
 
 def ensure_exists(path: Text) -> None:
@@ -103,10 +104,13 @@ def remove_punct(word: Text) -> Text:
 def normalized(file_: Text) -> List[Text]:
     """Gets contents of a file without punctuation and normalized
        (all lowercased). Returns List."""
-    with open(file_, "r") as f:
-        whole_file = f.read()
-    tokens = word_tokenize(whole_file)
-    return remove_empty_elements(tokens)
+    try:
+        with open(file_, "r") as f:
+            whole_file = f.read()
+        tokens = word_tokenize(whole_file)
+        return remove_empty_elements(tokens)
+    except FileNotFoundError:
+        return []
 
 
 def normalized_pattern(pattern: Text) -> List[Text]:
@@ -194,4 +198,5 @@ def vocab_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
             except RuntimeError:  # gen error
                 save_error("GEN:"+str(song))
             finished_songs += 1
+            progress_bar(finished_songs, song_count, prefix="Vocab Sets:")
         set_end = time()
