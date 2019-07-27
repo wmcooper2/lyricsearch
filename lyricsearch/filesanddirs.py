@@ -102,12 +102,14 @@ def make_dir(dir_) -> None:
     """Makes 'dir_' if it doesn't exist. Returns None."""
     if not Path(dir_).exists():
         Path(dir_).mkdir()
+    return None
 
 
 def make_file(file_):
     """Makes file_ if it doesn't exist. Returns None."""
     if not Path(file_).exists():
         Path(file_).touch()
+    return None
 
 
 def missing(paths: List[Tuple[Text, Text]]) -> List[Tuple[Text, bool]]:
@@ -131,6 +133,7 @@ def path_check(paths: List[Tuple[Text, Text]]) -> None:
         pprint(paths)
         raise Exception("Error: Missing paths. Quitting...")
         quit()
+    return None
 
 
 def paths_okay(paths: List[Tuple[Text, Text]]) -> bool:

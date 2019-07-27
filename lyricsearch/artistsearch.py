@@ -7,19 +7,35 @@ from typing import Any, Text, Tuple
 
 
 # custom
+from artistsearchutil import (
+        make_artist_list,
+        make_song_list,
+        make_artist_song_lists,
+        file_name_error_check)
+
+
 from constants import LYRICS, ARTISTDB
 from filesanddirs import (
         collect_file_names,
-        count_files,
-        make_artist_db,)
+        count_files)
 
 
-# make artist db
-# prepend because not ran in "./run"
-lyricsdir = "../"+LYRICS
-print("Making artist database...")
-make_artist_db(lyricsdir, "../"+ARTISTDB)
-print("Artist database created.")
+if __name__ == "__main__":
+    file_count = sum(1 for file_ in collect_file_names(LYRICS))
+    print("File count:", file_count)
 
+    # make complete list of artist names
+#     files = collect_file_names(LYRICS)  # gen
+#     make_artist_list("artistnames.txt", files)
 
-# "Overtime" in a["artists"]["Akon"]
+    # check all file names for double underscore problem
+#     files = collect_file_names(LYRICS)  # gen
+#     pprint(file_name_error_check(files))
+
+    # make complete list of song names
+#     files = collect_file_names(LYRICS)  # gen
+#     make_song_list("songtitles.txt", files)
+
+    # make lists for each artist with their song names
+    files = collect_file_names(LYRICS)  # gen
+    make_artist_song_lists(files)
