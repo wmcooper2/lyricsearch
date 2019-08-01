@@ -10,8 +10,10 @@ from typing import (
 
 # custom
 from constants import LYRICS
+from constants import STATS
 from dividefilesutil import progress_bar
-from dividesetsutil import read_file_lines
+# from dividesetsutil import read_file_lines
+from filesanddirs import read_file_lines
 from filesanddirs import collect_file_names
 
 
@@ -27,7 +29,7 @@ def make_artist_list(file_name: Text,
         file_count += 1
         progress_bar(file_count, file_total, prefix="Collecting Artists:")
 
-    with open("../.data/"+file_name, "w+") as f:
+    with open(STATS+file_name, "w+") as f:
         for artist in sorted(list(artists)):
             f.write(artist+"\n")
     return None
@@ -45,7 +47,7 @@ def make_song_list(file_name: Text,
         file_count += 1
         progress_bar(file_count, file_total, prefix="Collecting Songs:")
 
-    with open("../.data/"+file_name, "w+") as f:
+    with open(STATS+file_name, "w+") as f:
         for song in sorted(list(songs)):
             f.write(song+"\n")
     return None
@@ -67,20 +69,19 @@ def file_name_error_check(files: Generator[Text, None, None]) -> List[Text]:
 
 
 def make_artist_song_lists(files: Generator[Text, None, None]) -> None:
-# def make_artist_song_lists() -> None:
     """Makes a single file for each artist with only that artist's songs.
         Returns None."""
     filenames = list(files)
 
     # for artistname in set of artist names
-    artists = read_file_lines("../.data/artistnames.txt")
+    artists = read_file_lines(STATS+"artistnames.txt")
     print("Artist count:", len(artists))
 
     artist_count = 0
     artist_total = len(artists)
     for artist in artists:
         artistsongs = []
-        artistfile = "../.data/artistsonglists/"+artist+".txt"
+        artistfile = STATS+"artistsonglists/"+artist+".txt"
         for filename in filenames:
             if artist in str(filename):
                 artistsongs.append(str(filename).rstrip(".txt"))

@@ -11,8 +11,8 @@ from personal import (
         VOCABRESULTS,
         )
 
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 if DEBUG:
     ARTISTDB = DEBUGDIR+"artist.db"

@@ -44,12 +44,17 @@ def count_db(db: Text) -> int:
     return sum([1 for x in Path(db).glob("**/*.db")])
 
 
+#optimize
 def count_sets_in_dbs(set_dir: Text) -> int:
-    """Counts all the songs in all the sets. Returns Integer."""
+    """Counts all the songs in all the sets. Returns Integer.
+        -displays counter
+    """
     total = 0
     for db in Path(set_dir).glob("**/*.db"):
         with shelve.open(str(db)) as miniset:
             total += len(miniset.items())
+            print("\rCounting songs...", total, end="\r")
+    print("\n")
     return total
 
 
@@ -60,6 +65,10 @@ def file_name(dir_: Text, string: Text) -> Text:
 def file_path(song: Text, dict_: Dict[Text, Tuple[Text, Text]]) -> Text:
     """Gets the song path. Returns String."""
     return dict_[song][0]
+
+# def filepath(song: Text, dict_: Dict[Text, Text]) -> Text:
+#     """Gets the song path. Returns String."""
+#     return dict_[song][0]
 
 
 # def get_files(dir_: Text) -> Any:
@@ -139,3 +148,15 @@ def path_check(paths: List[Tuple[Text, Text]]) -> None:
 def paths_okay(paths: List[Tuple[Text, Text]]) -> bool:
     """Checks that all paths exist. Returns Boolean."""
     return all(Path(pair[1]).exists() for pair in paths)
+
+
+def read_file(file_: Text) -> List[Text]:
+    """Gets contents of a file. Returns list."""
+    with open(file_, "r") as s:
+        return list(s.read().split())
+
+
+def read_file_lines(file_: Text) -> List[Text]:
+    """Gets contents of a file, file lines become elements. Returns List."""
+    with open(file_, "r") as s:
+        return [line.strip() for line in s.readlines()]

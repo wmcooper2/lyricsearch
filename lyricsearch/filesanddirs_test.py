@@ -85,8 +85,8 @@ def test_node_result_name():
 def test_node_result_name_empty_string():
     assert fd.node_result_name("", "") == "noderesult.txt"
 
-def test_path_check():
-    pass
+# def test_path_check():
+#     pass
 
 def test_paths_okay_PATHS():
     assert fd.paths_okay(PATHS)

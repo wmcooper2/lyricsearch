@@ -84,7 +84,7 @@ if __name__ == "__main__":
             matches: List[Text] = vocab_search(pattern, minimum,
                                                VOCABSETS)
             save_results(pattern, VOCABRESULTS, matches)
-#             pprint(matches[:10])
+            pprint(matches[:10])
     
     # divide files
     elif args.dividefiles:
@@ -98,6 +98,7 @@ if __name__ == "__main__":
         divide_sets(LYRICS, VOCABSETS, vocab_sets)
     else:
         print("Please use a flag. Try '--help' for a list of commands.")
+#     breakpoint()
     print("Finished.")
 
     # flexible search

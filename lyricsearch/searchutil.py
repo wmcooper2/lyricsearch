@@ -74,13 +74,13 @@ def ranking_search(pattern: Text,
     return matches
 
 
+#optimize
 def rough_search(pattern: Text,
                  set_dir: Text,
                  result_dir: Text,
                  search_funct: Callable[[Text, Text], List[Text]],
                  ) -> List[Text]:
     """Check for subset matches. Returns List.
-
         - displays progress bar
     """
     matches = []
@@ -90,7 +90,7 @@ def rough_search(pattern: Text,
         matches += search_funct(pattern, str(song_db))
         searched += 1
         progress_bar(searched, song_tot,
-                     prefix="Subsets: "+str(len(matches)))
+                     prefix="Matches: "+str(len(matches)))
     return matches
 
 
@@ -142,7 +142,7 @@ def vocab_ratio(song_set: Set, pattern_set: Set) -> float:
     """Calculates the similarity between two sets. Returns Float."""
     matches = sum([1 for word in pattern_set if word in song_set])
     try:
-        return round(matches/len(song_set), 2)
+        return round(matches/len(pattern_set), 2) * 100
     except ZeroDivisionError:
         return 0.00
 
@@ -154,9 +154,7 @@ def vocab_search(pattern: Text,
     pattern_set = set(normalized_pattern(pattern))
     matches = []
     searched = 0
-    print("Counting songs...")
     song_tot = count_sets_in_dbs(set_dir)
-    print("Song total:", song_tot)
     song_dbs = Path(set_dir).glob("**/*.db")
     for db in song_dbs:
         with shelve.open(str(db)) as miniset:
@@ -167,10 +165,10 @@ def vocab_search(pattern: Text,
 #                     matches.append((100.00, path,))
 #                 else:
                 rank = vocab_ratio(song_set, pattern_set)
-                if rank > minimum:
-                    matches.append((rank, path,))
+                if rank >= minimum:
+                    matches.append((rank, name))
 
                 searched += 1
                 progress_bar(searched, song_tot,
-                             prefix="Vocab: "+str(len(matches)))
+                             prefix="Matches: "+str(len(matches)))
     return matches

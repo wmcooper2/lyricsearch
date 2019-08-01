@@ -1,14 +1,15 @@
-import dividesetsutil as du
+# import dividesetsutil as du
+import filesanddirs as fad
 
 
 dict_ = {"I like to": ["eat", "apples and bananas."]}
 
 
-def test_filepath():
-    assert du.filepath("I like to", dict_) == "eat"
+def test_file_path():
+    assert fad.file_path("I like to", dict_) == "eat"
 
-def test_lyricset():
-    assert du.lyricset("I like to", dict_) == "apples and bananas."
+# def test_lyricset():
+#     assert du.lyric_set("I like to", dict_) == "apples and bananas."
 
 def test_make_mega_set():
     pass

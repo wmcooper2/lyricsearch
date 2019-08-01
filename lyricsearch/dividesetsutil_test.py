@@ -1,4 +1,5 @@
 from dividesetsutil import *
+import filesanddirs as fad
 from constants import DEBUGSONG
 from nltk import word_tokenize
 
@@ -21,11 +22,11 @@ def test_normalized_empty_pattern():
     assert normalized_pattern("") == []
 
 def test_read_file():
-    assert read_file(DEBUGSONG) == \
+    assert fad.read_file(DEBUGSONG) == \
             ['*[NoThing', '-good?', '!', 'comeS,', 'easy]', '@`%$#:']
 
 def test_read_file_lines():
-    assert read_file_lines(DEBUGSONG) == \
+    assert fad.read_file_lines(DEBUGSONG) == \
             ['*[NoThing -good? ! comeS, easy] @`%$#:']
 
 def test_remove_empty_elements():

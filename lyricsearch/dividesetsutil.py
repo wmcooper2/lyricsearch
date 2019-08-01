@@ -20,6 +20,7 @@ from nltk import word_tokenize
 # custom
 from constants import DEBUGFILE
 from filesanddirs import count_files
+from filesanddirs import read_file
 from dividefilesutil import valid_bins, progress_bar
 
 
@@ -63,12 +64,12 @@ def ensure_exists(path: Text) -> None:
     return None
 
 
-def filepath(song: Text, dict_: Dict[Text, Text]) -> Text:
-    """Gets the song path. Returns String."""
-    return dict_[song][0]
+# def filepath(song: Text, dict_: Dict[Text, Text]) -> Text:
+#     """Gets the song path. Returns String."""
+#     return dict_[song][0]
 
 
-def lyricset(song: Text, dict_: Dict[Text, Text]) -> Text:
+def lyric_set(song: Text, dict_: Dict[Text, Text]) -> Text:
     """Gets the lyric's set. Returns Set."""
     return dict_[song][1]
 
@@ -120,17 +121,16 @@ def normalized_pattern(pattern: Text) -> List[Text]:
     return remove_empty_elements(tokens)
 
 
-def read_file(file_: Text) -> List[Text]:
-    """Gets contents of a file. Returns list."""
-    with open(file_, "r") as s:
-        return list(s.read().split())
-
-
-def read_file_lines(file_: Text) -> List[Text]:
-    """Gets contents of a file, nested lines. Returns List."""
-    ### ISSUE: What do I mean by "nested lines"?
-    with open(file_, "r") as s:
-        return [line.strip() for line in s.readlines()]
+# def read_file(file_: Text) -> List[Text]:
+#     """Gets contents of a file. Returns list."""
+#     with open(file_, "r") as s:
+#         return list(s.read().split())
+# 
+# 
+# def read_file_lines(file_: Text) -> List[Text]:
+#     """Gets contents of a file, file lines become elements. Returns List."""
+#     with open(file_, "r") as s:
+#         return [line.strip() for line in s.readlines()]
 
 
 def remove_empty_elements(tokens: List[Text]) -> List[Text]:

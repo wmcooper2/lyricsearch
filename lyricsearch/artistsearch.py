@@ -24,6 +24,7 @@ if __name__ == "__main__":
     file_count = sum(1 for file_ in collect_file_names(LYRICS))
     print("File count:", file_count)
 
+# preprocessing of data, these steps take a long time to complete.
     # make complete list of artist names
 #     files = collect_file_names(LYRICS)  # gen
 #     make_artist_list("artistnames.txt", files)
@@ -37,5 +38,5 @@ if __name__ == "__main__":
 #     make_song_list("songtitles.txt", files)
 
     # make lists for each artist with their song names
-    files = collect_file_names(LYRICS)  # gen
-    make_artist_song_lists(files)
+#     files = collect_file_names(LYRICS)  # gen
+#     make_artist_song_lists(files)
