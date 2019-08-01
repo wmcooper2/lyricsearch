@@ -86,6 +86,7 @@ def rough_search(pattern: Text,
     matches = []
     searched = 0
     song_tot = count_sets_in_dbs(set_dir)
+    breakpoint()
     for song_db in Path(set_dir).glob("**/*.db"):
         matches += search_funct(pattern, str(song_db))
         searched += 1

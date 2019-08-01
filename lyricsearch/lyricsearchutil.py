@@ -40,13 +40,14 @@ def user_input_pattern() -> Text:
     return pattern
 
 
-def verbose_paths(pattern: Text, paths: List[Text]) -> None:
+# def verbose_paths(pattern: Text, paths: List[Text]) -> None:
+def verbose_paths(paths: List[Text]) -> None:
     """Prints path info to terminal. Returns None"""
     print("Paths status;")
     for name in paths:
         print("\t{0} {1:<15}".format(Path(name).exists(),
               name))
-    print("Searching for: \n\t'"+pattern+"'")
+#     print("Searching for: \n\t'"+pattern+"'")
     return None
 
 

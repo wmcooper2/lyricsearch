@@ -7,10 +7,10 @@ from typing import List, Text
 
 # custom
 from constants import (
+        BIGRAMSETS,
         LYRICS,
         PATHS,
         RESULTS,
-        SETS,
         VOCABRESULTS,
         VOCABSETS,
         )
@@ -38,18 +38,22 @@ from searchutil import (
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
                         description="Search through lyrics files.")
+    group = parser.add_mutually_exclusive_group()
     # search
-    parser.add_argument("-m", "--messages",
+    group.add_argument("-m", "--messages",
                         help="Search with helpful messages in terminal.",
                         action="store_true")
-    parser.add_argument("-e", "--exact",
+    group.add_argument("-e", "--exact",
                         help="Search for exact match.",
                         action="store_true")
-    parser.add_argument("-w", "--words",
-                        help="Search for vocabulary match.",
+    group.add_argument("-r", "--rank",
+                        help="Performs ranked search.",
                         action="store_true")
+#     group.add_argument("-l", "--listsearch",
+#                         help="Performs ranked search, takes input list.",
+#                         nargs=1,  # not right
+#                         action="store_true")
 
-    group = parser.add_mutually_exclusive_group()
     # preprocessing sets
     group.add_argument("-f", "--dividefiles",
                        help="Divides files into multiple dirs.",
@@ -60,31 +64,39 @@ if __name__ == "__main__":
     group.add_argument("-v", "--vocabsets",
                        help="Makes vocabulary sets.",
                        action="store_true")
+
+    # quick checks
+    group.add_argument("-p", "--pathcheck",
+                       help="Print paths info",
+                       action="store_true")
     args = parser.parse_args()
 
     # search
     if not args.bigramsets \
         and not args.vocabsets \
-        and not args.dividefiles:
+        and not args.dividefiles \
+        and not args.pathcheck:
         pattern = user_input_pattern()
+        print("Searching for: \n\t'"+pattern+"'")
 
         if args.messages:
-            verbose_paths(pattern, PATHS)
+            verbose_paths(PATHS)
             possible: List[Text] = rough_search(pattern,
-                                                SETS,
+                                                BIGRAMSETS,
                                                 RESULTS,
                                                 search_db_bigrams)
             rankings: List[Text] = ranking_search(pattern, possible)
             save_results(pattern, RESULTS, rankings)
         elif args.exact:
-            print("Need to work on exact search.")
-            # this can be just vocab_search() with 100% match
-        elif args.words:
-            minimum = user_input_match_ratio()
-            matches: List[Text] = vocab_search(pattern, minimum,
+            matches: List[Text] = vocab_search(pattern, 100,
                                                VOCABSETS)
             save_results(pattern, VOCABRESULTS, matches)
             pprint(matches[:10])
+        elif args.rank:
+            matches: List[Text] = vocab_search(pattern, 0,
+                                               VOCABSETS)
+            save_results(pattern, VOCABRESULTS, matches)
+            pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
     
     # divide files
     elif args.dividefiles:
@@ -93,13 +105,14 @@ if __name__ == "__main__":
 
     # divide sets
     elif args.bigramsets:
-        divide_sets(LYRICS, SETS, bigram_sets)
+        divide_sets(LYRICS, BIGRAMSETS, bigram_sets)
     elif args.vocabsets:
         divide_sets(LYRICS, VOCABSETS, vocab_sets)
+    elif args.pathcheck:
+        verbose_paths(PATHS)
     else:
         print("Please use a flag. Try '--help' for a list of commands.")
-#     breakpoint()
-    print("Finished.")
+    print("\nFinished.")
 
     # flexible search
         # performing gap search

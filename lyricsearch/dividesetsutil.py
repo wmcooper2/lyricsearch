@@ -169,9 +169,7 @@ def user_input_sets() -> int:
     except ValueError:
         print("Please choose a number. Quitting...")
         quit()
-    if valid_bins(set_tot):
-        print(str(set_tot)+" sets will be created.")
-    else:
+    if not valid_bins(set_tot):
         print("Choose between 2 and 1000 sets to make.")
         quit()
     return set_tot
@@ -179,10 +177,10 @@ def user_input_sets() -> int:
 
 def vocab_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
     """Saves song sets to 'name.db' in 'song_dir'. Returns None."""
-    song_count = len(songs)
+#     song_count = len(songs)
     save_to = dest_dir+name+".db"
     with shelve.open(save_to) as db:
-        finished_songs = 0
+#         finished_songs = 0
         set_start = time()
         for song in songs:
             try:
@@ -197,6 +195,6 @@ def vocab_sets(songs: Deque, dest_dir: Text, name: Text) -> None:
                 save_error(str(song))
             except RuntimeError:  # gen error
                 save_error("GEN:"+str(song))
-            finished_songs += 1
-            progress_bar(finished_songs, song_count, prefix="Vocab Sets:")
+#             finished_songs += 1
+#             progress_bar(finished_songs, song_count, prefix="Vocab Sets:")
         set_end = time()

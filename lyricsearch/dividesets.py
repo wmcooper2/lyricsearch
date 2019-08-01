@@ -19,6 +19,13 @@ from filesanddirs import count_files, get_files
 def divide_sets(src_dir: Text,
                 dest_dir: Text,
                 set_funct: Callable[[Deque, Text, Text], None]) -> None:
+    """Divide the sets into smaller, more manageable blocks. Returns None.
+        -asks for user input
+        -displays;
+            -src and dest
+            -file count
+            -progress bar
+    """
     print("{0:<12} {1:<20}".format("Source dir:", src_dir))
     print("{0:<12} {1:<20}".format("Dest dir:", dest_dir))
     print("Counting files...")
@@ -32,11 +39,10 @@ def divide_sets(src_dir: Text,
     for file_ in get_files(src_dir):
         deq.append(file_)
         files += 1
-        progress_bar(files, file_tot)
-
         if len(deq) >= floor(file_tot/set_tot):
             set_name = str(block_set(sets))
             set_funct(deq, dest_dir, set_name)
+            progress_bar(sets, set_tot, prefix="Making vocab sets:")
             sets += 1
             deq = deque()
 

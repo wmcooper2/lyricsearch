@@ -1,11 +1,11 @@
 from personal import (
         ARTISTDB,
+        BIGRAMSETS,
         DEBUGDIR,
         DEBUGFILE,
         DEBUGSONG,
         LYRICS,
         RESULTS,
-        SETS,
         SOURCETEXT,
         VOCABSETS,
         VOCABRESULTS,
@@ -16,29 +16,19 @@ DEBUG = True
 
 if DEBUG:
     ARTISTDB = DEBUGDIR+"artist.db"
+    BIGRAMSETS = DEBUGDIR+"bigramsets/"
     LYRICS = DEBUGDIR+"lyrics/"  # 54 files
     RESULTS = DEBUGDIR+"results/"
-    SETS = DEBUGDIR+"sets/"
     SOURCETEXT = DEBUGDIR+"sourcetext/"
     VOCABSETS = DEBUGDIR+"vocabsets/"
 
-# remove?
-# NAMEDPATHS = [
-#     ("ARTISTDB", ARTISTDB),
-#     ("DEBUGDIR", DEBUGDIR),
-#     ("LYRICS", LYRICS),
-#     ("RESULTS", RESULTS),
-#     ("SETS", SETS),
-#     ("SOURCETEXT", SOURCETEXT),
-#     ("VOCABSETS", VOCABSETS),]
-
 PATHS = [
     ARTISTDB,
+    BIGRAMSETS,
     DEBUGDIR,
     DEBUGFILE,
     DEBUGSONG,
     LYRICS,
     RESULTS,
-    SETS,
     SOURCETEXT,
     VOCABSETS,]
