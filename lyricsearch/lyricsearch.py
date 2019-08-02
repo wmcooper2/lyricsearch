@@ -27,6 +27,7 @@ from filesanddirs import (
         collect_file_names,
         )
 from searchutil import (
+        fuzzy_search,
         ranking_search,
         rough_search,
         save_results,
@@ -52,17 +53,20 @@ if __name__ == "__main__":
     group.add_argument("-a", "--artist",
                         help="Search for artist name.",
                         action="store_true")
-    group.add_argument("-s", "--song",
-                        help="Search for song name.",
+    group.add_argument("-e", "--exact",
+                        help="Search for exact match.",
+                        action="store_true")
+    group.add_argument("-g", "--grammar",
+                        help="Search for grammar patterns with unknown words between them.",
                         action="store_true")
     group.add_argument("-m", "--messages",
                         help="Search with helpful messages in terminal.",
                         action="store_true")
-    group.add_argument("-e", "--exact",
-                        help="Search for exact match.",
-                        action="store_true")
     group.add_argument("-r", "--rank",
                         help="Performs ranked search.",
+                        action="store_true")
+    group.add_argument("-s", "--song",
+                        help="Search for song name.",
                         action="store_true")
 #     group.add_argument("-l", "--listsearch",
 #                         help="Performs ranked search, takes input list.",
@@ -70,14 +74,14 @@ if __name__ == "__main__":
 #                         action="store_true")
 
     # preprocessing sets
+    group.add_argument("-b", "--bigramsets",
+                       help="Preprocesses bigram sets.",
+                       action="store_true")
     group.add_argument("-f", "--dividefiles",
                        help="Divides files into multiple dirs.",
                        action="store_true")
-    group.add_argument("-b", "--bigramsets",
-                       help="Makes bigram sets.",
-                       action="store_true")
     group.add_argument("-v", "--vocabsets",
-                       help="Makes vocabulary sets.",
+                       help="Preprocesses vocabulary sets.",
                        action="store_true")
     group.add_argument("-x", "--setupartists",
                        help="Preprocesses artist list.",
@@ -97,19 +101,31 @@ if __name__ == "__main__":
     args = parser.parse_args()
     file_gen = collect_file_names(LYRICS)  # generator
 
-    # flexible search ???
-        # performing gap search
-
     # search
     if args.artist:
         pattern = user_input_pattern()
         artists = read_file_lines(LISTS+"artistnames.txt")
-        matches = artist_name_search(pattern, artists)
+        matches = fuzzy_search(pattern, artists)
         pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
     elif args.song:
-        #returns ranked list of matching song names
         pattern = user_input_pattern()
         songs = read_file_lines(LISTS+"songtitles.txt")
+        matches = fuzzy_search(pattern, songs)
+        pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
+    elif args.grammar:
+        print("This functionality is not finished.")
+        # flexible search ???
+        # performing gap search
+        # example:
+        #   pattern = "as ... as"
+        #   gap limit = 3
+        #   test lyrics = "I'm as smart as the next guy."
+        #   returns a match, gap < 3
+        #   test lyrics = "I'm as cool and smart as the next guy."
+        #   also returns a match, gap == 3
+        #   test lyrics = "I'm as cool, smart, funny and rich as the next guy."
+        #   doesn't return a match, gap > 3
+        pass
 
 
 
@@ -134,18 +150,18 @@ if __name__ == "__main__":
         save_results(pattern, VOCABRESULTS, matches)
         pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
     
-    # divide files
+    # PREPROCESSING; these steps take a long time to complete
     elif args.dividefiles:
         num_dirs = user_input_dirs()
         dividefiles.divide_all_files(LYRICS, num_dirs)
 
-    # divide sets
+    # make sets
     elif args.bigramsets:
         divide_sets(LYRICS, BIGRAMSETS, bigram_sets)
     elif args.vocabsets:
         divide_sets(LYRICS, VOCABSETS, vocab_sets)
-
-    # preprocessing; these steps take a long time to complete
+    
+    # make lists
     elif args.setupartists:
         make_artist_list(LISTS+"artistnames.txt", file_gen)
     elif args.setupsongs:

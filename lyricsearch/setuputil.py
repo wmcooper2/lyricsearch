@@ -91,7 +91,7 @@ def make_song_list(file_name: Text,
     file_total = len(list(tee2))
     songs = set()
     for file_ in tee1:
-        songs.add(file_.name.split("_")[1])
+        songs.add(file_.name.split("_")[1].rstrip(".txt"))
         file_count += 1
         progress_bar(file_count, file_total, prefix="Collecting Songs:")
 

@@ -42,7 +42,7 @@ def divide_sets(src_dir: Text,
         if len(deq) >= floor(file_tot/set_tot):
             set_name = str(block_set(sets))
             set_funct(deq, dest_dir, set_name)
-            progress_bar(sets, set_tot, prefix="Making vocab sets:")
+            progress_bar(sets, set_tot, prefix="Making sets:")
             sets += 1
             deq = deque()
 

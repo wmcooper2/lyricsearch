@@ -27,17 +27,17 @@ from filesanddirs import (
         )
 
 
-def artist_name_search(pattern: Text,
-                       artists: List[Text]) -> List[Tuple[float, Text]]:
+def fuzzy_search(pattern: Text,
+                 strings: List[Text]) -> List[Tuple[float, Text]]:
     """Performs ranked search of artist names. Returns List.
-        -pattern: the artist name to search for
-        -artists: list of artist names
+        -pattern: the pattern to search for
+        -strings: list of string
     """
     matcher = difflib.SequenceMatcher()
     results = []
-    for name in artists:
-            matcher.set_seqs(pattern, name)
-            results.append((matcher.ratio, name))
+    for thing in strings:
+            matcher.set_seqs(pattern, thing)
+            results.append((round(matcher.ratio(), 2)*100, thing))
     return results
 
 def brute_force_search(target: Text, pattern: Text) -> bool:
@@ -55,7 +55,7 @@ def brute_force_search(target: Text, pattern: Text) -> bool:
 # is this needed?
 # if vocab_search() is 100, then is that enough?
 def exact_search(possible: Tuple[List[Text], int],
-                       pattern: Text) -> List[Text]:
+                 pattern: Text) -> List[Text]:
     """Checks text files for exact matches. Returns List."""
     matches = []
     searched = 0
