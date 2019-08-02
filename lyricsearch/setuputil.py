@@ -3,9 +3,11 @@ from itertools import tee
 from pprint import pprint
 import shelve
 from typing import (
+        Any,
         Generator,
         List,
-        Text)
+        Text,
+        Tuple)
 
 # custom
 from constants import LISTS
@@ -64,7 +66,7 @@ def make_artist_list(file_name: Text,
                      files: Generator[Text, None, None]) -> None:
     """Makes a complete list of artist names. Returns None.
         -prints progress bar to terminal
-        -saves data to 'file_name'
+        -saves artist names to 'file_name'
     """
     tee1, tee2 = tee(files)
     file_count = 0
@@ -75,7 +77,7 @@ def make_artist_list(file_name: Text,
         file_count += 1
         progress_bar(file_count, file_total, prefix="Collecting Artists:")
 
-    with open(LISTS+file_name, "w+") as f:
+    with open(file_name, "w+") as f:
         for artist in sorted(list(artists)):
             f.write(artist+"\n")
     return None
@@ -93,7 +95,7 @@ def make_song_list(file_name: Text,
         file_count += 1
         progress_bar(file_count, file_total, prefix="Collecting Songs:")
 
-    with open(LISTS+file_name, "w+") as f:
+    with open(file_name, "w+") as f:
         for song in sorted(list(songs)):
             f.write(song+"\n")
     return None
@@ -101,12 +103,18 @@ def make_song_list(file_name: Text,
 
 def make_artist_song_lists(files: Generator[Text, None, None]) -> None:
     """Makes a single file for each artist with only that artist's songs.
-        Returns None."""
+        Returns None.
+        -makes a file for each artist in 'artistsonglists' directory
+        -prints artist count to terminal
+        -prints progress bar to terminal
+        """
     filenames = list(files)
 
     # for artistname in set of artist names
     artists = read_file_lines(LISTS+"artistnames.txt")
-    print("Artist count:", len(artists))
+    print("\tArtist count:", len(artists))
+    songs = read_file_lines(LISTS+"songtitles.txt")
+    print("\tSong count:", len(songs))
 
     artist_count = 0
     artist_total = len(artists)

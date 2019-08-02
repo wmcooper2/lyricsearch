@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 """Utility module for Lyric Search program."""
 # stand lib
+import difflib
 from pathlib import Path
 import re
 import shelve
@@ -25,6 +26,19 @@ from filesanddirs import (
         file_path,
         )
 
+
+def artist_name_search(pattern: Text,
+                       artists: List[Text]) -> List[Tuple[float, Text]]:
+    """Performs ranked search of artist names. Returns List.
+        -pattern: the artist name to search for
+        -artists: list of artist names
+    """
+    matcher = difflib.SequenceMatcher()
+    results = []
+    for name in artists:
+            matcher.set_seqs(pattern, name)
+            results.append((matcher.ratio, name))
+    return results
 
 def brute_force_search(target: Text, pattern: Text) -> bool:
     """Performs brute force pattern matching. Returns Boolean."""

@@ -8,6 +8,8 @@ from typing import List, Text
 # custom
 from constants import (
         BIGRAMSETS,
+        DEBUG,
+        LISTS,
         LYRICS,
         PATHS,
         RESULTS,
@@ -20,7 +22,10 @@ from dividesetsutil import (
         bigram_sets,
         vocab_sets,
         )
-from filesanddirs import read_file_lines
+from filesanddirs import (
+        read_file_lines,
+        collect_file_names,
+        )
 from searchutil import (
         ranking_search,
         rough_search,
@@ -97,9 +102,10 @@ if __name__ == "__main__":
 
     # search
     if args.artist:
-        #returns ranked list of matching artist names
         pattern = user_input_pattern()
         artists = read_file_lines(LISTS+"artistnames.txt")
+        matches = artist_name_search(pattern, artists)
+        pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
     elif args.song:
         #returns ranked list of matching song names
         pattern = user_input_pattern()
@@ -141,14 +147,15 @@ if __name__ == "__main__":
 
     # preprocessing; these steps take a long time to complete
     elif args.setupartists:
-        make_artist_list("artistnames.txt", file_gen)
+        make_artist_list(LISTS+"artistnames.txt", file_gen)
     elif args.setupsongs:
-        make_song_list("songtitles.txt", file_gen)
+        make_song_list(LISTS+"songtitles.txt", file_gen)
     elif args.setupartistsongs:
         make_artist_song_lists(file_gen)
 
     # debugging stuff
     elif args.pathcheck:
+        print("\tDEBUG ==", DEBUG)
         verbose_paths(PATHS)
     else:
         print("You need to add a flag. Try '--help' for a list of commands.")

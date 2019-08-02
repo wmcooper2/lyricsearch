@@ -4,11 +4,12 @@ from personal import (
         DEBUGDIR,
         DEBUGFILE,
         DEBUGSONG,
+        LISTS,
         LYRICS,
         RESULTS,
         SOURCETEXT,
-        VOCABSETS,
         VOCABRESULTS,
+        VOCABSETS,
         )
 
 DEBUG = True
@@ -17,9 +18,11 @@ DEBUG = True
 if DEBUG:
     ARTISTDB = DEBUGDIR+"artist.db"
     BIGRAMSETS = DEBUGDIR+"bigramsets/"
-    LYRICS = DEBUGDIR+"lyrics/"  # 54 files
+    LISTS = DEBUGDIR+"lists/"
+    LYRICS = DEBUGDIR+"lyrics/"  # 33900 lyrics files
     RESULTS = DEBUGDIR+"results/"
     SOURCETEXT = DEBUGDIR+"sourcetext/"
+    VOCABRESULTS = DEBUGDIR+"vocabresults/"
     VOCABSETS = DEBUGDIR+"vocabsets/"
 
 PATHS = [
@@ -28,7 +31,10 @@ PATHS = [
     DEBUGDIR,
     DEBUGFILE,
     DEBUGSONG,
+    LISTS,
     LYRICS,
     RESULTS,
     SOURCETEXT,
-    VOCABSETS,]
+    VOCABRESULTS,
+    VOCABSETS,
+    ]
