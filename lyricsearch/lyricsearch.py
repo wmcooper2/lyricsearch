@@ -20,17 +20,16 @@ from dividesetsutil import (
         bigram_sets,
         vocab_sets,
         )
-from lyricsearchutil import (
-        user_input_dirs,
-        user_input_match_ratio,
-        user_input_pattern,
-        verbose_paths,
-        )
+from filesanddirs import read_file_lines
 from searchutil import (
         ranking_search,
         rough_search,
         save_results,
         search_db_bigrams,
+        user_input_dirs,
+        user_input_match_ratio,
+        user_input_pattern,
+        verbose_paths,
         vocab_search,
         )
 from setuputil import (
@@ -98,9 +97,17 @@ if __name__ == "__main__":
 
     # search
     if args.artist:
-        pass
+        #returns ranked list of matching artist names
+        pattern = user_input_pattern()
+        artists = read_file_lines(LISTS+"artistnames.txt")
     elif args.song:
-        pass
+        #returns ranked list of matching song names
+        pattern = user_input_pattern()
+        songs = read_file_lines(LISTS+"songtitles.txt")
+
+
+
+
     elif args.messages:
         pattern = user_input_pattern()
         verbose_paths(PATHS)

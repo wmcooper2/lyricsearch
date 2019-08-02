@@ -13,16 +13,6 @@ from typing import (
     )
 
 
-def artist_song(path: Any) -> Tuple[Text, Text]:
-    """Extracts the artist and song name from 'path'. Returns String."""
-    parent = path.parents[0]
-    parts = path.parts
-    file_name = path.name
-    stem = path.stem
-    artist = stem.split("_")[0]
-    song = stem.split("_")[1]
-    return artist, song
-
 
 def collect_file_names(dir_: Text) -> Generator[Text, None, None]:
     """Collect the file names from the database. Returns generator."""
@@ -90,21 +80,6 @@ def get_files(dir_: Text) -> List[Text]:
 def get_files_non_recursive(dir_: Text) -> List[Text]:
     """Gets text file names, non-recursive. Returns List."""
     return [p for p in Path(dir_).glob("*.txt")]
-
-
-def make_artist_db(dir_: Text, database: Text) -> None:
-    """Creates the 'artist.db' from files in 'dir_'. Returns None."""
-    artists = {}
-    file_amt = count_files(dir_)
-    for path in collect_file_names(dir_):  # recursive
-        artist, song = artist_song(path)
-        if artist not in artists:
-            artists[artist] = set()
-        artists[artist].add(song)
-    pprint(artists)
-    print("database:", database)
-    with shelve.open(database) as db:
-        db["artists"] = artists
 
 
 def make_dir(dir_) -> None:
