@@ -33,6 +33,11 @@ from searchutil import (
         search_db_bigrams,
         vocab_search,
         )
+from setuputil import (
+        make_artist_list,
+        make_artist_song_lists,
+        make_song_list,
+        )
 
 
 if __name__ == "__main__":
@@ -40,6 +45,12 @@ if __name__ == "__main__":
                         description="Search through lyrics files.")
     group = parser.add_mutually_exclusive_group()
     # search
+    group.add_argument("-a", "--artist",
+                        help="Search for artist name.",
+                        action="store_true")
+    group.add_argument("-s", "--song",
+                        help="Search for song name.",
+                        action="store_true")
     group.add_argument("-m", "--messages",
                         help="Search with helpful messages in terminal.",
                         action="store_true")
@@ -64,39 +75,51 @@ if __name__ == "__main__":
     group.add_argument("-v", "--vocabsets",
                        help="Makes vocabulary sets.",
                        action="store_true")
+    group.add_argument("-x", "--setupartists",
+                       help="Preprocesses artist list.",
+                       action="store_true")
+    group.add_argument("-y", "--setupsongs",
+                       help="Preprocesses song list.",
+                       action="store_true")
+    group.add_argument("-z", "--setupartistsongs",
+                       help="Preprocesses artists' song lists.",
+                       action="store_true")
 
     # quick checks
     group.add_argument("-p", "--pathcheck",
                        help="Print paths info",
                        action="store_true")
+
     args = parser.parse_args()
+    file_gen = collect_file_names(LYRICS)  # generator
+
+    # flexible search ???
+        # performing gap search
 
     # search
-    if not args.bigramsets \
-        and not args.vocabsets \
-        and not args.dividefiles \
-        and not args.pathcheck:
+    if args.artist:
+        pass
+    elif args.song:
+        pass
+    elif args.messages:
         pattern = user_input_pattern()
-        print("Searching for: \n\t'"+pattern+"'")
-
-        if args.messages:
-            verbose_paths(PATHS)
-            possible: List[Text] = rough_search(pattern,
-                                                BIGRAMSETS,
-                                                RESULTS,
-                                                search_db_bigrams)
-            rankings: List[Text] = ranking_search(pattern, possible)
-            save_results(pattern, RESULTS, rankings)
-        elif args.exact:
-            matches: List[Text] = vocab_search(pattern, 100,
-                                               VOCABSETS)
-            save_results(pattern, VOCABRESULTS, matches)
-            pprint(matches[:10])
-        elif args.rank:
-            matches: List[Text] = vocab_search(pattern, 0,
-                                               VOCABSETS)
-            save_results(pattern, VOCABRESULTS, matches)
-            pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
+        verbose_paths(PATHS)
+        possible: List[Text] = rough_search(pattern,
+                                            BIGRAMSETS,
+                                            RESULTS,
+                                            search_db_bigrams)
+        rankings: List[Text] = ranking_search(pattern, possible)
+        save_results(pattern, RESULTS, rankings)
+    elif args.exact:
+        pattern = user_input_pattern()
+        matches: List[Text] = vocab_search(pattern, 100, VOCABSETS)
+        save_results(pattern, VOCABRESULTS, matches)
+        pprint(matches[:10])
+    elif args.rank:
+        pattern = user_input_pattern()
+        matches: List[Text] = vocab_search(pattern, 0, VOCABSETS)
+        save_results(pattern, VOCABRESULTS, matches)
+        pprint(sorted(matches, key=lambda x: x[0], reverse=True)[:10])
     
     # divide files
     elif args.dividefiles:
@@ -108,13 +131,19 @@ if __name__ == "__main__":
         divide_sets(LYRICS, BIGRAMSETS, bigram_sets)
     elif args.vocabsets:
         divide_sets(LYRICS, VOCABSETS, vocab_sets)
+
+    # preprocessing; these steps take a long time to complete
+    elif args.setupartists:
+        make_artist_list("artistnames.txt", file_gen)
+    elif args.setupsongs:
+        make_song_list("songtitles.txt", file_gen)
+    elif args.setupartistsongs:
+        make_artist_song_lists(file_gen)
+
+    # debugging stuff
     elif args.pathcheck:
         verbose_paths(PATHS)
     else:
-        print("Please use a flag. Try '--help' for a list of commands.")
+        print("You need to add a flag. Try '--help' for a list of commands.")
     print("\nFinished.")
 
-    # flexible search
-        # performing gap search
-        # searching for artists
-        # searching for song names

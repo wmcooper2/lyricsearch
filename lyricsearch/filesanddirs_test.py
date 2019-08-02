@@ -22,7 +22,7 @@ def test_block_dir_1():
     assert fd.block_dir(1) == "block1"
 
 def test_count_files():
-    assert fd.count_files(LYRICS) == 54
+    assert fd.count_files(LYRICS) == 33900
 
 def test_count_db():
     assert fd.count_db(BIGRAMSETS) > 0
@@ -34,7 +34,7 @@ def test_file_path():
     assert fd.file_path(SONG, DICT_) == "its/here/boss.txt"
 
 def test_get_dbs():
-    assert len(list(fd.get_dbs(BIGRAMSETS))) == 6
+    assert len(list(fd.get_dbs(BIGRAMSETS))) == 100
 
 def test_get_dbs_returns_generator():
     assert type(fd.get_dbs(BIGRAMSETS)).__name__ == "generator"
@@ -43,7 +43,7 @@ def test_get_files_returns_list():
     assert isinstance(fd.get_files(LYRICS), list)
 
 def test_get_files_all_files():
-    assert len(fd.get_files(LYRICS)) == 54
+    assert len(fd.get_files(LYRICS)) == 33900
 
 def test_get_files_returns_0_from_nonexsistent_dir():
     assert len(fd.get_files("nonexistent/dir/")) == 0

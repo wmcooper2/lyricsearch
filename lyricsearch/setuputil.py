@@ -1,25 +1,23 @@
 # stand lib
 from itertools import tee
-from pathlib import Path
+# from pathlib import Path
 from typing import (
         Generator,
         List,
         Text)
 
-# 3rd party
-
 # custom
-from constants import LYRICS
 from constants import STATS
 from dividefilesutil import progress_bar
-# from dividesetsutil import read_file_lines
 from filesanddirs import read_file_lines
-from filesanddirs import collect_file_names
 
 
 def make_artist_list(file_name: Text,
                      files: Generator[Text, None, None]) -> None:
-    """Makes a complete list of artist names. Returns None."""
+    """Makes a complete list of artist names. Returns None.
+        -prints progress bar to terminal
+        -saves data to 'file_name'
+    """
     tee1, tee2 = tee(files)
     file_count = 0
     file_total = len(list(tee2))
